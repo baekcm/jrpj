@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/ijongro/!svn/ver/1373/ijongro/WebContent/WEB-INF/config
+END
+applicationContext-db.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ijongro/!svn/ver/1319/ijongro/WebContent/WEB-INF/config/applicationContext-db.xml
+END
+log4j.properties
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/ijongro/!svn/ver/1180/ijongro/WebContent/WEB-INF/config/log4j.properties
+END
+payment.properties
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ijongro/!svn/ver/668/ijongro/WebContent/WEB-INF/config/payment.properties
+END
+config.properties
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ijongro/!svn/ver/1200/ijongro/WebContent/WEB-INF/config/config.properties
+END

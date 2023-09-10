@@ -1,0 +1,995 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cptSql">
+    <!-- 민원관리 목록수조회 -->
+	<select id="findCptTotCnt" parameterType="com.jnet.domain.Minwon" resultType="Integer">
+	    			SELECT count(*)
+					  FROM 
+							(SELECT   q.q_seq qSeq , q.create_ymd
+							  FROM JONGNO_MINWON_Q q
+								  ,JONGNO_MINWON_Q_COMM uqc
+								  ,JONGNO_MINWON_Q_COMM aqc
+								  ,JONGNO_COMM_CODE ucc
+								  ,JONGNO_COMM_CODE acc
+							 WHERE q.rm_yn = 'N'
+							   and ucc.code_gbn_cd='minwon'
+							   AND acc.code_gbn_cd='AREA'
+							   AND q.q_seq = uqc.q_seq
+							   AND ucc.comm_code_seq = uqc.comm_code_seq
+							   AND q.q_seq = aqc.q_seq
+							   AND acc.comm_code_seq = aqc.comm_code_seq
+							   	<if test='minwonInfo != null and minwonInfo !="" and minwonInfo == "O"'>
+							   		AND ucc.code_id IN
+									<foreach item="item" index="index" collection="minwonListAuth" open="(" separator="," close=")">
+							        	#{item}
+							  		</foreach>
+							   	</if>
+							     <if test='qSex != null and qSex != "" '>
+									 AND q.q_sex = #{qSex}
+								 </if>
+								 <if test='qAge != null and qAge != "" '>
+							 		<choose>
+							 			<when test='qAge == "60"'>
+							 				AND CAST(dbo.fn_GETAGE_2(substring(q.q_birth,1,4),substring(q.q_birth,5,2),substring(q.q_birth,7,2), GETDATE()) as nvarchar(5)) >= #{qAge}
+							 			</when>
+							 			<otherwise>
+							 				AND SUBSTRING(CAST(dbo.fn_GETAGE_2(substring(q.q_birth,1,4),substring(q.q_birth,5,2),substring(q.q_birth,7,2), GETDATE()) as nvarchar(5)),1,1)+'0' = #{qAge}
+							 			</otherwise>
+							 		</choose>
+								 </if>
+								 <if test='upId != null and upId != "" '>
+									 AND ucc.code_id = #{upId}
+								 </if>
+								 <if test='satisId != null and satisId != "" '>
+									 AND q.score = #{satisId}
+								 </if>
+								 <if test='areaId != null and areaId != "" '>
+									 AND acc.code_id = #{areaId}
+								 </if>
+								 <if test='searchVal != null and searchVal != "" '>
+									<if test='searchKey == "subject"'>
+										AND q.subject like  '%' + #{searchVal} + '%'
+									</if>
+									<if test='searchKey == "content"'>
+										AND q.content like  '%' + #{searchVal} + '%'
+									</if>
+									<if test='searchKey == "name"'>
+										AND q.Q_NM like  '%' + #{searchVal} + '%'
+									</if>
+								</if>
+								 <if test='qIdDi != null and qIdDi != "" '>
+							 		AND q.q_id_di= #{qIdDi}
+								 </if>	
+								 <if test='qStCreateYmd != null and qStCreateYmd != "" '>
+							 		AND q.create_ymd BETWEEN #{qStCreateYmd} AND  #{qEdCreateYmd}
+								 </if>
+								 <if test="statusCd != null and statusCd != ''">
+								 	AND q.status_cd = #{statusCd}
+								 </if>
+							) q
+ 					LEFT OUTER JOIN JONGNO_MINWON_A a
+ 					ON q.qSeq = a.q_seq
+ 					WHERE 1=1
+				 <if test="dateCnt != null">
+				 	<choose>
+				 		<when test='dateCnt == 4'>
+				 			AND DATEDIFF(day, q.create_ymd, a.create_ymd) >= #{dateCnt}	
+				 		</when>
+				 		<otherwise>
+				 			AND DATEDIFF(day, q.create_ymd, a.create_ymd) = #{dateCnt}
+				 		</otherwise>
+				 	</choose>
+				 </if>
+				 <if test='happyId != null and happyId != "" '>
+				 	AND (SELECT mac.comm_code_seq
+	       							 FROM jongno_minwon_a_comm mac, jongno_comm_code jcc
+	      							WHERE mac.a_seq = a.a_seq
+	        						  AND mac.comm_code_seq = jcc.comm_code_seq
+	        						  AND jcc.code_gbn_cd = 'HPC') = #{happyId}
+				 </if>
+    </select>
+    
+    <!-- 민원관리 목록 조회 -->
+	<select id="listCptMng" parameterType="com.jnet.domain.Minwon" resultType="com.jnet.domain.Minwon">
+				<if test='start != "0" and end != "0"'>
+				SELECT * FROM (
+				  SELECT TOP ${showPage} * FROM (
+				 </if>
+		  			SELECT
+		  				<if test='start != "0" and end != "0"'> 
+		  					TOP ${currentPage}
+		  				</if> 
+		  							q.*
+		     					  ,(SELECT jcc.code_nm
+		       						  FROM jongno_minwon_a_comm mac, jongno_comm_code jcc
+		      						 WHERE mac.a_seq = a.a_seq
+		        					   AND mac.comm_code_seq = jcc.comm_code_seq
+		        					   AND jcc.code_gbn_cd = 'HPC') happyNm
+		     					   , a.create_ymd aCreateYmd
+							       , a.create_hms aCreateHms
+							       , a.a_content aContent
+							       , a.modi_id modiId
+							       , DATEDIFF(day, q.qCreateYmd, a.create_ymd) dateCnt
+							       , (select aa.admin_nm From jongno_admin aa where aa.admin_id = a.modi_id) aNm
+					  FROM 
+							(SELECT   q.q_seq qSeq
+									 ,ucc.code_id upid
+							         ,ucc.code_nm upNm
+							         ,acc.code_nm areaNm
+									 , q.q_nm qNm
+									 , q.create_ymd qCreateYmd
+									 , q.subject subject
+									 , q.hitnum hitnum
+									 ,q.show_yn showYn
+									 ,q.q_id_di qIdDi
+									 ,q.q_sex qSex
+									 ,CAST(dbo.fn_GETAGE_2(substring(q.q_birth,1,4),substring(q.q_birth,5,2),substring(q.q_birth,7,2), GETDATE()) as nvarchar(5)) qAge
+									 ,q.content
+									 ,q.status_cd statusCd
+									 ,q.score
+							  FROM JONGNO_MINWON_Q q
+								  ,JONGNO_MINWON_Q_COMM uqc
+								  ,JONGNO_MINWON_Q_COMM aqc
+								  ,JONGNO_COMM_CODE ucc
+								  ,JONGNO_COMM_CODE acc
+							 WHERE q.rm_yn = 'N'
+							   and ucc.code_gbn_cd='minwon'
+							   AND acc.code_gbn_cd='AREA'
+							   AND q.q_seq = uqc.q_seq
+							   AND ucc.comm_code_seq = uqc.comm_code_seq
+							   AND q.q_seq = aqc.q_seq
+							   AND acc.comm_code_seq = aqc.comm_code_seq
+							   	<if test='minwonInfo != null and minwonInfo !="" and minwonInfo == "O"'>
+							   		AND ucc.code_id IN
+									<foreach item="item" index="index" collection="minwonListAuth" open="(" separator="," close=")">
+							        	#{item}
+							  		</foreach>
+							   	</if>
+							     <if test='qSex != null and qSex != "" '>
+									 AND q.q_sex = #{qSex}
+								 </if>
+								 <if test='qAge != null and qAge != "" '>
+							 		<choose>
+							 			<when test='qAge == "60"'>
+							 				AND CAST(dbo.fn_GETAGE_2(substring(q.q_birth,1,4),substring(q.q_birth,5,2),substring(q.q_birth,7,2), GETDATE()) as nvarchar(5)) >= #{qAge}
+							 			</when>
+							 			<otherwise>
+							 				AND SUBSTRING(CAST(dbo.fn_GETAGE_2(substring(q.q_birth,1,4),substring(q.q_birth,5,2),substring(q.q_birth,7,2), GETDATE()) as nvarchar(5)),1,1)+'0' = #{qAge}
+							 			</otherwise>
+							 		</choose>
+								 </if>
+								 <if test='upId != null and upId != "" '>
+									 AND ucc.code_id = #{upId}
+								 </if>
+								 <if test='satisId != null and satisId != "" '>
+								  	 AND q.score = #{satisId}
+								 </if>
+								 <if test='areaId != null and areaId != "" '>
+									 AND acc.code_id = #{areaId}
+								 </if>
+								 <if test='searchVal != null and searchVal != "" '>
+									<if test='searchKey == "subject"'>
+										AND q.subject like  '%' + #{searchVal} + '%'
+									</if>
+									<if test='searchKey == "content"'>
+										AND q.content like  '%' + #{searchVal} + '%'
+									</if>
+									<if test='searchKey == "name"'>
+										AND q.Q_NM like  '%' + #{searchVal} + '%'
+									</if>
+								</if>
+								 <if test='qIdDi != null and qIdDi != "" '>
+							 		AND q.q_id_di= #{qIdDi}
+								 </if>	
+								<if test='qStCreateYmd != null and qStCreateYmd != "" '>
+							 		AND q.create_ymd BETWEEN #{qStCreateYmd} AND  #{qEdCreateYmd}
+								 </if>
+								 <if test="statusCd != null and statusCd != ''">
+								 	AND q.status_cd = #{statusCd}
+								 </if>
+							) q
+		 					LEFT OUTER JOIN JONGNO_MINWON_A a
+		 					ON q.qSeq = a.q_seq
+		 		 WHERE 1=1
+				 <if test="dateCnt != null">
+				 	<choose>
+				 		<when test='dateCnt == 4'>
+				 			AND DATEDIFF(day, q.qCreateYmd, a.create_ymd) >= #{dateCnt}	
+				 		</when>
+				 		<otherwise>
+				 			AND DATEDIFF(day, q.qCreateYmd, a.create_ymd) = #{dateCnt}
+				 		</otherwise>
+				 	</choose>
+				 </if>
+				 <if test='happyId != null and happyId != "" '>
+				 	AND (SELECT mac.comm_code_seq
+	       							 FROM jongno_minwon_a_comm mac, jongno_comm_code jcc
+	      							WHERE mac.a_seq = a.a_seq
+	        						  AND mac.comm_code_seq = jcc.comm_code_seq
+	        						  AND jcc.code_gbn_cd = 'HPC') = #{happyId}
+				 </if>
+					ORDER BY q.qSeq DESC
+				<if test='start != "0" and end != "0"'> 
+				) A 
+				ORDER BY A.qSeq ) B 
+		ORDER BY B.qSeq DESC
+				</if>
+    </select>
+    
+    <!-- 민원관리 상세 조회 -->
+	<select id="findCptMng" parameterType="com.jnet.domain.Minwon" resultType="com.jnet.domain.Minwon">
+		  SELECT q.Q_SEQ qSeq
+				,q.Q_NM qNm
+				,q.Q_SEX qSex
+				,q.q_id_di qIdDi
+				,CAST(dbo.fn_GETAGE_2(substring(q.Q_BIRTH,1,4),substring(q.Q_BIRTH,5,2),substring(q.Q_BIRTH,7,2), GETDATE()) as nvarchar(5)) qBirth
+				,q_birth yymm
+				,(SELECT mqc.COMM_CODE_SEQ
+				 	FROM jongno_minwon_q_comm mqc, jongno_comm_code cc
+				   WHERE q.Q_SEQ = mqc.Q_SEQ
+				     AND mqc.COMM_CODE_SEQ = cc.COMM_CODE_SEQ
+				     AND cc.CODE_GBN_CD='minwon') upId
+				,(SELECT cc.code_nm
+				 	FROM jongno_minwon_q_comm mqc, jongno_comm_code cc
+				   WHERE q.Q_SEQ = mqc.Q_SEQ
+				     AND mqc.COMM_CODE_SEQ = cc.COMM_CODE_SEQ
+				     AND cc.CODE_GBN_CD='minwon') upNm
+				,(SELECT mqc.q_comm_seq
+				 	FROM jongno_minwon_q_comm mqc, jongno_comm_code cc
+				   WHERE q.Q_SEQ = mqc.Q_SEQ
+				     AND mqc.COMM_CODE_SEQ = cc.COMM_CODE_SEQ
+				     AND cc.CODE_GBN_CD='minwon') upCommSeq
+				,(SELECT mqc.COMM_CODE_SEQ
+				 	FROM jongno_minwon_q_comm mqc, jongno_comm_code cc
+				   WHERE q.Q_SEQ = mqc.Q_SEQ
+				     AND mqc.COMM_CODE_SEQ = cc.COMM_CODE_SEQ
+				     AND cc.CODE_GBN_CD='AREA') areaId
+				,(SELECT mqc.q_comm_seq
+				    FROM jongno_minwon_q_comm mqc, jongno_comm_code cc
+				   WHERE q.Q_SEQ = mqc.Q_SEQ
+  				     AND mqc.COMM_CODE_SEQ = cc.COMM_CODE_SEQ
+				     AND cc.CODE_GBN_CD='AREA') areaCommSeq
+				,(SELECT cc.code_nm
+				    FROM jongno_minwon_q_comm mqc, jongno_comm_code cc
+				   WHERE q.Q_SEQ = mqc.Q_SEQ
+  				     AND mqc.COMM_CODE_SEQ = cc.COMM_CODE_SEQ
+				     AND cc.CODE_GBN_CD='AREA') areaNm
+				,q.CREATE_YMD qCreateYmd
+				,q.subject  qSubject
+				,q.CONTENT  qContent  
+				,q.zipcode1 zipcode1
+				,q.zipcode2 zipcode2
+				,q.dft_addr dftAddr
+				,q.dtl_addr dtlAddr
+				,q.phone1 phone1
+				,q.phone2 phone2
+				,q.phone3 phone3
+				,q.email1 email1
+				,q.email2 email2
+				,q.SCORE score
+				,q.ASSESS assess
+				,q.status_cd statusCd
+				,a.A_SEQ aSeq
+				,a.A_CONTENT aContent
+				,a.CREATE_YMD aCreateYmd
+				,a.a_id aId
+				,a.a_nm aNm
+				,(SELECT mac.a_comm_seq
+				    FROM jongno_minwon_a_comm mac, jongno_comm_code cc
+				   WHERE a.Q_SEQ = mac.Q_SEQ
+				     AND mac.COMM_CODE_SEQ = cc.COMM_CODE_SEQ
+				     AND cc.CODE_GBN_CD='HPC') happyCommSeq
+				,(SELECT mac.COMM_CODE_SEQ
+				    FROM jongno_minwon_a_comm mac, jongno_comm_code cc
+				   WHERE a.Q_SEQ = mac.Q_SEQ
+				     AND mac.COMM_CODE_SEQ = cc.COMM_CODE_SEQ
+				     AND cc.CODE_GBN_CD='HPC') happyId
+				,q.RES_GBN_CD resGbnCd
+				,q.SHOW_YN showYn
+			FROM jongno_minwon_q q 
+			LEFT OUTER JOIN jongno_minwon_a a
+			ON q.Q_SEQ = a.Q_SEQ
+			WHERE q.Q_SEQ = #{qSeq}
+			  AND q.rm_yn = 'N'
+	</select>
+	
+	<!-- 민원 질문 사업장/분야 변경 -->
+	<update id="updateMinwonCommQ" parameterType="com.jnet.domain.Minwon">
+		UPDATE jongno_minwon_q_comm
+		   SET comm_code_seq = #{commCodeSeq}
+		  WHERE q_comm_seq = #{qCommSeq}
+			<if test='qSeq != null and qSeq != "" ' > 
+				 and q_seq = #{qSeq}  
+			</if> 
+	</update>
+	
+	<!-- 민원답변 수정 -->
+	<update id="updateMinwonA" parameterType="com.jnet.domain.Minwon">
+		UPDATE jongno_minwon_a
+			SET  a_id = #{modiId}
+				,a_nm = #{aNm}
+				,a_content = #{aContent}
+				,modi_id = #{modiId}
+				,modi_ip = #{modiIp}
+				,modi_ymd = #{modiYmd}
+				,modi_hms = #{modiHms}
+			WHERE a_seq = #{aSeq}
+			  and q_seq = #{qSeq}
+	</update>
+	
+	<!-- 민원 답변 해피콜/만족도 변경 -->
+	<update id="updateMinwonCommA" parameterType="com.jnet.domain.Minwon">
+		UPDATE jongno_minwon_a_comm
+		   SET comm_code_seq = #{commCodeSeq}
+		  WHERE a_comm_seq = #{aCommSeq}
+	</update>
+	
+	<update id="updateMinwonHit" parameterType="com.jnet.domain.Minwon">
+		UPDATE jongno_minwon_q
+		   SET hitnum = hitnum+1
+		  WHERE q_seq = #{qSeq}
+	</update>
+	
+	<!-- 민원 답변 내용 등록 -->
+	<insert  id="saveMinwonA" parameterType="com.jnet.domain.Minwon" useGeneratedKeys="true" keyProperty="aSeq">
+		INSERT INTO jongno_minwon_a(q_Seq
+									,a_id
+									,a_nm
+									,a_content
+									,create_id
+									,create_ip
+									,create_ymd
+									,create_hms
+									,modi_id
+									,modi_ip
+									,modi_ymd
+									,modi_hms)
+							  VALUES(#{qSeq}
+								    ,#{createId}
+								    ,#{aNm}
+								    ,#{aContent}
+								    ,#{createId}
+								    ,#{createIp}
+								    ,#{createYmd}
+								    ,#{createHms}
+								    ,#{createId}
+								    ,#{createIp}
+								    ,#{createYmd}
+								    ,#{createHms})
+	</insert>
+	
+	<!-- 민원 내용 등록 -->
+	<insert  id="saveMinwonQ" parameterType="com.jnet.domain.Minwon" useGeneratedKeys="true" keyProperty="qSeq">
+		INSERT INTO jongno_minwon_q(
+									q_nm
+									,q_birth
+									,q_id_di
+									,zipcode1
+									,zipcode2
+									,dft_addr
+									,dtl_addr
+									,phone1
+									,phone2
+									,phone3
+									,email1
+									,subject
+									,content
+									,q_sex
+									,email2
+									,create_ip
+									,create_ymd
+									,create_hms
+									,modi_ip
+									,modi_ymd
+									,modi_hms
+									,create_id_di
+									,modi_id_di
+									,rm_yn
+									,res_gbn_cd
+									,score
+									,assess
+									,show_yn
+									,status_cd
+									)
+							  VALUES(#{qNm}
+									,#{qBirth}
+									,#{qIdDi}
+									,#{zipcode1}
+									,#{zipcode2}
+									,#{addr}
+									,#{dtlAddr}
+									,#{phone1}
+									,#{phone2}
+									,#{phone3}
+									,#{email1}
+									,#{subject}
+									,#{content}
+									,#{qSex}
+									,#{email2}
+									,#{createIp}
+									,#{createYmd}
+									,#{createHms}
+									,#{modiIp}
+									,#{modiYmd}
+									,#{modiHms}
+									,#{createIdDi}
+									,#{modiIdDi}
+									,'N'
+									,#{resGbnCd}
+									,''
+									,''
+									,#{showYn}
+									,'01'
+									)
+	</insert>
+	
+	<!-- 민원코드 등록 -->
+	<insert id="saveMinwonCommQ" parameterType="com.jnet.domain.Minwon">
+		INSERT INTO jongno_minwon_q_comm(comm_code_seq,q_seq)
+								  VALUES(#{commCodeSeq},#{qSeq})
+	</insert>
+	<!-- 민원 답변 해피콜/만족도 등록 -->
+	<insert id="saveMinwonCommA" parameterType="com.jnet.domain.Minwon">
+		INSERT INTO jongno_minwon_a_comm(comm_code_seq
+										,a_seq
+										,q_seq)
+								  VALUES(#{commCodeSeq}
+									    ,#{aSeq}
+									    ,#{qSeq})
+	</insert>
+	
+	<!-- 민원관리 - 질문정보 공개여부 변경 -->
+	<update id="updateMinwonQ" parameterType="com.jnet.domain.Minwon">
+		UPDATE jongno_minwon_q
+		<trim prefix="SET" suffixOverrides=",">
+			<if test='showYn != null and showYn != "" ' >
+				show_yn = #{showYn} ,
+			</if>
+			<if test='zipcode1 != null and zipcode1 != "" ' >
+				zipcode1 = #{zipcode1} ,
+			</if>
+			<if test='zipcode2 != null and zipcode2 != "" ' >
+				zipcode2 = #{zipcode2} ,
+			</if>
+			<if test='addr != null and addr != "" ' >
+				dft_addr = #{addr} ,
+			</if>
+			<if test='dtlAddr != null and dtlAddr != "" ' >
+				dtl_addr = #{dtlAddr} ,
+			</if>
+			<if test='phone1 != null and phone1 != "" ' >
+				phone1 = #{phone1} ,
+			</if>
+			<if test='phone2 != null and phone2 != "" ' >
+				phone2 = #{phone2} ,
+			</if>
+			<if test='phone3 != null and phone3 != "" ' >
+				phone3 = #{phone3} ,
+			</if>
+			<if test='email1 != null and email1 != "" ' >
+				email1 = #{email1} ,
+			</if>
+			<if test='email2 != null and email2 != "" ' >
+				email2 = #{email2} ,
+			</if>
+			<if test='subject != null and subject != "" ' >
+				subject = #{subject} ,
+			</if>
+			<if test='content != null and content != "" ' >
+				content = #{content} ,
+			</if>
+			<if test='resGbnCd != null and resGbnCd != "" ' >
+				res_gbn_cd = #{resGbnCd} ,
+			</if>
+			<if test='rmYn != null and rmYn != "" ' >
+				rm_yn = #{rmYn} ,
+			</if>
+			<if test='score != null and score != "" ' >
+				score = #{score} ,
+			</if>
+			<if test='assess != null and assess != "" ' >
+				assess = #{assess} ,
+			</if>
+			<if test='statusCd != null and statusCd != "" ' >
+				status_cd = #{statusCd} ,
+			</if>
+		  </trim>
+		 WHERE q_seq = #{qSeq}
+	</update>	
+	
+	<select id="listCptStatsRight" parameterType="com.jnet.domain.Minwon" resultType="com.jnet.domain.Minwon">
+		<if test='flag != null and flag != ""'>
+			<choose>
+				<when test='flag == "year"'>
+				    SELECT a.code_id leftCodeId
+						  ,a.code_nm leftCodeNm
+						  ,c.y middleCodeNm
+						  ,b.code_id rightCodeId
+						  ,b.createy rightCodeNm
+						  ,ISNULL(b.cnt,0) cnt
+					FROM
+					(SELECT code_id
+						   ,code_nm
+					   FROM JONGNO_COMM_CODE 		
+					  WHERE code_gbn_cd = 'minwon') A
+					LEFT OUTER JOIN
+					(select yy.y
+					   from (select substring(create_ymd,1,4) y
+							   from jongno_minwon_q
+							  where rm_yn = 'N'
+							  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+								  	AND create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+							  </if>
+							  ) yy
+					   group by yy.y  ) C
+					ON 1=1		 
+					LEFT OUTER JOIN
+					(SELECT cc.code_id
+						   , q.createy
+						   , COUNT(q.createy)  cnt
+						FROM (SELECT create_ymd
+							        ,substring(create_ymd,1,4) createy
+							        ,q_seq
+						  		FROM jongno_minwon_q 
+						  		WHERE rm_yn = 'N'
+						  		  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+									  	AND create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+								  </if>
+						  		) q, jongno_minwon_q_comm qc, jongno_comm_code cc
+					    WHERE cc.comm_code_seq = qc.comm_code_seq 
+						  AND q.q_seq = qc.q_seq
+						  AND cc.code_gbn_cd = 'minwon'
+						GROUP BY cc.code_id,q.createy) B
+					ON a.code_id = b.code_id AND C.y = B.createy
+					ORDER BY A.code_id	
+				</when>
+				<when test='flag == "answerDate"'>
+					SELECT a.code_id leftCodeId
+							,a.code_nm leftCodeNm
+							,b.code_id middleCodeId
+							,b.code_nm middleCodeNm
+							,c.code_id rightCodeId
+							,c.dateCnt rightCodeNm
+							,c.cnt
+					FROM (SELECT code_id
+							   ,code_nm
+						   FROM JONGNO_COMM_CODE 		
+						  WHERE code_gbn_cd = 'minwon') A
+					LEFT OUTER JOIN
+						(SELECT '0' code_id,'당일' code_nm
+						 UNION
+						 SELECT '1' code_id,'1일' code_nm
+						 union
+						 SELECT '2' code_id,'2일' code_nm
+						 union
+						 SELECT '3' code_id,'3일' code_nm
+						 union
+						 SELECT '4' code_id,'4일' code_nm
+						 union
+						 SELECT null code_id,'미처리사항' code_nm) B
+					ON 1=1
+					LEFT OUTER JOIN
+					(SELECT aa.code_id
+						   ,aa.dateCnt
+						   , count(aa.dateCnt) cnt
+					FROM ( SELECT jcc.code_id
+								,q.create_ymd qymd
+								,a.create_ymd aymd
+								, CASE
+								  WHEN DATEDIFF(day, q.create_ymd, a.create_ymd) > 4
+								  THEN 4
+								  ELSE DATEDIFF(day, q.create_ymd, a.create_ymd)
+								  END  dateCnt
+							 FROM jongno_comm_code jcc,jongno_minwon_q_comm jmqc, jongno_minwon_q q
+							 LEFT outer join jongno_minwon_a a
+							   ON q.q_seq = a.q_seq
+							WHERE jcc.comm_code_seq = jmqc.comm_code_seq
+							  AND jcc.code_gbn_cd = 'minwon'
+							  AND jmqc.q_seq = q.q_seq
+							  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+								  	AND q.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+							  </if>
+							  AND q.rm_yn = 'N'
+						  ) aa
+					GROUP by aa.code_id, aa.dateCnt)C
+					ON a.code_id = c.code_id AND b.code_id = C.dateCnt
+					ORDER BY A.code_id
+				</when>
+				<when test='flag == "area"'>
+					    SELECT a.code_id leftCodeId
+							  ,a.code_nm leftCodeNm
+							  ,b.code_id middleCodeId
+							  ,b.code_nm middleCodeNm
+							  ,c.upId rightCodeId
+							  ,c.areaId rightCodeNm
+							  ,ISNULL(c.cnt,0) cnt
+						FROM
+						(SELECT code_id
+								,code_nm
+						   FROM JONGNO_COMM_CODE 		
+						  WHERE code_gbn_cd = 'minwon') A
+						LEFT OUTER JOIN
+						(SELECT code_id 
+								,code_nm
+						   FROM jongno_comm_code
+						  WHERE code_gbn_cd = 'AREA') B
+						ON 1=1  		 
+						LEFT OUTER JOIN
+						( SELECT 
+							  a.upId
+							, b.areaId
+							, COUNT(b.areaId) cnt
+						FROM (SELECT cc.comm_code_seq
+								   ,cc.code_nm upNm
+								   ,cc.code_id upId
+								   ,qc.q_seq
+							   FROM jongno_minwon_q_comm qc, jongno_comm_code cc
+							   WHERE cc.comm_code_seq = qc.comm_code_seq 
+							   AND cc.code_gbn_cd = 'minwon') a,
+							(SELECT  ccc.comm_code_seq
+								    ,ccc.code_nm areaNm
+									,ccc.code_id areaId
+									,qcc.q_seq
+								FROM jongno_minwon_q qq, jongno_comm_code ccc, 	jongno_minwon_q_comm qcc
+								WHERE ccc.code_gbn_cd = 'area'
+								  AND ccc.comm_code_seq = qcc.comm_code_seq
+								  AND qq.q_seq = qcc.q_seq
+								  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+									  	AND qq.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+								  </if>
+								  AND qq.rm_yn = 'N') b
+						WHERE a.q_seq = b.q_seq	
+						GROUP BY a.upId, b.areaId) C
+						ON a.code_id = c.upId AND b.code_id = c.areaId
+						ORDER BY A.code_id
+				</when>
+				<when test='flag == "sex"'>
+					SELECT a.code_id leftCodeId 
+						  ,a.code_nm leftCodeNm
+						  ,b.codeId middleCodeId
+						  ,b.codeNm middleCodeNm
+						  ,c.code_id rightCodeId
+						  ,c.q_sex rightCodeNm
+						  ,ISNULL(c.cnt,0) cnt
+					FROM
+					(SELECT code_id
+							,code_nm
+					   FROM JONGNO_COMM_CODE 		
+					  WHERE code_gbn_cd = 'minwon') A
+					LEFT OUTER JOIN
+					(SELECT '1' codeId
+					       ,'남' codeNm
+					  UNION
+					 SELECT '2' codeId
+					       ,'여' codeNm) B
+					ON 1=1  		 
+					LEFT OUTER JOIN
+					( SELECT cc.code_id 
+						   , q.q_sex 
+						   , count(q.q_sex) cnt
+					    FROM jongno_minwon_q q, jongno_minwon_q_comm qc, jongno_comm_code cc
+					   WHERE cc.comm_code_seq = qc.comm_code_seq 
+					     AND q.q_seq = qc.q_seq
+					     AND cc.code_gbn_cd = 'minwon'
+					     <if test="qStCreateYmd != null and qStCreateYmd != ''">
+							  	AND q.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+						  </if>
+					     AND q.rm_yn = 'N'
+					 GROUP by cc.code_id, q.q_sex) C
+					ON a.code_id = c.code_id AND b.codeId = c.q_sex
+					ORDER BY A.code_id
+
+				</when>
+				<when test='flag == "happyCall"'>
+					SELECT a.code_id leftCodeId
+						  ,a.code_nm leftCodeNm
+						  ,b.code_id middleCodeId
+						  ,b.code_nm middleCodeNm
+						  ,c.upId 
+						  ,c.hpcId rightCodeId
+						  ,ISNULL(c.cnt,0) cnt
+					FROM
+					(SELECT code_id
+							,code_nm
+					   FROM JONGNO_COMM_CODE 		
+					  WHERE code_gbn_cd = 'minwon') A
+					LEFT OUTER JOIN
+					(SELECT code_id 
+							,code_nm
+					   FROM jongno_comm_code
+					  WHERE code_gbn_cd = 'HPC') B
+					ON 1=1  		 
+					LEFT OUTER JOIN
+					( SELECT  a.upId
+							, b.hpcId
+							, COUNT(b.hpcId) cnt
+					   FROM (SELECT cc.comm_code_seq
+									 ,cc.code_nm upNm
+									 ,cc.code_id upId
+									 ,qc.q_seq
+							   FROM jongno_minwon_q_comm qc, jongno_comm_code cc
+							   WHERE cc.comm_code_seq = qc.comm_code_seq 
+							   AND cc.code_gbn_cd = 'minwon') a,
+							(SELECT ccc.comm_code_seq
+								   ,ccc.code_nm hpcNm
+								   ,ccc.code_id hpcId
+								   ,qcc.q_seq
+								FROM jongno_minwon_q qq
+								    ,jongno_minwon_a aa
+								    ,jongno_comm_code ccc
+								    ,jongno_minwon_a_comm qcc
+								WHERE ccc.code_gbn_cd = 'HPC'
+								  AND ccc.comm_code_seq = qcc.comm_code_seq
+								  AND qq.q_seq = aa.q_seq
+								  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+									  	AND qq.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+								  </if>
+								  AND qq.rm_yn ='N'
+								  AND aa.a_seq = qcc.a_seq) b
+					 WHERE a.q_seq = b.q_seq	
+					 GROUP by a.upId, b.hpcId) C
+					ON a.code_id = c.upId AND b.code_id = c.hpcId
+					ORDER BY A.code_id
+				</when>
+				<when test='flag == "status"'>
+					SELECT a.code_id leftCodeId
+						  ,a.code_nm leftCodeNm
+						  ,b.codeId middleCodeId
+						  ,b.codeNm middleCodeNm
+						  ,c.code_id rightCodeId
+						  ,c.score rightCodeNm
+						  ,ISNULL(c.cnt,0) cnt
+					FROM
+					(SELECT code_id
+							,code_nm
+					   FROM JONGNO_COMM_CODE 		
+					  WHERE code_gbn_cd = 'minwon') A
+					LEFT OUTER JOIN
+					(SELECT '1' codeId
+					       ,'매우불만족' codeNm
+					  UNION
+					 SELECT '2' codeId
+					       ,'불만족' codeNm
+					  UNION
+					 SELECT '3' codeId
+					       ,'보통' codeNm 
+					  UNION
+					 SELECT '4' codeId
+					       ,'만족' codeNm 
+					  UNION
+					 SELECT '5' codeId
+					       ,'매우만족' codeNm) B
+					ON 1=1  		 
+					LEFT OUTER JOIN
+					( SELECT cc.code_id 
+						   , q.score 
+						   , count(q.score) cnt
+					    FROM jongno_minwon_q q, jongno_minwon_q_comm qc, jongno_comm_code cc
+					   WHERE cc.comm_code_seq = qc.comm_code_seq 
+					     AND q.q_seq = qc.q_seq
+					     AND cc.code_gbn_cd = 'minwon'
+					     AND q.rm_yn = 'N'
+					     <if test="qStCreateYmd != null and qStCreateYmd != ''">
+							  	AND q.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+						  </if>
+					   GROUP BY cc.code_id, q.score
+					   ) C
+					ON a.code_id = c.code_id AND b.codeId = c.score
+					ORDER BY A.code_id
+				</when>
+				<when test='flag == "age"'>
+					SELECT a.code_id leftCodeId
+						  ,a.code_nm leftCodeNm
+						  ,b.codeId middleCodeId
+						  ,b.codeNm middleCodeNm
+						  ,c.code_id rightCodeId
+						  ,c.ageAvg rightCodeNm
+						  ,ISNULL(c.cnt,0) cnt
+					FROM
+					(SELECT code_id
+							,code_nm
+					   FROM JONGNO_COMM_CODE 		
+					  WHERE code_gbn_cd = 'minwon') A
+					LEFT OUTER JOIN
+					(SELECT '1' codeId
+					       ,'10대' codeNm
+					  UNION
+					 SELECT '2' codeId
+					       ,'20대' codeNm
+					  UNION
+					 SELECT '3' codeId
+					       ,'30대' codeNm 
+					  UNION
+					 SELECT '4' codeId
+					       ,'40대' codeNm 
+					  UNION
+					 SELECT '5' codeId
+					       ,'50대' codeNm
+					  UNION
+					 SELECT '6' codeId
+					       ,'60대이상' codeNm) B
+					ON 1=1  		 
+					LEFT OUTER JOIN
+					( SELECT  cc.code_id 
+							 ,  q.ageAvg 
+							 , count(q.ageAvg) cnt
+						FROM (SELECT a.age
+						           , CASE
+										WHEN a.age/10 >= 6
+										THEN '6' 
+										ELSE a.age/10
+									  END ageAvg
+						           , a.q_seq
+								FROM(SELECT  dbo.fn_GETAGE_2(substring(q_birth,1,4),substring(q_birth,5,2),substring(q_birth,7,2), GETDATE()) age
+											,q_seq
+									   FROM jongno_minwon_q
+						  			  WHERE rm_yn = 'N'
+						  			  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+										  	AND create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+									  </if>
+						  			  ) a
+							  )q, jongno_minwon_q_comm qc, jongno_comm_code cc
+						WHERE cc.comm_code_seq = qc.comm_code_seq 
+						AND q.q_seq = qc.q_seq
+						AND cc.code_gbn_cd = 'minwon'	  
+						GROUP BY cc.code_id,q.ageAvg) C
+					ON a.code_id = c.code_id AND b.codeId = c.ageAvg
+					ORDER BY A.code_id  
+				</when>
+			</choose>
+		</if>
+	</select>
+	<select id="listCptStatsTotCnt" parameterType="com.jnet.domain.Minwon" resultType="com.jnet.domain.Minwon">
+		<if test='flag != null and flag != ""'>
+				<choose>
+					<when test='flag == "year"'>
+					    SELECT cc.code_id codeId
+							   , COUNT(cc.code_id)  cnt
+							FROM (SELECT create_ymd
+								        ,substring(create_ymd,1,4) createy
+								        ,q_seq
+							  		FROM jongno_minwon_q 
+							  		WHERE rm_yn = 'N'
+							  		<if test="qStCreateYmd != null and qStCreateYmd != ''">
+									  	AND create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+									</if>
+							  		) q, jongno_minwon_q_comm qc, jongno_comm_code cc
+						    WHERE cc.comm_code_seq = qc.comm_code_seq 
+							  AND q.q_seq = qc.q_seq
+							  AND cc.code_gbn_cd = 'minwon'
+							GROUP BY cc.code_id	
+					</when>
+					<when test='flag == "answerDate"'>
+						SELECT aa.code_id codeId
+							   , count(aa.code_id) cnt
+						FROM ( SELECT jcc.code_id
+									,q.create_ymd qymd
+									,a.create_ymd aymd
+									, CASE
+									  WHEN DATEDIFF(day, q.create_ymd, a.create_ymd) > 4
+									  THEN 4
+									  ELSE DATEDIFF(day, q.create_ymd, a.create_ymd)
+									  END  dateCnt
+								 FROM jongno_comm_code jcc,jongno_minwon_q_comm jmqc, jongno_minwon_q q
+								 LEFT outer join jongno_minwon_a a
+								   ON q.q_seq = a.q_seq
+								WHERE jcc.comm_code_seq = jmqc.comm_code_seq
+								  AND jcc.code_gbn_cd = 'minwon'
+								  AND jmqc.q_seq = q.q_seq
+								  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+								  	AND q.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+								  </if>
+								  AND q.rm_yn = 'N'
+							  ) aa
+						GROUP by aa.code_id
+					</when>
+					<when test='flag == "area"'>
+						    SELECT 
+								  a.upId codeId
+								, COUNT(a.upId) cnt
+							FROM (SELECT cc.comm_code_seq
+									   ,cc.code_nm upNm
+									   ,cc.code_id upId
+									   ,qc.q_seq
+								   FROM jongno_minwon_q_comm qc, jongno_comm_code cc
+								   WHERE cc.comm_code_seq = qc.comm_code_seq 
+								   AND cc.code_gbn_cd = 'minwon') a,
+								(SELECT  ccc.comm_code_seq
+									    ,ccc.code_nm areaNm
+										,ccc.code_id areaId
+										,qcc.q_seq
+									FROM jongno_minwon_q qq, jongno_comm_code ccc, 	jongno_minwon_q_comm qcc
+									WHERE ccc.code_gbn_cd = 'area'
+									  AND ccc.comm_code_seq = qcc.comm_code_seq
+									  AND qq.q_seq = qcc.q_seq
+									  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+									  	AND qq.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+									  </if>
+									  AND qq.rm_yn = 'N') b
+							WHERE a.q_seq = b.q_seq	
+							GROUP BY a.upId
+					</when>
+					<when test='flag == "sex"'>
+						SELECT cc.code_id codeId 
+							   , count(cc.code_id) cnt
+						    FROM jongno_minwon_q q, jongno_minwon_q_comm qc, jongno_comm_code cc
+						   WHERE cc.comm_code_seq = qc.comm_code_seq 
+						     AND q.q_seq = qc.q_seq
+						     AND cc.code_gbn_cd = 'minwon'
+						     AND q.rm_yn = 'N'
+						     <if test="qStCreateYmd != null and qStCreateYmd != ''">
+							  	AND q.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+							 </if>
+						 GROUP by cc.code_id
+	
+					</when>
+					<when test='flag == "happyCall"'>
+						SELECT  a.upId codeId
+								, COUNT(a.upId) cnt
+							FROM (SELECT cc.comm_code_seq
+										 ,cc.code_nm upNm
+										 ,cc.code_id upId
+										 ,qc.q_seq
+								   FROM jongno_minwon_q_comm qc, jongno_comm_code cc
+								   WHERE cc.comm_code_seq = qc.comm_code_seq 
+								   AND cc.code_gbn_cd = 'minwon') a,
+								(SELECT ccc.comm_code_seq
+									   ,ccc.code_nm hpcNm
+									   ,ccc.code_id hpcId
+									   ,qcc.q_seq
+									FROM jongno_minwon_q qq
+									    ,jongno_minwon_a aa
+									    ,jongno_comm_code ccc
+									    ,jongno_minwon_a_comm qcc
+									WHERE ccc.code_gbn_cd = 'HPC'
+									  AND ccc.comm_code_seq = qcc.comm_code_seq
+									  AND qq.q_seq = aa.q_seq
+									  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+									  	AND qq.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+									 </if>
+									  AND qq.rm_yn ='N'
+									  AND aa.a_seq = qcc.a_seq) b
+							WHERE a.q_seq = b.q_seq	
+							GROUP by a.upId
+					</when>
+					<when test='flag == "status"'>
+						SELECT cc.code_id codeId 
+							   , count(cc.code_id) cnt
+						    FROM jongno_minwon_q q, jongno_minwon_q_comm qc, jongno_comm_code cc
+						   WHERE cc.comm_code_seq = qc.comm_code_seq 
+						     AND q.q_seq = qc.q_seq
+						     AND cc.code_gbn_cd = 'minwon'
+						     AND q.rm_yn = 'N'
+						     <if test="qStCreateYmd != null and qStCreateYmd != ''">
+							  	AND q.create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+							 </if>
+						   GROUP BY cc.code_id
+					</when>
+					<when test='flag == "age"'>
+						SELECT  cc.code_id codeId
+								, count(cc.code_id) cnt
+							FROM (SELECT a.age
+							           , CASE
+											WHEN a.age/10 >= 6
+											THEN '6' 
+											ELSE a.age/10
+										  END ageAvg
+							           , a.q_seq
+									FROM(SELECT  dbo.fn_GETAGE_2(substring(q_birth,1,4),substring(q_birth,5,2),substring(q_birth,7,2), GETDATE()) age
+												,q_seq
+										   FROM jongno_minwon_q
+							  			  WHERE rm_yn = 'N'
+							  			  <if test="qStCreateYmd != null and qStCreateYmd != ''">
+											  	AND create_ymd BETWEEN #{qStCreateYmd} and #{qEdCreateYmd}
+										  </if>
+							  			  ) a
+								  )q, jongno_minwon_q_comm qc, jongno_comm_code cc
+							WHERE cc.comm_code_seq = qc.comm_code_seq 
+							AND q.q_seq = qc.q_seq
+							AND cc.code_gbn_cd = 'minwon'	  
+							GROUP BY cc.code_id  
+					</when>
+				</choose>
+			</if>
+	</select>
+</mapper>

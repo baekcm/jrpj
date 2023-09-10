@@ -1,0 +1,70 @@
+
+
+
+
+
+
+
+
+<form name='xecure'><input type=hidden name='p'></form>
+
+<script language='javascript' src='/XecureObject/xecureweb.js'></script>
+<script language='javascript'>
+PrintObjectTag();
+</script>
+
+
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=ks_c_5601-1987'>
+<title>암호화 데모 결과</title>
+
+</head>
+<body>
+
+<p align='center'><big><strong>암호화된 클라이언트 Response 입니다. </strong></big></p>
+<p align='center'><big><strong>sf_enc2.jsp </strong></big></p>
+
+
+
+<SCRIPT language='JavaScript'> 
+var s = '';
+s += 'nu+7bLlNytAPvRPww20IcSpHZwfoymJWuPMrZkV6WfqwZApiTWAHtOv5K1OHZMg5';
+s += ';A5e3EMPvtdvEPu1Dnio3PdRkHKE=';
+document.write(BlockDec(s));
+</SCRIPT>
+
+
+첫번째 막간을 이용해서, 짜잔!~ <br><br>
+
+<SCRIPT language='JavaScript'> 
+var s = '';
+s += 'v1XmSdvNR8eXNx1dZmpYL4qIKOZIKsf/oFFwYsZX78mwhRty7FyRW0l6nlr7oIV1';
+s += ';oNMBZt0tD1+enxKepG6E2DVudBw=';
+document.write(BlockDec(s));
+</SCRIPT>
+
+
+두번째 막간!~ <br>
+<br><br>
+
+<SCRIPT language='JavaScript'> 
+var s = '';
+s += 'GS/y+zTPBeIBt+MwPpqr95VChnOWdGwcYwzuN9qdjKf4lGlzNjtjitOME33BjmlR';
+s += 'vBO0uvC1p4J2jFENuig+AssYkTSgyURDZgC7h09/g8xhaZ6oVir8ntvVoQ6z6ggu';
+s += 'XWsKoc9C3viuRpVAF7cURt2eZiL6QelT5Xrd7gZH29WGIdrEARGoaB+27+tiodk6';
+s += 'NFnrftbLed0alPfA1VLEHVqFy71Lo+YFshdhphWaEh/R1Yg+HwY4WYSXAVeh2do3';
+s += 'yIw05CynB7F1tHnCgazl0hWt043z3P3AZ3xqf03Q+NXZstBeC5XNDs30S/ZYrBkW';
+s += 'ESjqlUUrL4l35pB7L1YeufRmmlHNoKmO+mYVQjWk4Cclp4PBW2w4ZBeXhhaoXHYY';
+s += ';aIETz9s1MQeK5EDWdMLBhm7HULQ=';
+document.write(BlockDec(s));
+</SCRIPT>
+
+
+끝이랍니다!~ <br>
+
+
+<br><br>
+<a href="/XecureDemo/jsp/sf_enc3.html"> 링크 </a>
+
+</body></html>

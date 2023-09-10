@@ -1,0 +1,126 @@
+<html>
+	<head>
+		<title>XecureWeb Demo</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=euc-kr"><style type="text/css">
+			<!--
+			.font1 { font-size: 9pt;color:#666666;}
+			td {  font-size: 9pt;color:#333333}
+			A:link    {font-size:9pt;color:#010824;text-decoration:none; }
+			A:active  {font-size:9pt;color:#010824;text-decoration:none; }
+			A:visited {font-size:9pt;color:#010824;text-decoration:none; }
+			A:hover   {font-size:9pt;color:#0066cc;text-decoration:none; }
+			-->
+		</style>
+	</head>
+	<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<script language="javascript" src="xecureweb.js"></script>
+		<script language="javascript">
+			PrintObjectTag();
+			
+			var xmlHttp;
+
+			function createXMLHttpRequest() {
+				if (window.ActiveXObject) {
+					xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				else if (window.XMLHttpRequest) {
+					xmlHttp = new XMLHttpRequest();
+				}
+			}
+			
+			function createQueryString(plain, signed_msg) {
+				var queryString = "plain=" + plain + "&signed_msg=" + signed_msg;
+				return queryString;
+			}
+			
+			function sign_submit(){
+				var plain = document.getElementById("plain").value;
+				var signed_msg = document.getElementById("signed_msg").value;
+				
+				var url = "ajax_sign_result.jsp";
+				url = XecureAjaxGet(url);
+				var p_value = XecureAjaxPost(createQueryString(plain, signed_msg));
+				
+				createXMLHttpRequest();
+				xmlHttp.open("POST", url, true);
+				xmlHttp.onreadystatechange = handleStateChange;
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+				xmlHttp.send(p_value);
+			}
+			
+			function handleStateChange() {
+				if(xmlHttp.readyState == 4) {
+					if(xmlHttp.status == 200) {
+						updateModelsList();
+					}
+					else{
+						alert("status : " + xmlHttp.status + "\nstatusText : " + xmlHttp.statusText);
+					}
+				}
+			}
+			
+			function createCellWithText(text) {
+				var cell = document.createElement("td");
+				cell.appendChild(document.createTextNode(text));
+				return cell;
+			}
+
+			function updateModelsList() {
+				clearModelsList();
+				
+				var responseXML = xmlHttp.responseXML;
+				var signResult = document.getElementById("SignResult");
+				var results = responseXML.getElementsByTagName("result");
+
+				var row = null;
+				for(var i = 0; i < results.length; i++) {
+					row = document.createElement("tr");
+					
+					//최하위 노드의 데이터를 읽어 온다. 암호화 된 데이터 임
+					title = responseXML.getElementsByTagName("title")[i].firstChild.nodeValue;
+					content = responseXML.getElementsByTagName("content")[i].firstChild.nodeValue;
+					
+					//암호화된 데이터에 대해서 직접 BlockDec를 호출함으로서 복호화를 수행한다.
+					content = BlockDec(content);
+					
+					row.appendChild(createCellWithText(title));
+					row.appendChild(createCellWithText(content));
+					
+					signResult.appendChild(row);
+				}
+				updateResultListVisibility();
+			}
+
+			function clearModelsList() {
+				var signResult = document.getElementById("SignResult");
+				while(signResult.childNodes.length > 0) {
+					signResult.removeChild(models.childNodes[0]);
+				}
+			}
+			
+			function updateResultListVisibility() {
+				var signResult = document.getElementById("SignResult");
+				if(signResult.childNodes.length > 0) {
+					document.getElementById("SignResultSpan").style.display = "";
+				}
+				else {
+					document.getElementById("SignResultSpan").style.display = "none";
+				}
+			}
+		</script>
+		<form action="#" id="signform" name="signform">
+			<br><br>서명할 데이터<br><br>
+			<input type="text" id="plain" name="plain" value="서명 원문입니다."><br>
+			<br><br>서명 메세지<br><br>
+			<textarea cols="120" rows="15" id="signed_msg" name="signed_msg"></textarea>
+			<input type=button value="전자서명 (no confirm window, all certificates)" onClick="signform.signed_msg.value = Sign_with_option(0, signform.plain.value);"/>
+			<input type=button value="서버로 전송" onclick="sign_submit();"/>
+		</form>
+		<span id="SignResultSpan" style="display:none;">
+			<h2>Sign Result</h2>
+			<table border="1" width="80%">
+				<tbody id="SignResult"></tbody>
+			</table>
+		</span>
+	</body>
+</html>

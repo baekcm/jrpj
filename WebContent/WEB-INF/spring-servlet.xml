@@ -1,0 +1,119 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+       http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+	   http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	   http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	   http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+      
+    <!-- 어노테이션 설정 -->
+	<mvc:annotation-driven />
+	
+	<mvc:resources mapping="/favicon.ico" location="/favicon.ico" />
+	
+	<!-- 리소스파일(JS,CSS,IMG) 파일들 리소스 설정 -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	
+	<context:component-scan base-package="com.jnet" use-default-filters="false">
+	    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<!-- 아래의 interceptor 각각의 path 를 한꺼번에 경로 지정. -->
+	<!-- 
+	<mvc:interceptors>
+		<mvc:interceptor>
+		    <mvc:mapping path="/**/*.do" />
+		    <mvc:mapping path="/**/*.json" />
+		    <mvc:exclude-mapping path="/Login/LoginGate.do" />
+		    <ref bean="sessionInterceptor" />
+	 	</mvc:interceptor>
+ 	</mvc:interceptors>
+ 	 -->
+ 
+	<!-- 세션인터셉터 설정(사용자) -->
+	<mvc:interceptors> 
+       	<mvc:interceptor>
+   		   	<mvc:mapping path="/front/index" />
+   		   	<!-- 마이페이지관련 시작 -->
+   		   	<mvc:mapping path="/front/mypage/minwonList"/>
+   		   	<mvc:mapping path="/front/mypage/basketList"/>
+   		   	<mvc:mapping path="/front/mypage/addBasket"/>
+   		   	<mvc:mapping path="/front/mypage/removeBasket"/>
+   		   	<mvc:mapping path="/front/mypage/mypageModify"/>
+   		   	<mvc:mapping path="/front/mypage/pwChange"/>
+   		   	<mvc:mapping path="/front/mypage/payment/orderForm"/>
+   		   	<!-- 마이페이지관련 종료 -->
+   		   	<mvc:mapping path="/front/community/community_writeForm"/>
+           	<bean class="com.jnet.interceptor.FrontInterceptor"/>
+        </mvc:interceptor> 
+    </mvc:interceptors>
+    
+    <!-- NON SESSION INTERCEPTOR(사용자) -->
+	<mvc:interceptors> 
+       	<mvc:interceptor> 
+   		   <mvc:mapping path="/front/formLogin"/>
+           <bean class="com.jnet.interceptor.NonInterceptor"/>
+        </mvc:interceptor> 
+    </mvc:interceptors>
+    
+    <!-- 세션인터셉터 설정(관리자) -->
+	<mvc:interceptors> 
+       	<mvc:interceptor>
+   		   	<mvc:mapping path="/admin/list*" /> 
+   		   	<mvc:mapping path="/admin/list*/*/*" />
+   		   	<mvc:mapping path="/admin/formCreate*" />
+   		   	<mvc:mapping path="/admin/formCreate*/*" />
+   		   	<mvc:mapping path="/admin/formCreate*/*/*" />
+		   	<mvc:mapping path="/admin/formUpdate*" />
+		   	<mvc:mapping path="/admin/formUpdate*/*" />
+		   	<mvc:mapping path="/admin/formUpdate*/*/*" />
+		   	<mvc:mapping path="/admin/save*" />
+		   	<mvc:mapping path="/admin/update*" />
+		   	<mvc:mapping path="/admin/remove*" />
+   		   	<mvc:mapping path="/admin/formMain"/>
+   		   	<mvc:mapping path="/admin/formPopMng"/>
+   		   	<mvc:mapping path="/admin/formOneNotiMng"/>
+   		   	<mvc:mapping path="/admin/formAccept"/>
+   		   	<mvc:mapping path="/admin/formMemStat"/>
+   		   	<mvc:mapping path="/admin/formChart*"/>
+   		   	<mvc:mapping path="/admin/formRefundPop"/>
+   		   	<mvc:mapping path="/admin/findDpAdmId"/>
+   		   	<mvc:mapping path="/admin/find*/*"/>
+   		   	<mvc:mapping path="/admin/excelDown*"/>
+   		   	<mvc:mapping path="/admin/sendMemMail"/>
+   		   	<mvc:mapping path="/admin/empSampleDown"/>
+           	<bean class="com.jnet.interceptor.AdminInterceptor"/>
+        </mvc:interceptor> 
+    </mvc:interceptors>
+    
+    <!-- NON SESSION INTERCEPTOR -->
+	<mvc:interceptors> 
+       <mvc:interceptor> 
+       		   <mvc:mapping path="/admin/formLogin"/>
+       		   <mvc:mapping path="/admin/findLoginInfo"/>
+               <bean class="com.jnet.interceptor.NonAdminInterceptor"/>
+        </mvc:interceptor> 
+    </mvc:interceptors>
+
+	<!-- 파일업로드 설정 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+    
+	<!-- VIEW 설정 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	    <property name="prefix" value="/WEB-INF/jnet/"/>
+	    <property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!-- 컨트롤러 AOP -->
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="controllerOperation" expression="execution(public * com.jnet..controller.*Controller.*(..))" />
+	</aop:config>	
+</beans>

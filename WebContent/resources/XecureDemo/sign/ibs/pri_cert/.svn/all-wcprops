@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert
+END
+cert_replace_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_replace_op.jsp
+END
+cert_replace.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_replace.jsp
+END
+cert_get.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_get.jsp
+END
+cert_update_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_update_op.jsp
+END
+cert_request_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_request_op.jsp
+END
+cacert_install.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cacert_install.jsp
+END
+cert_renew_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_renew_op.jsp
+END
+cert_revoke_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_revoke_op.jsp
+END
+cert_revoke.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_revoke.jsp
+END
+cert_renew.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_renew.jsp
+END
+cert_request.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_request.jsp
+END
+cert_update.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_update.jsp
+END
+cert_main.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_main.jsp
+END
+cert_get_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/sign/ibs/pri_cert/cert_get_op.jsp
+END

@@ -1,0 +1,30 @@
+package com.jnet.interceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.validator.GenericValidator;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.jnet.domain.Member;
+
+public class FrontInterceptor extends HandlerInterceptorAdapter{
+	
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
+		try {
+			if(request.getSession().getAttribute("userInfo") == null ){
+					response.sendRedirect("/front/formLogin");	
+					return false;
+			}else{
+				Member member =(Member)request.getSession().getAttribute("userInfo");
+				if(GenericValidator.isBlankOrNull(member.getUserDi())){
+					response.sendRedirect("/front/certy/old");
+					return false;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+}

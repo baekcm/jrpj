@@ -1,0 +1,151 @@
+@charset "utf-8";
+/* CSS Document */
+@import url("layout.css");
+@import url("default.css");
+
+
+#wrap {
+}
+#middle {padding-top:0;}
+
+
+#mSec1 { background:url(../image/main/bg_mSec1.jpg) 0 0 no-repeat; width:980px; height:390px; overflow:hidden; display:block; position:relative}
+#mSec2 { padding-top:10px}
+.slog1 {width:200px; height:380px; overflow:hidden; position:relative; float:left}
+.slog1  IMG { position:absolute; top:15px; left:20px}
+.mSec1r { float:right}
+.mSec1r #mSearch { width:690px; padding:18px 0 18px 50px; margin:0 auto; margin-top:10px; }
+.mSec1r #mSearch #msearchSel { width:150px; padding:3px; height:20px; border:1px solid #d4d4d4; margin:0 10px 0 15px;}
+.mSec1r #mSearch #msearchKWD { width:355px; height:16px; margin-right:10px;}
+
+.mSec1rBanArea .mSec1Ban1,.mSec1rBanArea .mSec1Ban2,.mSec1rBanArea .mSec1Ban3 {float:left}
+.slog2 { position:absolute; right:160px; bottom:10px;}
+
+/*mainTab*/
+
+.noticeArea { width:432px; height:160px; padding:10px 15px; overflow:hidden; float:left; background:url(/resources/include/commonfile/image/main/bg_news.gif) 0 0 no-repeat; float:left}
+.maintab {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+.maintab h2 {
+	top: 0px;
+	margin: 0;
+	height: 24px;
+	display: block;
+}
+.maintab h2.tabtit1 {
+	left: 0px;
+}
+.maintab h2.tabtit2 {
+	left: 82px;
+}
+.maintab h2.tabtit3 {
+	left: 164px;
+}
+.maintab h2.tabtit4 {
+	left: 246px;
+}
+.maintab ul {
+	padding: 30px 0 0 0px; overflow:hidden
+}
+.maintab li {
+	overflow: hidden;
+	padding:5px 0;
+	background:url(/resources/include/commonfile/image/common/line_dot3px.gif) 0 bottom repeat-x
+}
+.maintab li img {
+	vertical-align: middle;
+	margin-left: 3px;
+	float: left;
+}
+.maintab .btnMore {
+	right: 0;
+	top: 5px;
+	display:inline-block;
+}
+.maintab .date {
+	color: #999;
+	font-size: 11px;
+	line-height: 1.3;
+	float:right;
+}
+.maintab  .listx a{
+	color: #666;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	white-space: nowrap;
+	line-height: 1.3;
+	width:auto;
+	max-width:300px;
+	display:inline-block;
+	float:left;
+}
+
+
+.popArea {
+width:488px; height:180px; overflow:hidden; float:right; padding:0 1px; background:url(../image/main/bg_pop.gif) 0 0 no-repeat; position:relative
+}
+.popArea .popTitle { position:absolute; top:5px; left:10px;}
+.popArea .popzoneArea {
+	position: relative;
+	margin-top: 0px;
+}
+.popArea .controlArea {
+	position: absolute;
+	right: 80px;
+	top: 5px;
+}
+.popArea .controlArea li {
+	float: left;
+	margin-left: 2px;
+}
+.popArea a.pager-link {
+	background:url(/resources/include/commonfile/image/main/bg_no_off.gif) 0 0 no-repeat;
+	font-size: 11px;
+	color: #fff;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	line-height: 1.5;
+	margin-right: 3px; 
+	font-weight:bold;
+}
+.popArea  a.pager-active {
+	background: url(/resources/include/commonfile/image/main/bg_no_on.gif) 0 0 no-repeat;
+	font-size: 11px;
+	color: #fff;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	line-height: 1.5; 
+	font-weight:bold;
+}
+.popArea  a.pager-link:link {
+color#fff;
+}
+.popArea  .bx-pager {
+	position: absolute;
+	top: 7px;
+	right: 10px;
+}
+.popArea  .popView li {
+	margin-top: 30px;
+	text-align: center;
+	width: 488px;
+	height: 148px;
+}
+.popArea  .popView li img {
+	width: 488px;
+	height: 148px;
+}
+
+.mBanAreaWrap {background:url(../image/main/bg_bottomBan.gif) 0 0 repeat-x}
+.mBanArea { width:980px; margin:0 auto; overflow:hidden}

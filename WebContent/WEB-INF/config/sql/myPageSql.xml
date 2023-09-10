@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myPageSql">
+	<select id="selectLockerTotCnt" parameterType="com.jnet.domain.Locker" resultType="Integer">
+		select count(*)
+				
+		from sgbxutb a inner join   sggsttb b on a.mem_no = b.mem_no 
+		                     inner join  scitmtb c on a.up_id = c.up_id and a.bas_cd = c.bas_cd and a.item_cd = c.item_cd and c.fg_cd='77'
+		where a.mem_no=#{userNo} 
+		
+	</select>
+	<select id="listLocker" parameterType="com.jnet.domain.Locker" resultType="com.jnet.domain.Locker">
+	<![CDATA[
+	SELECT * FROM (
+			  SELECT TOP ${showPage} * 
+			    FROM (
+	SELECT  TOP ${currentPage}  
+				a.up_id as upId
+				,a.land_seq landSeq
+						,b.mem_no userNo  
+				        ,b.mem_nm userNm
+				        , c.item_nm itemNm
+				        , a.box_no boxNo
+				        , a.start_dt startDt
+				        ,  last_end_dt lastEndDt
+				        , a.rcv_amt rcvAmt
+				        , a.issue_dt issueDt
+				from sgbxutb a inner join   sggsttb b on a.mem_no = b.mem_no 
+				                     inner join  scitmtb c on a.up_id = c.up_id and a.bas_cd = c.bas_cd and a.item_cd = c.item_cd and c.fg_cd='77'
+				where a.mem_no=#{userNo} 
+				) A ORDER BY A.upId DESC,A.landSeq DESC, A.startDt DESC) B 
+			ORDER BY B.upId DESC,B.landSeq DESC, B.startDt DESC
+				
+	
+		]]>		
+	</select>
+	
+	<select id="listMyProgram" parameterType="com.jnet.domain.OutPgm" resultType="com.jnet.domain.OutPgm">
+	SELECT * FROM (
+			  SELECT TOP ${showPage} * 
+			    FROM (
+	SELECT  TOP ${currentPage} 
+	S.UP_ID upId, P.PGM_CD pgmCd,T.target_cd targetCd,P.PGM_NM pgmNm,S.F_ENTER_DT fEnterDt
+	, LEFT(S.START_DT, 4) + '-' + SUBSTRING(S.START_DT, 5,2) + '-' + RIGHT(S.START_DT, 2) AS startT, 
+				 LEFT(S.END_DT, 4) + '-' + SUBSTRING(S.END_DT, 5,2) + '-' + RIGHT(S.END_DT, 2) AS endT, 
+				 LEFT(S.ISSUE_DT, 4) + '-' + SUBSTRING(S.ISSUE_DT, 5,2) + '-' + RIGHT(S.ISSUE_DT, 2) AS issueDt, S.RCV_AMT amt
+			   FROM SGSPCTB S WITH(NOLOCK), SCPGMTB P WITH(NOLOCK),SCCOSTTB T WITH(NOLOCK)
+			 WHERE
+			 S.MEM_NO = #{memNo}  
+			 AND S.UP_ID = #{upId}
+			       AND S.PGM_CD = P.PGM_CD
+				   AND T.PGM_CD = P.PGM_CD
+				   AND T.UP_ID= P.UP_ID
+			       AND S.UP_ID = P.UP_ID
+			       AND S.ST_TAG = '0'
+			ORDER BY S.UP_ID, S.F_ENTER_DT DESC, startT DESC	
+			) A 
+					ORDER BY A.upId DESC,A.fEnterDt DESC, A.startT DESC) B 
+			ORDER BY B.upId DESC,B.fEnterDt DESC, B.startT DESC
+					
+	</select>
+	<select id="findMyPgmTotCnt" parameterType="com.jnet.domain.OutPgm" resultType="Integer">
+	
+	SELECT  COUNT(*)
+			   FROM SGSPCTB S WITH(NOLOCK), SCPGMTB P WITH(NOLOCK),SCCOSTTB T WITH(NOLOCK)
+			 WHERE
+			 S.MEM_NO = #{memNo}  
+			 AND S.UP_ID = #{upId}
+			       AND S.PGM_CD = P.PGM_CD
+				   AND T.PGM_CD = P.PGM_CD
+				   AND T.UP_ID= P.UP_ID
+			       AND S.UP_ID = P.UP_ID
+			       AND S.ST_TAG = '0'
+	</select>
+	
+	<select id="findCsMemberInfo" parameterType="com.jnet.domain.CsMember" resultType="com.jnet.domain.CsMember">
+		SELECT
+				* 
+		FROM SGGSTTB
+		WHERE mem_no = #{mem_no}
+			  AND st_tag='0'		
+	</select>
+	
+	<select id="insertBasket" parameterType="java.util.HashMap" resultType="java.lang.String" statementType="CALLABLE">
+		{ CALL
+				UP_SetBasketList_test(
+					 #{upId, mode=IN}
+					,#{memNo, mode=IN}
+					,#{pgmCd, mode=IN}
+					,#{yymm, mode=IN}
+					,#{targetCd, mode=IN}
+					,#{saleComCd, mode=IN}
+					,#{delNo, mode=IN}
+					,#{gbn, mode=IN}
+				)
+		}		
+	</select>
+	
+	<select id="listBasket" parameterType="java.util.HashMap" resultType="com.jnet.domain.Payment" statementType="CALLABLE">
+		{ CALL
+				UP_GetBasketList(
+					 #{upId, mod=IN}
+					,#{memNo, mod=IN}
+					,#{yymm, mod=IN}		
+				)
+		}		
+	</select>
+	
+	<select id="listDcCode" parameterType="java.util.HashMap" resultType="java.util.HashMap" statementType="CALLABLE">
+		{ CALL
+				UP_GetDCCode(
+					 #{memNo, mode=IN}
+					,#{upId, mode=IN}
+					,#{basCd, mode=IN}
+					,#{saleComCd, mode=IN}
+					,#{dcCd, mode=IN}
+					,#{age, mode=IN}
+					,#{gender, mode=IN}
+				)
+		}		
+	</select>
+	
+	<select id="removeBasket" parameterType="java.util.HashMap" resultType="java.lang.Integer" statementType="CALLABLE">
+		{ CALL
+				UP_DelBasketOne(
+					 #{upId, mode=IN}
+					,#{memNo, mode=IN}
+					,#{seqNo, mode=IN}
+					,#{pgmCd, mode=IN}
+					,#{yymm, mode=IN}
+				)
+		}		
+	</select>	
+
+	
+    
+</mapper>

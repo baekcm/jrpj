@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/ijongro/!svn/ver/1278/ijongro/WebContent/WEB-INF/jnet/admin/cptMng
+END
+formUpdateCptMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ijongro/!svn/ver/1105/ijongro/WebContent/WEB-INF/jnet/admin/cptMng/formUpdateCptMng.jsp
+END
+listCptMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ijongro/!svn/ver/1095/ijongro/WebContent/WEB-INF/jnet/admin/cptMng/listCptMng.jsp
+END
+listSatisFactionStats.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/ijongro/!svn/ver/1084/ijongro/WebContent/WEB-INF/jnet/admin/cptMng/listSatisFactionStats.jsp
+END
+listCptStats.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/ijongro/!svn/ver/1278/ijongro/WebContent/WEB-INF/jnet/admin/cptMng/listCptStats.jsp
+END
+listCptAjaxStats.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ijongro/!svn/ver/1084/ijongro/WebContent/WEB-INF/jnet/admin/cptMng/listCptAjaxStats.jsp
+END

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/ijongro/!svn/ver/1239/ijongro/WebContent/WEB-INF/jnet/admin/ctsMng
+END
+listOneNotiMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ijongro/!svn/ver/1171/ijongro/WebContent/WEB-INF/jnet/admin/ctsMng/listOneNotiMng.jsp
+END
+formPopMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ijongro/!svn/ver/1171/ijongro/WebContent/WEB-INF/jnet/admin/ctsMng/formPopMng.jsp
+END
+formOneNotiMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ijongro/!svn/ver/1239/ijongro/WebContent/WEB-INF/jnet/admin/ctsMng/formOneNotiMng.jsp
+END
+formUpdateCtsMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/ijongro/!svn/ver/994/ijongro/WebContent/WEB-INF/jnet/admin/ctsMng/formUpdateCtsMng.jsp
+END
+listCtsMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ijongro/!svn/ver/1007/ijongro/WebContent/WEB-INF/jnet/admin/ctsMng/listCtsMng.jsp
+END
+listAjaxCtsMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ijongro/!svn/ver/1074/ijongro/WebContent/WEB-INF/jnet/admin/ctsMng/listAjaxCtsMng.jsp
+END
+listPopMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ijongro/!svn/ver/1031/ijongro/WebContent/WEB-INF/jnet/admin/ctsMng/listPopMng.jsp
+END

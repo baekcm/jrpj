@@ -1,0 +1,1124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bbsSql">
+    <!-- 컨텐츠 목록 조회 -->
+	<select id="listBbsMng" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+			SELECT 
+					a.menu_seq menuSeq
+					,a.menu_nm menuNm
+					,a.comm_code_seq commCodeSeq
+					,a.emp_seq empSeq
+					,(SELECT jongno_emp.emp_nm FROM jongno_emp WHERE a.emp_seq = jongno_emp.emp_seq AND jongno_emp.rm_yn = 'N') empNm
+					,(SELECT jongno_emp.emp_phone1+jongno_emp.emp_phone2+jongno_emp.emp_phone3 FROM jongno_emp WHERE a.emp_seq = jongno_emp.emp_seq AND jongno_emp.rm_yn = 'N') empPhoneNumber
+					,bc.board_seq boardSeq
+				    ,bc.modi_ymd modiYmd
+				    ,bc.board_type boardType
+				    ,(SELECT COUNT(c.data_seq) FROM JONGNO_BOARD_DATA c WHERE c.board_seq = bc.board_seq and c.use_yn='Y' and c.create_ymd = #{createYmd}) todayCnt
+					,(SELECT COUNT(c.data_seq) FROM JONGNO_BOARD_DATA c WHERE c.board_seq = bc.board_seq and c.use_yn='Y') totalCnt
+			  FROM jongno_menu a 
+			  LEFT OUTER JOIN (SELECT bb.board_seq, bb.modi_ymd, cc.emp_seq, bb.menu_seq, bb.board_type
+			   			     	 FROM  jongno_board bb, jongno_menu cc
+						         WHERE bb.menu_seq = cc.menu_seq) bc
+			    ON a.menu_seq = bc.menu_seq										  
+			WHERE a.page_gbn_cd = 'FRONT'
+			AND a.use_yn = 'Y'
+			AND menu_type = 'BBS'
+			ORDER BY menuSeq DESC
+    </select>
+    
+    <!-- 게시판정보 상세조회 -->
+    <select id="findBbsMng" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    			SELECT 
+							a.menu_seq menuSeq,
+							a.menu_nm menuNm,
+							a.comm_code_seq commCodeSeq ,
+							a.emp_seq empSeq, 
+							(SELECT jongno_emp.emp_nm FROM jongno_emp WHERE a.emp_seq = jongno_emp.emp_seq  AND jongno_emp.rm_yn = 'N') empNm,
+							(SELECT jongno_emp.emp_phone1+jongno_emp.emp_phone2+jongno_emp.emp_phone3 FROM jongno_emp WHERE a.emp_seq = jongno_emp.emp_seq AND jongno_emp.rm_yn = 'N') empPhoneNumber,
+							bc.board_seq boardSeq,
+						    bc.modi_ymd modiYmd,
+						    bc.member_yn memberYn,
+						    bc.board_type boardType,
+						    bc.board_explain boardExplain,
+						    bc.pgm_cat_cd_yn pgmCatCdYn,
+						    bc.cat_cd_yn catCdYn,
+						    bc.grp_cat_cd_yn grpCatCdYn
+					  FROM jongno_menu a 
+					  LEFT OUTER JOIN (SELECT bb.board_seq, bb.modi_ymd
+					  						 ,cc.emp_seq, bb.menu_seq
+					   						 ,bb.member_yn, bb.board_type
+					   						 ,bb.board_explain
+					   						 ,bb.pgm_cat_cd_yn
+					   						 ,bb.cat_cd_yn
+					   						 ,bb.grp_cat_cd_yn
+					   			     	 FROM  jongno_board bb, jongno_menu cc
+								        WHERE bb.menu_seq = cc.menu_seq) bc
+					    ON a.menu_seq = bc.menu_seq										  
+					WHERE a.page_gbn_cd = 'FRONT'
+					AND a.use_yn = 'Y'
+					AND a.menu_seq = #{menuSeq}
+    </select>
+    
+    <!-- 게시물 내용 조회 -->
+    <select id="findBbs" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+	    SELECT board_type boardType
+	     	 , board_nm boardNm
+	     	 , board_seq boardSeq
+	     	 , member_yn memberYn
+	     	 , cat_cd_yn catCdYn
+	     	 , pgm_cat_cd_yn pgmCatCdYn
+	     	 , grp_cat_cd_yn grpCatCdYn
+	     	 , menu_seq menuSeq
+		  FROM jongno_board 
+		 WHERE board_seq = #{boardSeq}
+		   AND use_yn = 'Y'
+    </select>
+    
+    <!-- 담당자 정보조회
+    <select id="findEmpInfo" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT jongno_emp.emp_seq
+    		   ,jongno_emp.emp_nm empNm
+    		   ,jongno_emp.emp_phone1+jongno_emp.emp_phone2+jongno_emp.emp_phone3 empPhoneNumber
+    	FROM jongno_menu, jongno_emp
+    	WHERE jongno_menu.emp_seq = jongno_emp.emp_seq
+    	  AND jongno_menu.menu_seq = #{menuSeq}
+    	  AND jongno_menu.use_yn = 'Y'
+    	  AND jongno_emp.rm_yn = 'N'
+    </select> -->
+    
+    <!-- 게시물 저장 -->
+    <insert id="saveBbsMng" parameterType="com.jnet.domain.BbsFileReply">
+    	INSERT INTO jongno_board(board_nm
+						    	,board_explain
+						    	,board_type
+						    	,create_id
+						    	,create_ip
+						    	,create_ymd
+						    	,create_hms
+						    	,modi_id
+						    	,modi_ip
+						    	,modi_ymd
+						    	,modi_hms
+						    	,member_yn
+						    	,use_yn
+						    	,menu_seq
+						    	,cat_cd_yn
+						    	,pgm_cat_cd_yn
+						    	,grp_cat_cd_yn)
+				    	 VALUES( #{boardNm}
+						    	,#{boardExplain}
+						    	,#{boardType}
+						    	,#{createId}
+						    	,#{createIp}
+						    	,#{createYmd}
+						    	,#{createHms}
+						    	,#{createId}
+						    	,#{createIp}
+						    	,#{createYmd}
+						    	,#{createHms}
+						    	,#{memberYn}
+						    	,'Y'
+						    	,#{menuSeq}
+						    	,#{catCdYn}
+						    	,#{pgmCatCdYn}
+						    	,#{grpCatCdYn})
+    </insert>
+    
+    <!-- 게시물 수정 -->
+    <update id="updateBbsMng" parameterType="com.jnet.domain.BbsFileReply">
+    	UPDATE jongno_board
+    	   SET board_nm = #{boardNm}
+ 	    	  ,board_explain = #{boardExplain}
+	    	  ,board_type = #{boardType}
+	    	  ,modi_id = #{modiId}
+	    	  ,modi_ip = #{modiIp}
+	    	  ,modi_ymd = #{modiYmd}
+	    	  ,modi_hms = #{modiHms}
+	    	  ,member_yn = #{memberYn}
+	    	  ,pgm_cat_cd_yn = #{pgmCatCdYn}
+	    	  ,cat_cd_yn = #{catCdYn}
+	    	  ,menu_seq = #{menuSeq}
+	    	  ,grp_cat_cd_yn = #{grpCatCdYn}
+    	 WHERE board_seq = #{boardSeq}
+    </update>
+    
+    <!-- 게시판별 게시데이터 목록수 조회 -->
+	<select id="findBbsDataTotCnt" parameterType="com.jnet.domain.BbsFileReply" resultType="Integer">
+		SELECT  count(*)
+	   FROM JONGNO_BOARD_DATA a, JONGNO_BOARD b
+		  WHERE a.board_seq = #{boardSeq}
+		    AND a.board_seq = b.board_seq
+		    AND b.menu_seq = #{menuSeq}
+		    AND a.use_yn = 'Y'
+		    AND b.use_yn = 'Y'
+		    <if test='searchFacil != null and searchFacil != ""'>
+		    	AND a.comm_code_seq = #{searchFacil}
+		    </if>
+		    <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+		    	<if test='searchKey == "subject"'>
+		    		AND a.subject like  '%' + #{searchVal} + '%'
+		    	</if>
+		    	<if test='searchKey == "content"'>
+		    		AND a.content like  '%' + #{searchVal} + '%'
+		    	</if>
+		    	<if test='searchKey == "name"'>
+		    		AND a.create_nm like  '%' + #{searchVal} + '%'
+		    	</if>
+  	   		</if>
+    </select>
+    
+   
+    <!-- 게시판별 게시데이터 목록 조회 -->
+	<select id="listBbsData" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    		SELECT c.*
+	    	  FROM
+			    	(SELECT T2.*
+			    	  	  , ROWNUM RNUM
+			    		FROM
+			    		(SELECT  a.data_seq dataSeq
+				    				,a.board_seq boardSeq
+				    				,a.subject
+				    				,a.create_nm createNm
+				    				,a.create_ymd createYmd
+				    				,b.board_type boardType 
+				    			    ,(SELECT jcc.code_nm FROM jongno_comm_code jcc WHERE jcc.comm_code_seq = a.comm_code_seq) codeNm
+				    			    ,CASE 
+								      WHEN b.board_type = 'GALL'
+								      	THEN (SELECT TOP 1 c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+								      WHEN b.board_type = 'LOSE'
+								      	THEN (SELECT TOP 1 c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+								      WHEN b.board_type = 'FREE'
+								      	THEN (SELECT TOP 1 c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+								      ELSE (SELECT TOP 1 c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq)
+								     END filePathNm
+								     ,CASE 
+								      WHEN b.board_type = 'GALL'
+								      	THEN (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+								      WHEN b.board_type = 'LOSE'
+								      	THEN (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+								      WHEN b.board_type = 'FREE'
+								      	THEN (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+								      ELSE (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq)
+								     END fileSeq
+								     ,a.learn_ymd learnYmd
+								     ,a.learn_area learnArea
+								     ,a.learn_store_yn learnStoreYn
+								     ,b.menu_seq menuSeq
+								     ,(SELECT COUNT(t1.data_seq)+1 
+										FROM JONGNO_BOARD_DATA t1, JONGNO_BOARD t0
+									   WHERE t1.data_seq > a.data_seq
+										 AND t1.board_seq = #{boardSeq}
+			 						    AND t1.board_seq = t0.board_seq
+			 						    AND t0.menu_seq = #{menuSeq}
+			 						    AND t1.use_yn = 'Y'
+			 						    AND t0.use_yn = 'Y'
+			 						    <if test='searchFacil != null and searchFacil != ""'>
+									    	AND t1.comm_code_seq = #{searchFacil}
+									    </if>
+			 						    <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+			 						    	<if test='searchKey == "subject"'>
+			 						    		AND t1.subject like  '%' + #{searchVal} + '%'
+			 						    	</if>
+			 						    	<if test='searchKey == "content"'>
+			 						    		AND t1.content like  '%' + #{searchVal} + '%'
+			 						    	</if>
+			 						    	<if test='searchKey == "name"'>
+			 						    		AND t1.create_nm like  '%' + #{searchVal} + '%'
+			 						    	</if>
+						    	   		</if>
+									 ) rownum
+							   FROM JONGNO_BOARD_DATA a, JONGNO_BOARD b
+	 						  WHERE a.board_seq = #{boardSeq}
+	 						    AND a.board_seq = b.board_seq
+	 						    AND b.menu_seq = #{menuSeq}
+	 						    AND a.use_yn = 'Y'
+	 						    AND b.use_yn = 'Y'
+	 						    <if test='searchFacil != null and searchFacil != ""'>
+							    	AND a.comm_code_seq = #{searchFacil}
+							    </if>
+	 						    <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+	 						    	<if test='searchKey == "subject"'>
+	 						    		AND a.subject like  '%' + #{searchVal} + '%'
+	 						    	</if>
+	 						    	<if test='searchKey == "content"'>
+	 						    		AND a.content like  '%' + #{searchVal} + '%'
+	 						    	</if>
+	 						    	<if test='searchKey == "name"'>
+	 						    		AND a.create_nm like  '%' + #{searchVal} + '%'
+	 						    	</if>
+				    	   		</if>
+					  <![CDATA[ 
+				    	 ) T2
+				      WHERE rownum <= #{end}
+					) c
+		WHERE RNUM >= #{start}
+		ORDER BY dataSeq DESC
+		]]>			 
+    </select>
+    
+     <!-- 최근게시물 목록 조회 -->
+	<select id="listLeastBbsData" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+		SELECT TOP 5 T1.*
+		 FROM (SELECT 
+			 		   a.board_seq boardSeq
+			 		 , a.data_seq dataSeq
+					 , a.subject
+					 , a.create_nm createNm
+					 , a.create_ymd createYmd
+					 , a.hitnum
+					 , jcc.code_id codeId
+					 , jcc.code_nm codeNm
+				    FROM JONGNO_BOARD_DATA a, JONGNO_BOARD b,jongno_comm_code jcc
+				   WHERE a.board_seq = b.board_seq
+				     AND a.use_yn = 'Y'
+				     AND b.use_yn = 'Y'
+				     AND jcc.code_gbn_cd = 'board_id'
+				     AND jcc.comm_code_seq = a.comm_code_seq
+				     ) T1
+		  ORDER BY T1.dataSeq desc
+	</select>
+	
+	
+	<!-- 게시판별 게시데이터 목록수 조회 -->
+	<select id="findLeastBbsDataTotCnt" parameterType="com.jnet.domain.BbsFileReply" resultType="Integer">
+	  		SELECT COUNT(*)
+			 FROM jongno_board_data a, jongno_comm_code b
+		    WHERE a.comm_code_seq = b.comm_code_seq
+		      AND b.code_gbn_cd = 'board_id'
+		      AND a.use_yn = 'Y' 
+    </select>
+    
+   
+    <!-- 게시판별 게시데이터 목록 조회 -->
+	<select id="listLeastBbsDataTotal" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	 SELECT c.*
+	    	  FROM
+			    	(SELECT T2.*
+			    	  	  , ROWNUM RNUM
+			    		FROM
+			    		( SELECT   b.code_nm codeNm
+						 		 , a.board_seq boardSeq
+						 		 , a.data_seq dataSeq
+								 , a.subject
+								 , a.create_nm createNm
+								 , a.create_ymd createYmd
+								 , a.hitnum
+								 ,(SELECT COUNT(t1.data_seq)+1 
+									FROM jongno_board_data t1 , jongno_comm_code t0
+								   WHERE t1.data_seq > a.data_seq
+									 AND t1.comm_code_seq = t0.comm_code_seq
+								     AND t0.code_gbn_cd = 'board_id'
+								     AND t1.use_yn = 'Y'
+								 ) rownum
+						    FROM jongno_board_data a, jongno_comm_code b
+						   WHERE a.comm_code_seq = b.comm_code_seq
+						     AND b.code_gbn_cd = 'board_id'
+						     AND a.use_yn = 'Y'
+		<![CDATA[ 
+				    	 ) T2
+				      WHERE rownum <= #{end}
+					) c
+		WHERE RNUM >= #{start}
+		ORDER BY dataSeq DESC
+		]]>
+    </select>
+    
+    
+    <!-- 게시판별 게시데이터 상세조회 -->
+    <select id="findBbsData" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT   a.data_seq dataSeq
+				,a.board_seq boardSeq
+				,aa.menu_seq menuSeq
+				,a.subject
+				,a.content
+				,a.create_nm createNm
+				,a.create_ymd createYmd
+				,a.create_hms createHms
+				,a.learn_ymd learnYmd
+				,a.learn_area learnArea
+				,a.learn_store_yn learnStoreYn
+				,a.url_nm urlNm
+				,a.comm_code_seq commCodeSeq
+				,(SELECT code_id FROM jongno_comm_code jcc WHERE jcc.comm_code_seq = a.comm_code_seq) codeId
+				,a.cat_gbn_cd catGbnCd
+				,a.pgm_cat_gbn_cd pgmCatGbnCd
+				,a.hitnum
+				,b.file_path filePath
+				,b.orgnl_file_nm orgnlFileNm
+				,b.real_file_nm realFileNm
+				,b.file_seq fileSeq
+				,b.thumb_yn thumbYn
+				,aa.board_type boardType
+				,aa.cat_cd_yn catCdYn
+				,aa.board_nm boardNm
+				,aa.pgm_cat_cd_yn pgmCatCdYn
+				,aa.grp_cat_cd_yn grpCatCdYn
+				,a.free_place freePlace
+				,a.free_dtm freeDtm
+		   FROM JONGNO_BOARD aa, JONGNO_BOARD_DATA a
+		   LEFT OUTER JOIN 	JONGNO_FILE b
+		     ON a.DATA_SEQ = b.DATA_SEQ
+		  WHERE  AA.board_seq = a.board_seq
+		    AND a.board_seq = #{boardSeq}
+			AND a.data_seq = #{dataSeq}
+			AND aa.use_yn = 'Y'
+			AND a.use_yn = 'Y'
+    </select>
+    
+    <!-- 클린신고센터 파일정보조회 -->
+    <select id="findBbsDataFile" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT file_path filePath
+    		  ,orgnl_file_nm orgnlFileNm
+    		  ,real_file_nm realFileNm
+    	FROM JONGNO_FILE
+    	WHERE file_seq = #{fileSeq}
+    </select>
+    
+    <!-- 메뉴 담당자 변경 -->
+    <update id="updateMenuEmpSeq" parameterType="com.jnet.domain.Menu">
+    	UPDATE jongno_menu
+    	SET emp_seq = #{empSeq}
+    	   ,modi_id = #{modiId}
+    	   ,modi_ip = #{modiIp}
+    	   ,modi_ymd = #{modiYmd}
+    	   ,modi_hms = #{modiHms}
+    	WHERE menu_seq = #{menuSeq}
+    </update>
+    
+    
+    <!-- 클린신고 목록수조회 -->
+	<select id="findClenTotCnt" parameterType="com.jnet.domain.BbsFileReply" resultType="Integer">
+	       SELECT COUNT(*)
+		   FROM JONGNO_CLEAN a
+		   WHERE a.rm_yn = 'N'
+		   <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+			    	<if test='searchKey == "subject"'>
+			    		AND a.subject like  '%' + #{searchVal} + '%'
+			    	</if>
+			    	<if test='searchKey == "content"'>
+			    		AND a.content like  '%' + #{searchVal} + '%'
+			    	</if>
+   	   		</if>
+    </select>
+    
+    <!-- 클린신고목록조회 -->
+	<select id="listClean" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+			SELECT c.*
+			    	  FROM
+					    	(SELECT T1.*
+					    		<if test='start != "0" and end != "0"'>
+					    	  	  , ROWNUM RNUM
+					    	  	</if>
+					    		FROM
+					    		(SELECT  a.clean_seq cleanSeq
+					    				,a.subject
+					    				,a.user_nm userNm
+					    				,a.phone1
+								    	,a.phone2
+								    	,a.phone3
+								    	,a.email1
+								    	,a.email2
+								    	,a.content
+					    				,a.create_ymd createYmd
+					    				,a.create_hms createHms
+					    				,b.clean_file_seq cleanFileSeq
+					    				,b.orgnl_file_nm orgnlFileNm
+					    				<if test='start != "0" and end != "0"'>
+					    			    ,(SELECT COUNT(t1.clean_seq)+1 
+											FROM JONGNO_CLEAN t1 
+										   WHERE t1.clean_seq > a.clean_seq
+											 AND t1.rm_yn = 'N'
+											 <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+				 						    	<if test='searchKey == "subject"'>
+				 						    		AND t1.subject like  '%' + #{searchVal} + '%'
+				 						    	</if>
+				 						    	<if test='searchKey == "content"'>
+				 						    		AND t1.content like  '%' + #{searchVal} + '%'
+				 						    	</if>
+							    	   		</if>
+										 ) rownum 
+										</if>
+								   FROM JONGNO_CLEAN a
+								   LEFT OUTER JOIN jongno_clean_file b
+    								 ON a.clean_seq = b.clean_seq
+		 						  WHERE a.rm_yn = 'N'
+		 						  <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+		 						    	<if test='searchKey == "subject"'>
+		 						    		AND a.subject like  '%' + #{searchVal} + '%'
+		 						    	</if>
+		 						    	<if test='searchKey == "content"'>
+		 						    		AND a.content like  '%' + #{searchVal} + '%'
+		 						    	</if>
+					    	   		</if>
+		
+						    	 ) T1
+						    <if test='start != "0" and end != "0"'>
+						    <![CDATA[
+						      WHERE rownum <= #{end}
+						      ]]>	
+						    </if>
+							) c
+				<if test='start != "0" and end != "0"'>
+				WHERE RNUM >= #{start}
+				</if>
+				ORDER BY cleanSeq DESC
+    </select>
+    
+    <!-- 클린신고센터 상세조회 -->
+    <select id="findClean" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT   a.clean_seq cleanSeq
+    			,a.subject
+		    	,a.user_nm userNm
+		    	,a.phone1
+		    	,a.phone2
+		    	,a.phone3
+		    	,a.email1
+		    	,a.email2
+		    	,a.content
+		    	,b.clean_file_seq cleanFileSeq
+		    	,b.orgnl_file_nm orgnlFileNm
+		    	,a.create_ymd createYmd
+		    	,a.create_hms createHms
+    	FROM jongno_clean a
+    	LEFT OUTER JOIN jongno_clean_file b
+    	ON a.clean_seq = b.clean_seq
+    	WHERE a.clean_seq = #{cleanSeq}
+    	  AND a.rm_yn = 'N'
+    </select>
+    
+    <!-- 클린신고센터 파일정보조회 -->
+    <select id="findCleanFile" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT file_path filePath
+    		  ,orgnl_file_nm orgnlFileNm
+    		  ,real_file_nm realFileNm
+    	FROM jongno_clean_file
+    	WHERE clean_file_seq = #{cleanFileSeq}
+    </select>
+    
+    
+ <!-- 신고 저장 -->
+    <insert id="saveClean" parameterType="com.jnet.domain.BbsFileReply" useGeneratedKeys="true" keyProperty="cleanSeq">
+    	INSERT INTO jongno_clean(subject
+    							,user_nm
+    							,phone1
+    							,phone2
+    							,phone3
+    							,email1
+    							,email2
+    							,content
+						    	 ,create_ip
+						    	 ,create_ymd
+						    	 ,create_hms
+						    	 ,modi_ip
+						    	 ,modi_ymd
+						    	 ,modi_hms
+						    	 ,rm_yn
+							    	 )
+    						   VALUES(#{subject}
+    							,#{userNm}
+    							,#{phone1}
+    							,#{phone2}
+    							,#{phone3}
+    							,#{email1}
+    							,#{email2}
+    							,#{content}
+						    	 ,#{createIp}
+						    	 ,#{createYmd}
+						    	 ,#{createHms}
+						    	 ,#{modiIp}
+						    	 ,#{modiYmd}
+						    	 ,#{modiHms}
+						    	 ,'N')
+    </insert>    
+    
+ 	<!-- 신고 파일 저장 -->
+    <insert id="saveCleanFile" parameterType="com.jnet.domain.BbsFileReply">
+    	INSERT INTO jongno_clean_file( file_path
+						    	,orgnl_file_nm
+						    	,create_ip
+						    	,create_ymd
+						    	,create_hms
+						    	,modi_ip
+						    	,modi_ymd
+						    	,modi_hms
+						    	,clean_seq
+						    	,real_file_nm
+						    	)
+    					 VALUES(#{filePath}
+	    					   ,#{orgnlFileNm}
+	    					   ,#{createIp}
+	    					   ,#{createYmd}
+	    					   ,#{createHms}
+	    					   ,#{createIp}
+	    					   ,#{createYmd}
+	    					   ,#{createHms}
+	    					   ,#{cleanSeq}
+	    					   ,#{realFileNm}
+	    					   )
+    </insert>
+    
+    
+    <!-- 고객제안 목록수조회 -->
+	<select id="findSuggestTotCnt" parameterType="com.jnet.domain.BbsFileReply" resultType="Integer">
+	     SELECT COUNT(*)
+		   FROM JONGNO_SUGGEST a
+		   WHERE a.rm_yn = 'N'
+		   <if test='statusCd != null and statusCd != "" '>
+			  and a.status_cd = #{statusCd}
+			  </if>
+			  
+
+  		 <if test='searchVal != null and searchVal != "" '>
+	    	<if test='searchKey == "subject"'>
+	    		AND a.subject like  '%' + #{searchVal} + '%'
+	    	</if>
+	    	<if test='searchKey == "name"'>
+	    		AND a.user_nm like  '%' + #{searchVal} + '%'
+	    	</if>
+  	   		</if>
+		 <if test='createId != null and createId != "" '>
+		 and a.create_id=#{createId}
+		 </if>
+    </select>
+    
+    <!-- 고객제안 목록 조회 -->
+	<select id="listSuggest" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+				SELECT c.*
+				    	  FROM
+						    	(SELECT T1.*
+						    		<if test='start != "0" and end != "0"'>
+						    	  	  , ROWNUM RNUM
+						    	  	</if>
+						    		FROM
+						    		(SELECT  a.suggest_seq suggestSeq
+						    				,a.suggest_gbn_cd suggestGbnCd
+						    				,a.user_nm userNm
+						    				,a.create_ymd createYmd
+						    				,a.create_id createId
+						    				,a.create_hms createHms
+						    				,a.hitnum as hitnum
+						    				,a.show_yn useYn
+						    				,a.subject
+						    				,a.purpose
+									    	,a.problem
+									    	,a.way
+									    	,a.effect
+									    	,a.email1
+									    	,a.email2
+									    	,a.phone1
+									    	,a.phone2
+									    	,a.phone3
+						    				,b.suggest_file_seq suggestFileSeq
+						    				,b.orgnl_file_nm orgnlFileNm
+						    				,a.status_cd statusCd
+						    				<if test='start != "0" and end != "0"'>
+						    			    ,(SELECT COUNT(t1.suggest_seq)+1 
+												FROM JONGNO_SUGGEST t1 
+											   WHERE t1.suggest_seq > a.suggest_seq
+												 AND t1.rm_yn = 'N'
+												  <if test='statusCd != null and statusCd != "" '>
+						 						  AND t1.status_cd = #{statusCd}
+						 						  </if>
+										  		 <if test='searchVal != null and searchVal != "" '>
+											    	<if test='searchKey == "subject"'>
+											    		AND t1.subject like  '%' + #{searchVal} + '%'
+											    	</if>
+											    	<if test='searchKey == "name"'>
+											    		AND t1.user_nm like  '%' + #{searchVal} + '%'
+											    	</if>
+								    	   		</if>
+												 <if test='createId != null and createId != "" '>
+												 	AND t1.create_id=#{createId}
+												 </if>
+											 ) rownum
+											</if>
+									   FROM JONGNO_SUGGEST a 
+									   LEFT OUTER JOIN JONGNO_SUGGEST_FILE b
+    									 ON a.suggest_seq = b.suggest_seq
+			 						  WHERE a.rm_yn = 'N'
+			 						  <if test='statusCd != null and statusCd != "" '>
+			 						  and a.status_cd = #{statusCd}
+			 						  </if>
+							  		 <if test='searchVal != null and searchVal != "" '>
+								    	<if test='searchKey == "subject"'>
+								    		AND a.subject like  '%' + #{searchVal} + '%'
+								    	</if>
+								    	<if test='searchKey == "name"'>
+								    		AND a.user_nm like  '%' + #{searchVal} + '%'
+								    	</if>
+					    	   		</if>
+									 <if test='createId != null and createId != "" '>
+									 and a.create_id=#{createId}
+									 </if>
+							    	 ) T1
+							     <if test='start != "0" and end != "0"'>
+									 <![CDATA[
+								      WHERE rownum <= #{end}
+								      ]]>
+							      </if>
+								) c
+					<if test='start != "0" and end != "0"'>
+						WHERE RNUM >= #{start}
+					</if>
+					ORDER BY suggestSeq DESC
+    </select>
+    
+    <!-- 고객제안상세조회 -->
+    <select id="findSuggest" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT   a.suggest_seq suggestSeq
+		    	,a.user_nm userNm
+		    	,a.subject
+		    	,a.suggest_gbn_cd suggestGbnCd
+		    	,a.subject
+		    	,a.purpose
+		    	,a.problem
+		    	,a.way
+		    	,a.effect
+		    	,b.suggest_file_seq suggestFileSeq
+		    	,b.orgnl_file_nm orgnlFileNm
+		    	,a.show_yn useYn
+		    	,a.email1
+		    	,a.email2
+		    	,a.phone1
+		    	,a.phone2
+		    	,a.phone3
+		    	,a.create_id createId
+		    	,a.create_ymd createYmd
+		    	,a.create_hms createHms
+		    	,a.status_cd statusCd
+    	FROM jongno_suggest a
+    	LEFT OUTER JOIN jongno_suggest_file b
+    	ON a.suggest_seq = b.suggest_seq
+    	WHERE a.suggest_seq = #{suggestSeq}
+    	  and a.rm_yn = 'N'
+    </select>
+
+ 	<!-- 고객제안 파일정보조회 -->
+    <select id="findSuggestFile" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT file_path filePath
+    		  ,orgnl_file_nm orgnlFileNm
+    		  ,real_file_nm realFileNm
+    	FROM jongno_suggest_file
+    	WHERE suggest_file_seq = #{suggestFileSeq}
+    </select>
+    
+    <!-- 게시물 저장 -->
+    <insert id="saveBbsData" parameterType="com.jnet.domain.BbsFileReply" useGeneratedKeys="true" keyProperty="dataSeq">
+    	INSERT INTO jongno_board_data(subject
+							    	 ,content
+							    	 ,create_id
+							    	 ,create_ip
+							    	 ,create_ymd
+							    	 ,create_hms
+							    	 ,modi_id
+							    	 ,modi_ip
+							    	 ,modi_ymd
+							    	 ,modi_hms
+							    	 ,use_yn
+							    	 ,hitnum
+							    	 ,board_seq
+							    	 ,create_nm
+							    	 ,modi_nm
+							    	 ,comm_code_seq
+							    	 ,url_nm
+							    	 ,cat_gbn_cd
+							    	 ,pgm_cat_gbn_cd
+							    	 ,learn_ymd
+							    	 ,learn_area
+							    	 ,learn_store_yn
+							    	 ,free_place
+							    	 ,free_dtm
+							    	 )
+    						   VALUES(#{subject}
+	    						     ,#{content}
+	    						     ,#{createId}
+	    						     ,#{createIp}
+	    						     ,#{createYmd}
+	    						     ,#{createHms}
+	    						     ,#{createId}
+	    						     ,#{createIp}
+	    						     ,#{createYmd}
+	    						     ,#{createHms}
+	    						     ,'Y'
+	    						     ,0
+	    						     ,#{boardSeq}
+	    						     ,#{createNm}
+	    						     ,#{createNm}
+	    						     ,#{commCodeSeq}
+	    						     ,#{urlNm}
+	    						     ,#{catGbnCd}
+	    						     ,#{pgmCatGbnCd}
+	    						     ,#{learnYmd}
+	    						     ,#{learnArea}
+	    						     ,#{learnStoreYn}
+	    						     ,#{freePlace}
+	    						     ,#{freeDtm}
+	    						     )
+    </insert>
+    
+    <!-- 게시물 수정 -->
+    <update id="updateBbsData" parameterType="com.jnet.domain.BbsFileReply">
+    	UPDATE JONGNO_BOARD_DATA
+    	SET subject = #{subject}
+    	   ,content = #{content}
+    	   ,modi_id = #{modiId}
+    	   ,modi_ip = #{modiIp}
+    	   ,modi_ymd = #{modiYmd}
+    	   ,modi_hms = #{modiHms}
+    	   ,comm_code_seq = #{commCodeSeq}
+    	   ,url_nm = #{urlNm}
+    	   ,cat_gbn_cd = #{catGbnCd}
+    	   ,learn_ymd = #{learnYmd}
+    	   ,learn_area = #{learnArea}
+    	   ,learn_store_yn = #{learnStoreYn}
+    	WHERE board_seq = #{boardSeq}
+    	  AND data_seq = #{dataSeq}
+    </update>
+    
+    <!-- 게시물 파일 저장 -->
+    <insert id="saveBbsFile" parameterType="com.jnet.domain.BbsFileReply">
+    	INSERT INTO jongno_file( file_path
+						    	,orgnl_file_nm
+						    	,real_file_nm
+						    	,file_size
+						    	,create_id
+						    	,create_ip
+						    	,create_ymd
+						    	,create_hms
+						    	,modi_id
+						    	,modi_ip
+						    	,modi_ymd
+						    	,modi_hms
+						    	,rm_yn
+						    	,data_seq
+						    	,thumb_yn)
+    					 VALUES(#{filePath}
+	    					   ,#{orgnlFileNm}
+	    					   ,#{realFileNm}
+	    					   ,#{fileSize}
+	    					   ,#{createId}
+	    					   ,#{createIp}
+	    					   ,#{createYmd}
+	    					   ,#{createHms}
+	    					   ,#{createId}
+	    					   ,#{createIp}
+	    					   ,#{createYmd}
+	    					   ,#{createHms}
+	    					   ,'N'
+	    					   ,#{dataSeq}
+	    					  , #{thumbYn})
+    </insert>
+    
+    <!-- 썸네일 번호로 원본 이미지 정보포함 목록 조회 -->
+    <select id="listGallImgByFileSeq" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT file_seq fileSeq
+			 , real_file_nm realFileNm
+		  FROM jongno_file 
+		 WHERE file_seq in(#{fileSeq}, #{fileSeq}-1) 
+    </select>
+    
+    <!-- listGallImgByPopSeq에서 목록 조회한 파일정보 삭제 -->
+    <delete id="removeGallImg" parameterType="com.jnet.domain.BbsFileReply">
+	   DELETE FROM jongno_file WHERE file_seq = #{fileSeq}
+    </delete>
+    
+    <!--  목록 조회한 파일정보 삭제 -->
+    <delete id="removeImg" parameterType="com.jnet.domain.BbsFileReply">
+		DELETE FROM jongno_file WHERE data_seq = #{dataSeq}
+    </delete>
+
+    <!--  제안파일 삭제 -->
+    <delete id="removeSugestFile" parameterType="com.jnet.domain.BbsFileReply">
+		DELETE FROM jongno_suggest_file WHERE suggest_seq = #{suggestSeq}
+    </delete>
+    
+    <!-- 권한별 사업장 목록 조회  -->
+    <select id="listFacilWithMenuSeq" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.Common">
+	    SELECT   d.COMM_CODE_SEQ commCodeSeq
+				,d.CODE_NM codeNm
+				,d.code_gbn_cd codeGbnCd
+				,d.code_id codeId
+		  FROM jongno_admin a, jongno_admin_menu b, jongno_board c, jongno_comm_code d
+		 WHERE a.admin_seq = b.admin_seq
+		   AND a.rm_yn = 'N'
+		   AND c.use_yn = 'Y'
+		   AND b.menu_seq = c.menu_seq
+		   AND d.code_id = b.SLCT_FACIL_ID
+		   AND d.CODE_GBN_CD = 'board_id'
+		   AND b.pgm_gbn_cd = 'BBS'
+		   AND c.board_seq = #{boardSeq}
+		   AND a.admin_id = #{admId}
+    </select>
+    
+    
+     <!-- 댓글 목록 수 조회 -->
+	<select id="findReplytTotCnt" parameterType="com.jnet.domain.BbsFileReply" resultType="Integer">
+		SELECT COUNT(*)
+   		  FROM  jongno_reply
+   		 WHERE data_seq = #{dataSeq}
+   		   AND use_yn = 'Y'
+    </select>
+    
+    <!-- 댓글 목록 조회 -->
+	<select id="listReply" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	<![CDATA[
+    		SELECT c.*
+	    	  FROM
+			    	(SELECT T1.*
+			    	  	  , ROWNUM RNUM
+			    		FROM
+			    		( SELECT reply_seq replySeq
+					    		,reply_content replyContent
+					    		,create_id createId
+					    		,create_nm createNm
+					    		,create_ymd createYmd
+					    		,data_seq dataSeq
+					    	    ,(SELECT COUNT(t1.reply_seq)+1 
+									FROM jongno_reply t1 
+								   WHERE t1.reply_seq > jongno_reply.reply_seq
+									 AND t1.data_seq = #{dataSeq}
+									 AND t1.use_yn = 'Y'
+								 ) rownum
+			    			FROM  jongno_reply
+			    		   WHERE data_seq = #{dataSeq}
+			    		     AND use_yn = 'Y' 
+				    	 ) T1
+				      WHERE rownum <= #{end}
+					) c
+		WHERE RNUM >= #{start}
+		ORDER BY replySeq DESC
+		]]>			 
+    </select>
+    
+    <!-- 댓글등록 -->
+    <insert id="saveReply" parameterType="com.jnet.domain.BbsFileReply">
+    	 INSERT INTO jongno_reply(reply_content
+						    	 ,create_id
+						    	 ,create_ip
+						    	 ,create_ymd
+						    	 ,create_hms
+						    	 ,create_nm
+						    	 ,modi_id
+						    	 ,modi_ip
+						    	 ,modi_ymd
+						    	 ,modi_hms
+						    	 ,modi_nm
+						    	 ,data_seq
+						    	 ,use_yn)
+    					   VALUES(#{replyContent}
+	    					     ,#{createId}
+	    					     ,#{createIp}
+	    					     ,#{createYmd}
+	    					     ,#{createHms}
+	    					     ,#{createNm}
+	    					     ,#{createId}
+	    					     ,#{createIp}
+	    					     ,#{createYmd}
+	    					     ,#{createHms}
+	    					     ,#{createNm}
+	    					     ,#{dataSeq}
+	    					     ,'Y')
+    </insert>
+    
+    <!-- 댓글 삭제 -->
+    <update id="removeReply" parameterType="com.jnet.domain.BbsFileReply">
+		UPDATE jongno_reply
+		SET use_yn = 'N'
+		   ,modi_id = #{modiId}
+	       ,modi_ip = #{modiIp}
+	       ,modi_ymd = #{modiYmd}
+	       ,modi_hms = #{modiHms}
+	       ,modi_nm = #{modiNm}
+		WHERE data_seq = #{dataSeq}
+		  AND reply_seq = #{replySeq}    
+    </update>
+    
+    <!-- 게시물 삭제 -->
+    <update id="removeBbsData" parameterType="com.jnet.domain.BbsFileReply">
+		UPDATE jongno_board_data
+		SET use_yn = 'N'
+		   ,modi_id = #{modiId}
+	       ,modi_ip = #{modiIp}
+	       ,modi_ymd = #{modiYmd}
+	       ,modi_hms = #{modiHms}
+		WHERE data_seq = #{dataSeq}
+    </update>
+    
+    
+    <!-- 고객제안 저장 -->
+    <insert id="saveSugest" parameterType="com.jnet.domain.BbsFileReply" useGeneratedKeys="true" keyProperty="suggestSeq">
+    	INSERT INTO jongno_suggest(
+									user_nm
+									,purpose
+									,problem
+									,way
+									,effect
+									,subject
+									,email1
+									,email2
+									,phone1
+									,phone2
+									,phone3
+									,show_yn
+									,create_ip
+									,create_ymd
+									,create_hms
+									,modi_ip
+									,modi_ymd
+									,modi_hms
+									,create_id
+									,modi_id
+									,rm_yn
+									,status_cd
+							    	 )
+    						   VALUES(#{userNm}
+	    						     ,#{purpose}
+	    						     ,#{problem}
+	    						     ,#{way}
+	    						     ,#{effect}
+									,#{subject}
+									,#{email1}
+									,#{email2}
+									,#{phone1}
+									,#{phone2}
+									,#{phone3}
+									,#{useYn}
+	    						     ,#{createIp}
+	    						     ,#{createYmd}
+	    						     ,#{createHms}
+	    						     ,#{createIp}
+	    						     ,#{createYmd}
+	    						     ,#{createHms}
+	    						     ,#{createId}
+	    						     ,#{createId}
+	    						     ,'N'
+	    						     ,'R'
+	    						     )
+    </insert>
+    
+    <!-- 고객제안 조회수 -->
+    <update id="updateSugestHit" parameterType="com.jnet.domain.BbsFileReply">
+    	UPDATE JONGNO_SUGGEST
+    	SET hitnum = hitnum+1
+    	WHERE suggest_seq = #{suggestSeq}
+    </update>
+    
+    <!-- 고객제안 파일 저장 -->
+    <insert id="saveSugestFile" parameterType="com.jnet.domain.BbsFileReply">
+    	INSERT INTO jongno_suggest_file( file_path
+						    	,orgnl_file_nm
+						    	,create_id
+						    	,create_ip
+						    	,create_ymd
+						    	,create_hms
+						    	,modi_id
+						    	,modi_ip
+						    	,modi_ymd
+						    	,modi_hms
+						    	,suggest_seq
+						    	,real_file_nm
+						    	)
+    					 VALUES(#{filePath}
+	    					   ,#{orgnlFileNm}
+	    					   ,#{createId}
+	    					   ,#{createIp}
+	    					   ,#{createYmd}
+	    					   ,#{createHms}
+	    					   ,#{createId}
+	    					   ,#{createIp}
+	    					   ,#{createYmd}
+	    					   ,#{createHms}
+	    					   ,#{suggestSeq}
+	    					   ,#{realFileNm}
+	    					   )
+    </insert>
+    
+    <!-- 고객제안 수정 -->
+	<update id="updateSugest" parameterType="com.jnet.domain.BbsFileReply">
+    	UPDATE jongno_suggest
+		<trim prefix="SET" suffixOverrides=",">
+
+			<if test='subject != null and subject !="" ' >
+    	    subject = #{subject},
+    	    </if>
+			<if test='purpose != null and purpose !="" ' >
+    	    purpose = #{purpose},
+    	    </if>
+			<if test='problem != null and problem !="" ' >
+    	    problem = #{problem},
+			</if>
+			<if test='way != null and way !="" ' >    	    
+    	    way = #{way},
+			</if>
+			<if test='effect != null and effect !="" ' >    	    
+    	    effect = #{effect},
+			</if>
+			<if test='modiIp != null and modiIp !="" ' >    	    
+    	    modi_ip = #{modiIp},
+			</if>
+			<if test='modi_ymd != null and modi_ymd !="" ' >    	    
+    	    modi_ymd = #{modi_ymd},
+			</if>
+			<if test='modiHms != null and modiHms !="" ' >    	    
+    	    modi_hms = #{modiHms},
+			</if>
+			<if test='modiId != null and modiId !="" ' >    	    
+    	    modi_id = #{modiId},
+			</if>	
+			<if test='rmYn != null and rmYn !="" ' >    	    
+    	    rm_yn = #{rmYn},
+			</if>
+			<if test='useYn != null and useYn !="" ' >    	    
+    	    show_yn = #{useYn},
+			</if>
+			<if test='phone1 != null and phone1 !="" ' >    	    
+    	    phone1 = #{phone1},
+			</if>
+			<if test='phone2 != null and phone2 !="" ' >    	    
+    	    phone2 = #{phone2},
+			</if>
+			<if test='phone3 != null and phone3 !="" ' >    	    
+    	    phone3 = #{phone3},
+			</if>
+			<if test='email1 != null and email1 !="" ' >    	    
+    	    email1 = #{email1},
+			</if>
+			<if test='email2 != null and email2 !="" ' >    	    
+    	    email2 = #{email2},
+			</if>
+   	    </trim>
+    	WHERE suggest_seq = #{suggestSeq}
+    </update>
+    
+    <!-- 고객제안 상태값 수정 -->
+    <update id="updateSugestStatusCd" parameterType="com.jnet.domain.BbsFileReply">
+	    UPDATE jongno_suggest
+	    	SET status_cd = #{statusCd}
+	    	   ,modi_id = #{modiId}
+	    	   ,modi_ip = #{modiIp}
+	    	   ,modi_ymd = #{modiYmd}
+	    	   ,modi_hms = #{modiHms}
+	    	WHERE suggest_Seq = #{suggestSeq}
+    </update>
+    
+    <!-- 무료강좌 강사 등록 -->
+    <insert id="saveBbsTeacher" parameterType="com.jnet.domain.BbsFileReply">
+    	INSERT INTO jongno_board_teacher (data_seq , teacher_seq)
+    							   VALUES(#{dataSeq},#{teacherSeq})
+    </insert>
+    
+    <!-- 무료강좌 강사 삭제-->
+    <delete id="removeBbsTeacher" parameterType="com.jnet.domain.BbsFileReply">
+    	DELETE FROM jongno_board_teacher WHERE data_seq = #{dataSeq}
+    </delete>
+    
+    <!-- 무료강좌등록된 강사목록조회 -->
+    <select id="listBbsTeacher" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    SELECT a.teacher_seq teacherSeq
+	  	  ,b.teacher_nm teacherNm
+  	  FROM jongno_board_teacher a
+  	  	 , jongno_teacher b
+ 	 WHERE a.data_seq = #{dataSeq}
+   	   AND a.teacher_seq = b.teacher_seq
+    </select>
+</mapper>

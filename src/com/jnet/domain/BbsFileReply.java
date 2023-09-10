@@ -1,0 +1,146 @@
+package com.jnet.domain;
+
+import java.util.ArrayList;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.springframework.web.multipart.MultipartFile;
+
+public class BbsFileReply extends BbsData {
+	
+	private static final long serialVersionUID = 1L;
+	private ArrayList<MultipartFile> boardFileList;
+	private ArrayList<BbsFileReply> teacherList;
+	
+	//파일번호
+	private int fileSeq;
+	//파일경로
+	private String filePath;
+	//원본파일명
+	private String orgnlFileNm;
+	//실제파일명
+	private String realFileNm;
+	//썸네일구분(Y/N)
+	private String thumbYn;
+	//파일사이즈
+	private long fileSize;
+	
+	//파일경로 + 파일명
+	private String filePathNm;
+	//답변번호
+	private int replySeq;
+	//답변내용
+	private String replyContent;
+	//해피콜 코드(대기:"W", 완료:"C", 재통요망:"R", 블랙컨슈머:"B")
+	private String happyCd;
+	//만족도 코드(매우만족:"10", 만족:"8", 보통:"5", 불만족:"2", 매우불만족:"0")
+	private String satisCd;
+	//노출여부(Y/N)
+	private String useYn;
+	
+	//처리상태  R 접수중 ,I 처리중, C 완료
+	private String statusCd;
+	
+	
+	public ArrayList<BbsFileReply> getTeacherList() {
+		return teacherList;
+	}
+	public void setTeacherList(ArrayList<BbsFileReply> teacherList) {
+		this.teacherList = teacherList;
+	}
+	public String getStatusCd() {
+		return statusCd;
+	}
+	public void setStatusCd(String statusCd) {
+		this.statusCd = statusCd;
+	}
+	private ArrayList<BbsFileReply> bbsFileList;
+	
+	public String getFilePathNm() {
+		return filePathNm;
+	}
+	public void setFilePathNm(String filePathNm) {
+		this.filePathNm = filePathNm;
+	}
+	public ArrayList<BbsFileReply> getBbsFileList() {
+		return bbsFileList;
+	}
+	public void setBbsFileList(ArrayList<BbsFileReply> bbsFileList) {
+		this.bbsFileList = bbsFileList;
+	}
+	public ArrayList<MultipartFile> getBoardFileList() {
+		return boardFileList;
+	}
+	public void setBoardFileList(ArrayList<MultipartFile> boardFileList) {
+		this.boardFileList = boardFileList;
+	}
+	public String getUseYn() {
+		return useYn;
+	}
+	public void setUseYn(String useYn) {
+		this.useYn = useYn;
+	}
+	public int getFileSeq() {
+		return fileSeq;
+	}
+	public void setFileSeq(int fileSeq) {
+		this.fileSeq = fileSeq;
+	}
+	public String getFilePath() {
+		return filePath;
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	public String getOrgnlFileNm() {
+		return orgnlFileNm;
+	}
+	public void setOrgnlFileNm(String orgnlFileNm) {
+		this.orgnlFileNm = orgnlFileNm;
+	}
+	public String getRealFileNm() {
+		return realFileNm;
+	}
+	public void setRealFileNm(String realFileNm) {
+		this.realFileNm = realFileNm;
+	}
+	public String getThumbYn() {
+		return thumbYn;
+	}
+	public void setThumbYn(String thumbYn) {
+		this.thumbYn = thumbYn;
+	}
+	public long getFileSize() {
+		return fileSize;
+	}
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
+	}
+	public int getReplySeq() {
+		return replySeq;
+	}
+	public void setReplySeq(int replySeq) {
+		this.replySeq = replySeq;
+	}
+	public String getReplyContent() {
+		return replyContent;
+	}
+	public void setReplyContent(String replyContent) {
+		this.replyContent = replyContent;
+	}
+	public String getHappyCd() {
+		return happyCd;
+	}
+	public void setHappyCd(String happyCd) {
+		this.happyCd = happyCd;
+	}
+	public String getSatisCd() {
+		return satisCd;
+	}
+	public void setSatisCd(String satisCd) {
+		this.satisCd = satisCd;
+	}
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+}

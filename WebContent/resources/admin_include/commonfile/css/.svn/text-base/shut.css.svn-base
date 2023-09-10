@@ -1,0 +1,8 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url("default.css");
+
+.shutphoto { width:530px; height:320px; overflow:hidden; margin:0; padding:0;}
+.shutphoto h2 { background:#fff url(/resources/admin_include/commonfile/image/common/bul_dp1.gif) 10px 15px no-repeat;  padding:10px 0;padding-left:25px; font-size:14px; font-weight:bold; font-family:'NanumGothic'  !important; color:#333;}
+.shutdesc {font-size:14px; font-weight:400; font-family:'NanumGothic'  !important; vertical-align:middle; height:200px; float:right; width:200px; background:#fff; overflow:hidden; padding-top:70px;}

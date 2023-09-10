@@ -1,0 +1,321 @@
+@charset "utf-8";
+/* CSS Document */
+.nanum {
+	font-family: 'NanumGothic' !important;
+}
+* {
+	font-family: dodtum, '돋움';
+	font-size: 12px;
+	line-height: 1.6em;
+}
+
+@font-face {
+  font-family: 'NanumGothic';
+  font-style: normal;
+  font-weight: 700;
+  src: url(/resources/admin_include/commonfile/font/NanumGothic-Bold.eot);
+  src: url(/resources/admin_include/commonfile/font/NanumGothic-Bold.eot?#iefix) format('embedded-opentype'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-Bold.woff2) format('woff2'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-Bold.woff) format('woff'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'NanumGothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/resources/admin_include/commonfile/font/NanumGothic-Regular.eot);
+  src: url(/resources/admin_include/commonfile/font/NanumGothic-Regular.eot?#iefix) format('embedded-opentype'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-Regular.woff2) format('woff2'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-Regular.woff) format('woff'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'NanumGothic';
+  font-style: normal;
+  font-weight: 800;
+  src: url(/resources/admin_include/commonfile/font/NanumGothic-ExtraBold.eot);
+  src: url(/resources/admin_include/commonfile/font/NanumGothic-ExtraBold.eot?#iefix) format('embedded-opentype'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-ExtraBold.woff2) format('woff2'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-ExtraBold.woff) format('woff'),
+       url(/resources/admin_include/commonfile/font/NanumGothic-ExtraBold.ttf) format('truetype');
+}
+
+body, img, ul, ol, dl, dt, dd, li, p, h1, h2, h3, h4, h5, h6, h7 {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	color: #262626
+}
+form {
+	margin: 0;
+	padding: 0;
+	display:inline;
+	width:auto;
+}
+a {
+	text-decoration: none;
+	color: #262626
+}
+a:link {
+	color: #262626
+}
+ul, ol, dl {
+	list-style-type: none
+}
+caption, legend {
+	display: none
+}
+p {
+	line-height: 1.6
+}
+input[type=image] {
+	border: 0 none
+}
+input, textarea {
+	background: #fff;
+	border: 1px solid #ccc
+}
+input[type=checkbox], input[type=radio] {
+	border: 0 none;
+	margin-right: 5px;
+*margin-right:0px;
+	padding: 0;
+	vertical-align: text-top;
+*vertical-align:middle;
+}
+input, img, span, select {
+	vertical-align: middle
+}
+body {
+	position: relative;
+}
+.accessibility {
+	width: 100%;
+	font-size: 0;
+	line-height: 0;
+	fon-size: 0;
+	position: absolute;
+	top: -1000px;
+	left: -1000px;
+	z-index: 99;
+	overflow: hidden
+}
+.accessibility a:hover, .accessibility a:active, .accessibility a:focus {
+	height: 25px;
+	text-align: center;
+	color: #262626;
+	line-height: 1.8;
+	font-size: 12px;
+	font-weight: bold;
+	position: fixed;
+	background: #fff;
+	visibility: visible;
+	width: 100%;
+	top: 0;
+	left: 0;
+}
+/*hidden*/
+.hidden {
+	display: none
+}
+.fl {
+	float: left !important
+}
+.fr {
+	float: right !important
+}
+.clb {
+	clear: both !important
+}
+.ta_c {
+	text-align: center !important
+}
+.ta_l {
+	text-align: left !important
+}
+.ta_r {
+	text-align: right !important
+}
+.fb {
+	font-weight: bold !important
+}
+.point_blue01 {
+	color: #4571ff !important;
+}
+.point_blue02 {
+	color: #0348a7 !important;
+}
+.point_color01 {
+	color: #4571ff !important;
+}
+.point_color02 {
+	color: #b2720d !important;
+}
+.point_color03 {
+	color: #ff6600;
+	font-size: inherit !important;
+}
+.point_green01 {
+	color: #217500 !important;
+}
+.point_black01 {
+	color: #000;
+	text-decoration: underline
+}
+.point_red01 {
+	color: #ff6600 !important;
+}
+.fnt10px {
+	font-size: 10px
+}
+.fnt11px {
+	font-size: 11px
+}
+.fnt13px {
+	font-size: 13px
+}
+.fnt14px {
+	font-size: 14px
+}
+/*margin*/
+.mt00 {
+	margin-top: 0 !important;
+}
+.mt05 {
+	margin-top: 5px !important;
+}
+.mt07 {
+	margin-top: 7px !important;
+}
+.mt08 {
+	margin-top: 8px !important;
+}
+.mt10 {
+	margin-top: 10px !important;
+}
+.mt15 {
+	margin-top: 15px !important;
+}
+.mt20 {
+	margin-top: 20px !important;
+}
+.mt30 {
+	margin-top: 30px !important;
+}
+.mb05 {
+	margin-bottom: 05px !important;
+}
+.mb10 {
+	margin-bottom: 10px !important;
+}
+.mb15 {
+	margin-bottom: 15px !important;
+}
+.mb20 {
+	margin-bottom: 20px !important;
+}
+.mb25 {
+	margin-bottom: 25px !important;
+}
+.mb30 {
+	margin-bottom: 30px !important;
+}
+.mb40 {
+	margin-bottom: 40px !important;
+}
+.mb50 {
+	margin-bottom: 50px !important;
+}
+.mb60 {
+	margin-bottom: 60px !important;
+}
+.mb70 {
+	margin-bottom: 70px !important;
+}
+/*padding*/
+.pd10 {
+	padding: 10px
+}
+.pd15 {
+	padding: 15px
+}
+.pd20 {
+	padding: 20px
+}
+.pt30 {
+	padding-top: 30px
+}
+.pt00 {
+	padding-top: 0 !important;
+}
+.ptb10 {
+	padding: 10px 0
+}
+.ptb15 {
+	padding: 25px 0
+}
+.pl10 {
+	padding-left: 10px;
+}
+.pl20 {
+	padding-left: 20px;
+}
+.pl30 {
+	padding-left: 30px;
+}
+/*background color */
+.bg_f1 {
+	background: #eff7f9
+}
+.bg_f2 {
+	background: #f2f2f2
+}
+/*width*/
+.wd50p {
+	width: 50%
+}
+.ovh {
+	overflow: hidden;
+}
+.mwd55 {
+	max-width: 55px
+}
+.mwd60 {
+	max-width: 60px
+}
+.mwd70 {
+	max-width: 70px
+}
+.mwd80 {
+	max-width: 80px
+}
+.mwd90 {
+	max-width: 90px
+}
+.mwd100 {
+	max-width: 100px
+}
+.mwd120 {
+	max-width: 120px
+}
+.mwd140 {
+	max-width: 140px
+}
+.mwd180 {
+	max-width: 180px
+}
+.mwd210 {
+	max-width: 210px
+}
+.mwd250 {
+	max-width: 250px
+}
+.mwd270 {
+	max-width: 270px
+}
+.mwd310 {
+	max-width: 310px
+}
+.mwd360 {
+	max-width: 360px
+}

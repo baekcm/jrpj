@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pollSql">
+	<!-- 설문조사 목록 수 조회 -->
+    <select id="findPollTotCnt" parameterType="java.util.Map" resultType="Integer">
+    	SELECT COUNT(*) 
+    	  FROM JONGNO_POLL 
+    	 WHERE use_yn != 'N'
+    	 <if test='useYn == "R"'>
+    	 and use_yn != #{useYn}
+    	 </if>
+    </select>
+    
+    <!-- 설문조사 목록 조회 -->
+    <select id="listPoll" parameterType="java.util.Map" resultType="com.jnet.domain.Poll">
+    	SELECT  poll_seq pollSeq
+    	       ,subject
+    	       ,st_ymd stDtm
+    	       ,ed_ymd edDtm
+    	       ,create_ymd createYmd
+    	       <![CDATA[
+			   ,CASE
+			  	WHEN convert(varchar, getdate(), 112) < st_ymd  AND a.use_yn = 'Y'
+		        	THEN '대기'
+				WHEN convert(varchar, getdate(), 112) >=st_ymd AND convert(varchar, getdate(), 112) <=ed_ymd AND a.use_yn = 'Y' 
+		        	THEN '설문중'
+		        WHEN a.use_yn = 'R'  
+		        	THEN '임시저장'
+		        ELSE '종료'
+		       END pollStatus
+		       ,CASE
+			  	WHEN convert(varchar, getdate(), 112) < st_ymd OR a.use_yn = 'R' 
+		        	THEN 'R'
+				WHEN convert(varchar, getdate(), 112) >=st_ymd AND convert(varchar, getdate(), 112) <=ed_ymd AND a.use_yn = 'Y'  
+		        	THEN 'I'
+		        ELSE 'C'
+		       END pollStatusCd
+		       ]]>  
+		       ,(SELECT COUNT(DISTINCT create_id) FROM JONGNO_POLL_ANSWER b WHERE a.poll_seq = b.poll_seq) answerCnt
+    	  FROM JONGNO_POLL a
+    	 WHERE use_yn != 'N'
+    	 <if test='useYn == "R"'>
+    	 and use_yn != #{useYn}
+    	 </if>
+    	 order by pollSeq desc
+    </select>
+    
+    <!-- 설문조사 상세조회 -->
+    <select id="findPoll" parameterType="com.jnet.domain.APoll" resultType="com.jnet.domain.Poll">
+    	SELECT a.poll_seq pollSeq
+			  ,a.subject
+			  ,a.st_ymd stDtm
+			  ,a.ed_ymd edDtm
+			  ,(SELECT COUNT(DISTINCT create_id) FROM JONGNO_POLL_ANSWER b WHERE a.poll_seq = b.poll_seq) answerCnt
+			  <![CDATA[
+			  ,CASE
+			  	WHEN convert(varchar, getdate(), 112) < st_ymd    AND a.use_yn = 'Y'  
+		        	THEN '대기'
+				WHEN convert(varchar, getdate(), 112) >=st_ymd AND convert(varchar, getdate(), 112) <=ed_ymd    AND a.use_yn = 'Y'  
+		        	THEN '설문중'
+		        WHEN a.use_yn = 'R'  
+		        	THEN '임시저장'
+		        ELSE '종료'
+		       END pollStatus
+		       ,CASE
+			  	WHEN convert(varchar, getdate(), 112) < st_ymd  OR a.use_yn = 'R'  
+		        	THEN 'R'
+				WHEN convert(varchar, getdate(), 112) >=st_ymd AND convert(varchar, getdate(), 112) <=ed_ymd AND a.use_yn = 'Y'  
+		        	THEN 'I'
+		        ELSE 'C'
+		       END pollStatusCd
+		      ]]>  
+		      <if test="createId != null and createId != ''">
+			  	,ISNULL((SELECT COUNT(*) FROM JONGNO_POLL_ANSWER WHERE create_id = #{createId} AND POLL_SEQ = a.poll_seq),0) myPollCnt
+			  </if>
+			  ,a.use_yn useYn
+			  ,a.contents
+		  FROM JONGNO_POLL a
+		 WHERE a.use_yn != 'N'
+		   AND a.poll_seq = #{pollSeq}
+    </select>
+    
+    <!-- 최시 설문 상세조회:미구현 -->
+    <select id="findLeastPoll" resultType="com.jnet.domain.Poll" parameterType="java.util.Map">
+    	SELECT TOP 1
+    		   a.poll_seq pollSeq
+			  ,a.subject
+			  ,a.st_ymd stDtm
+			  ,a.ed_ymd edDtm
+			  ,(SELECT COUNT(DISTINCT create_id) FROM JONGNO_POLL_ANSWER b WHERE a.poll_seq = b.poll_seq) answerCnt
+		  <![CDATA[
+			  ,CASE
+			  	WHEN convert(varchar, getdate(), 112) < st_ymd  
+		        	THEN '대기'
+				WHEN convert(varchar, getdate(), 112) >=st_ymd AND convert(varchar, getdate(), 112) <=ed_ymd  
+		        	THEN '설문중'
+		        ELSE '종료'
+		       END pollStatus
+		  ]]>
+		  <if test="createId != null and createId != ''">
+		  	,NVL((SELECT COUNT(*) FROM JONGNO_POLL_ANSWER WHERE create_id = #{createId} AND POLL_SEQ = a.poll_seq),0) myPollCnt
+		  </if>
+		  FROM JONGNO_POLL a
+		 WHERE a.use_yn != 'N'
+		 ORDER BY A.POLL_SEQ DESC
+    </select>
+    
+    <!-- 설문조사 질문 목록 조회 -->
+    <select id="listPollQuestion" parameterType="com.jnet.domain.APoll" resultType="com.jnet.domain.QPoll">
+ 		   		  SELECT prnt_problem_seq prntProblemSeq
+					    ,PROBLEM_SEQ problemSeq
+					    ,problem_content problemContent
+                        ,problem_type problemType
+                        ,problem_no_type qNoType
+                        ,(SELECT COUNT(a_seq) FROM JONGNO_POLL_ANSWER WHERE JONGNO_POLL_ANSWER.PROBLEM_SEQ = JONGNO_POLL_PROBLEM.PROBLEM_SEQ) answerCnt
+                        ,poll_seq pollSeq
+					FROM JONGNO_POLL_PROBLEM 
+					WHERE poll_seq = #{pollSeq}
+				   ORDER BY problem_seq
+    </select>
+    
+    <!-- 설문저장 -->
+    <insert id="savePoll" parameterType="com.jnet.domain.QPoll" useGeneratedKeys="true" keyProperty="pollSeq">
+    	INSERT INTO JONGNO_POLL(
+    						 subject
+					    	,st_ymd
+					    	,ed_ymd
+					    	,create_ymd
+					    	,create_hms
+					    	,create_id
+					    	,create_ip
+					    	,modi_ymd
+					    	,modi_hms
+					    	,modi_id
+					    	,modi_ip
+					    	,use_yn
+					    	,contents)
+					 VALUES(#{subject}
+						   ,#{stDtm}
+						   ,#{edDtm}
+						   ,#{createYmd}
+						   ,#{createHms}
+						   ,#{createIp}
+						   ,#{createId}
+						   ,#{modiYmd}
+						   ,#{modiHms}
+						   ,#{modiIp}
+						   ,#{modiId}
+						   ,#{useYn}
+						   ,#{contents})
+    </insert>
+    
+    <!-- 설문조사 문제 저장 -->
+    <insert id="savePollProblem" parameterType="com.jnet.domain.QPoll" useGeneratedKeys="true" keyProperty="problemSeq">
+    	INSERT INTO JONGNO_POLL_PROBLEM( poll_seq
+								    	,problem_content
+								    	,problem_type
+								    	,prnt_problem_seq)
+								  VALUES(#{pollSeq}
+										,#{problemContent}
+										,#{problemType}
+										,0)
+    </insert>
+    
+    <!-- 질문 저장 -->
+    <insert id="savePollQuestion" parameterType="com.jnet.domain.QPoll">
+    	 INSERT INTO JONGNO_POLL_PROBLEM(
+    									 poll_seq
+	    								,problem_content
+	    								,problem_type
+								    	,prnt_problem_seq
+								    	,problem_no_type)
+								  VALUES(
+								  	     #{pollSeq}
+								  		,#{qContent}
+										,#{problemType}
+										,#{problemSeq}
+										,#{qNoType})
+    </insert>
+    
+    <!-- 설문 삭제:수정처리 -->
+    <update id="removePoll" parameterType="com.jnet.domain.QPoll">
+    	UPDATE	JONGNO_POLL
+    	   SET	use_yn = 'N'
+    		   ,modi_ymd = #{modiYmd}
+    		   ,modi_hms = #{modiHms}
+    		   ,modi_id = #{modiId}
+    		   ,modi_ip = #{modiIp}
+    	 WHERE  poll_seq = #{pollSeq}
+    </update>
+    
+    <!-- 설문수정 -->
+    <update id="updatePoll" parameterType="com.jnet.domain.QPoll">
+    	UPDATE JONGNO_POLL
+		  SET  modi_id = #{modiId}
+		  	  ,modi_ip = #{modiIp}
+		  	  ,modi_ymd = #{modiYmd}
+		  	  ,modi_hms = #{modiHms}
+		  	  ,subject = #{subject}
+	    	  ,st_ymd = #{stDtm}
+	    	  ,ed_ymd = #{edDtm}
+	    	  ,use_yn = #{useYn}
+	    	  ,contents = #{contents}
+		WHERE poll_seq = #{pollSeq}
+    </update>
+    
+    <!-- 질문과 문제 삭제 -->
+    <delete id="removePollProblemWithQuestion" parameterType="com.jnet.domain.QPoll">
+    	DELETE FROM JONGNO_POLL_PROBLEM WHERE poll_seq = #{pollSeq}
+    </delete>
+    
+    
+    <!-- 설문조사 중복투표 불가 -->
+    <select id="findDpPollUser" parameterType="java.util.Map" resultType="Integer">
+    	SELECT COUNT(*) 
+    	  FROM JONGNO_POLL_ANSWER 
+    	 WHERE poll_seq = #{pollSeq}
+    	   AND create_id = #{createId} 
+    </select>
+    
+    <!-- 설문 답변 저장 - 미구현 -->
+    <insert id="savePollAnswer" parameterType="com.jnet.domain.APoll">
+    	INSERT INTO JONGNO_POLL_ANSWER(  poll_seq
+							    		,problem_seq
+						    			,a_short_answer
+						    			,a_etc
+							    		,create_ymd
+							    		,create_hms
+							    		,create_id
+							    		,create_ip)
+								VALUES(  #{pollSeq}
+										,#{problemSeq}
+							    		,#{aShortAnswer}
+							    		,#{aEtc}
+										,#{createYmd}
+										,#{createHms}
+										,#{createId}
+										,#{createIp})
+    </insert>
+    
+
+
+	<!-- 기타선택 상세내용 목록수 조회 - 미구현  -->
+	<select id="findPollViewerTotCnt" parameterType="com.jnet.domain.QPoll" resultType="Integer">
+		SELECT COUNT(*)
+		  FROM JONGNO_POLL_ANSWER
+		 WHERE PROBLEM_SEQ = #{problemSeq}
+	</select>
+	
+	<!-- 기타선택 상세내용 목록 조회  - 미구현 -->
+	<select id="listPollViewer" parameterType="com.jnet.domain.QPoll" resultType="com.jnet.domain.APoll">
+		SELECT *
+		FROM (SELECT ROWNUM AS RNUM, a.* 
+				FROM (SELECT a.create_id createId
+						  ,(SELECT user_nm FROM jongno_member WHERE jongno_member.user_id = a.create_id) createNm
+						  ,a.create_ymd createYmd
+						  ,a.a_etc aEtc
+						  ,a.a_short_answer aShortAnswer
+						  ,a.a_seq aSeq
+						   ,(SELECT COUNT(t1.PROBLEM_SEQ)+1 
+									FROM JONGNO_POLL_ANSWER t1
+								   WHERE t1.PROBLEM_SEQ > a.PROBLEM_SEQ
+									 AND t1.PROBLEM_SEQ = #{problemSeq}
+								 ) rownum
+					  FROM JONGNO_POLL_ANSWER a
+					 WHERE a.PROBLEM_SEQ = #{problemSeq}
+				 ) a
+				 <![CDATA[
+				 WHERE ROWNUM <= #{end}) bb
+				 ]]>
+		WHERE RNUM >= #{start}  
+		ORDER BY aSeq DESC
+	</select>   
+</mapper>

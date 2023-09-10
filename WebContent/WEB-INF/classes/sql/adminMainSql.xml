@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="adminMainSql">
+    <!-- 회원수 + 민원수 조회 -->
+	<select id="findMemMinGrpCnt" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Common">
+		SELECT (SELECT COUNT(*) FROM jongno_member) allMemCnt
+			 , (SELECT COUNT(*) FROM jongno_member WHERE sign_ymd = #{todayYmd}) todayMemCnt
+			 , (SELECT COUNT(*) FROM jongno_minwon_q) allMinwonCnt
+			 , (SELECT COUNT(*) FROM jongno_minwon_q WHERE create_ymd = #{todayYmd})  todayMinwonCnt
+    </select>
+</mapper>

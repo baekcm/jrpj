@@ -1,0 +1,363 @@
+@charset "utf-8";
+/* CSS Document */
+@import url("layout.css");
+@import url("default.css");
+#wrap {
+}
+#middle {
+	padding-top: 0;
+}
+#contbody {
+	overflow: hidden;
+	margin-bottom: 20px !important;
+*margin-bottom:0 !important;
+}
+#mSec1 {
+	background: url(../image/main/bg_mSec1.jpg) 0 0 no-repeat;
+	width: 980px;
+	height: 390px;
+	overflow: hidden;
+	display: block;
+	position: relative;
+	margin-bottom: 20px;
+}
+#mSec2 {
+}
+.slog1 {
+	width: 200px;
+	height: 380px;
+	overflow: hidden;
+	position: relative;
+	float: left;
+}
+.slog1 IMG {
+	position: absolute;
+	top: 35px;
+	left: 20px
+}
+.mSec1r {
+	float: right
+}
+.mSec1r #mSearch {
+	width: 690px;
+	padding: 18px 0 18px 50px;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+.mSec1r #mSearch #msearchSel {
+	width: 150px;
+	padding: 3px;
+	height: 20px;
+	border: 1px solid #d4d4d4;
+	margin: 0 10px 0 15px;
+}
+.mSec1r #mSearch #msearchKWD {
+	width: 505px;
+	height: 16px;
+	margin-right: 10px;
+}
+.mSec1rBanArea .mSec1Ban1, .mSec1rBanArea .mSec1Ban2, .mSec1rBanArea .mSec1Ban3 {
+	float: left
+}
+.slog2 {
+	position: absolute;
+	right: 100px;
+	bottom: 10px;
+}
+/*mainTab*/
+
+.noticeArea {
+	width: 432px;
+	height: 160px;
+	padding: 10px 15px;
+	overflow: hidden;
+	float: left;
+	background: url(/resources/include/commonfile/image/main/bg_news.gif) 0 0 no-repeat;
+}
+.maintab {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+.maintab h2 {
+	top: 0px;
+	margin: 0;
+	height: 24px;
+	display: block;
+}
+.maintab h2.tabtit1 {
+	left: 0px;
+}
+.maintab h2.tabtit2 {
+	left: 82px;
+}
+.maintab h2.tabtit3 {
+	left: 164px;
+}
+.maintab h2.tabtit4 {
+	left: 246px;
+}
+.maintab ul {
+	padding: 30px 0 0 0px;
+	overflow: hidden
+}
+.maintab li {
+	overflow: hidden;
+	padding: 5px 0;
+	background: url(/resources/include/commonfile/image/common/line_dot3px.gif) 0 bottom repeat-x
+}
+.maintab li img {
+	vertical-align: middle;
+	margin-left: 3px;
+	float: left;
+}
+.maintab .btnMore {
+	right: 0;
+	top: 5px;
+	display: inline-block;
+}
+.maintab .date {
+	color: #262626;
+	font-size: 11px;
+	line-height: 1.3;
+	float: right;
+}
+.maintab .listx a {
+	color: #262626;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	white-space: nowrap;
+	line-height: 1.3;
+	width: auto;
+	max-width: 300px;
+	display: inline-block;
+	float: left;
+}
+.popArea {
+	width: 488px;
+	height: 180px;
+	overflow: hidden;
+	float: right;
+	padding: 0 1px;
+	background: url(../image/main/bg_pop.gif) 0 0 no-repeat;
+	position: relative
+}
+.popArea .popTitle {
+	position: absolute;
+	top: 5px;
+	left: 10px;
+}
+.popArea .popzoneArea {
+	position: relative;
+	margin-top: 0px;
+}
+.popArea .controlArea {
+	position: absolute;
+	right: 10px;
+	top: 5px;
+}
+.popArea .controlArea li {
+	float: left;
+	margin-left: 2px;
+}
+.popArea a.pager-link {
+	background: url(/resources/include/commonfile/image/main/bg_no_off.gif) 0 0 no-repeat;
+	font-size: 11px;
+	color: #fff;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	line-height: 1.5;
+	margin-right: 3px;
+	font-weight: bold;
+}
+.popArea a.pager-active {
+	background: url(/resources/include/commonfile/image/main/bg_no_on.gif) 0 0 no-repeat;
+	font-size: 11px;
+	color: #fff;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	line-height: 1.5;
+	font-weight: bold;
+}
+.popArea a.pager-link:link {
+color#fff;
+}
+.popArea .bx-pager {
+	position: absolute;
+	top: 7px;
+	left: 80px;
+}
+.popArea .popView li {
+	margin-top: 30px;
+	text-align: center;
+	width: 488px;
+	height: 148px;
+}
+.popArea .popView li img {
+	width: 488px;
+	height: 148px;
+}
+.mBanAreaWrap {
+	background: url(../image/main/bg_bottomBan.gif) 0 0 repeat-x;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+.mBanArea {
+	width: 980px;
+	margin: 0 auto;
+	overflow: hidden
+}
+.mBanArea .mBan LI {
+	float: left
+}
+.mBanArea .mBan LI A {
+	padding: 10px 40px;
+*padding:10px 41px;
+	display: inline-block;
+	overflow: hidden;
+	background: url(../image/main/bg_bottomBanLI.gif) 0 0 no-repeat
+}
+.mBanArea .mBan LI:first-child A {
+	padding: 10px 44px;
+*padding:10px 40px;
+	background: url(../image/main/bg_bottomBanLI.gif) -2px 0 no-repeat
+}
+.mBanArea .mBan LI A:hover, .mBanArea .mBan LI A:focus {
+	background: #fff;
+}
+/*bannerZone Area*/
+.mBanArea2Wrap {
+	overflow: hidden
+}
+.bannerArea {
+	width: 980px;
+	margin: 0 auto;
+	overflow: hidden;
+	position: relative
+}
+.bannerArea .banhead {
+	width: 25px;
+	height: 40px;
+	overflow: hidden;
+	background: url(../image/main/bg_banControl.gif) 0 0 no-repeat;
+	text-align: center;
+	padding: 3px 0 5px 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.bannerArea .banhead img {
+	margin-bottom: 1px;
+}
+.bannerArea .bannerControlArea {
+}
+.bannerArea .banBtnPrev {
+	position: absolute;
+	top: 0;
+	left: 35px
+}
+.bannerArea .banBtnNext {
+	position: absolute;
+	top: 0;
+	right: 0
+}
+.bannerArea .bannerList {
+	background: url(../../image/main/bg_bannerzone.gif) 0 0 no-repeat;
+	display: block;
+	margin: 0 40px 0 70px;
+	overflow: hidden;
+}
+.bannerArea .bannerList li {
+	float: left;
+}
+.bannerArea .bannerList img {
+	border: 1px solid #d4d4d4;
+	width:130px;
+	height:38px;
+}
+.bannerArea .bannerList a {
+	margin: 0 7px;
+}
+
+/*bannerZone Area*/
+.mSec1rBanArea .mSec1Ban1 { width:260px; overflow:hidden}
+.mSec1Ban1 .mSBDn {
+	overflow: hidden;
+}
+.singleBannerArea {
+	width: 220px;
+	margin: 0 auto;
+	overflow: hidden;
+	position: relative;
+	padding:20px 0;
+}
+.singleBannerArea .banhead {
+	width: 25px;
+	height: 40px;
+	overflow: hidden;
+	background: url(../image/main/bg_banControl.gif) 0 0 no-repeat;
+	text-align: center;
+	padding: 3px 0 5px 0;
+	position: absolute;
+	top: 20px;
+	left: 0;
+}
+.singleBannerArea .banhead img {
+	margin-bottom: 1px;
+}
+.singleBannerArea .bannerControlArea {
+}
+.singleBannerArea .banBtnPrev {
+	position: absolute;
+	top: 0px;
+	left: 107px
+}
+.singleBannerArea .banBtnNext {
+	position: absolute;
+	top: 128px;
+	left: 107px
+}
+.singleBannerArea .bannerList {
+	background: url(../../image/main/bg_bannerzone.gif) 0 0 no-repeat;
+	display: block;
+	margin: 0 0 0 22px;
+	overflow: hidden;
+}
+.singleBannerArea .bannerList li {
+	float: left;
+}
+.singleBannerArea .bannerList img {
+	border: 1px solid #d4d4d4;
+	width:189px;
+	height:100px;
+}
+.singleBannerArea .bannerList a {
+	margin: 0 7px;
+}
+
+
+
+.mSec1rBanArea .mSec1Ban2 .mSBDn { width:220px; overflow:hidden; padding:20px;}
+.mSec1rBanArea .mSec1Ban3 .mSBDn { width:220px; overflow:hidden; padding:20px;}
+.mSec1rBanArea .mSec1Ban3 .mSBDn .public { background:url(../image/main/bg_slban.gif) 0 0 no-repeat; padding-left:120px; height:120px; overflow:hidden}
+
+
+#totalMenuWrap { margin-bottom:20px; border-bottom:1px solid #ddd;}
+#btnTotal { text-align:center}
+#totalMenu { display:none; width:100%; padding:15px 0;border-top:1px solid #ddd; background:#f0f0f0;}
+#totMenu { width:980px; margin:0 auto; overflow:hidden}
+#totMenu > LI { display:inline-block; width:125px; float:left;background:url(../image/main/bul_plus.png) 0 5px no-repeat; padding-left:15px;}
+#totMenu > LI >A { font-weight:bold; margin-bottom:5px}
+#totMenu > LI>UL>LI>UL,#totMenu #gnb8,#totMenu #gnb9,#totMenu #gnb10, #totMenu .depth3 { display:none}
+#totMenu #gnb1 { width:160px}
+#totMenu #gnb2 { width:160px}
+#totMenu #gnb5 { width:90px}
+#totMenu #gnb6 { width:90px}

@@ -1,0 +1,329 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/ijongro/!svn/ver/1268/ijongro/WebContent/WEB-INF/lib
+END
+json-lib-2.4-jdk15.jar
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/json-lib-2.4-jdk15.jar
+END
+spring-context-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-context-3.1.1.RELEASE.jar
+END
+commons-io-1.4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-io-1.4.jar
+END
+poi-3.9-20121203.jar
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ijongro/!svn/ver/28/ijongro/WebContent/WEB-INF/lib/poi-3.9-20121203.jar
+END
+spring-context-support-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-context-support-3.1.1.RELEASE.jar
+END
+activation.jar
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ijongro/!svn/ver/1094/ijongro/WebContent/WEB-INF/lib/activation.jar
+END
+commons-validator-1.3.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-validator-1.3.1.jar
+END
+commons-dbcp-1.4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-dbcp-1.4.jar
+END
+commons-collections-3.2.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-collections-3.2.1.jar
+END
+cglib-nodep-2.1_3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/cglib-nodep-2.1_3.jar
+END
+slf4j-api-1.6.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/slf4j-api-1.6.1.jar
+END
+spring-jdbc-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-jdbc-3.1.1.RELEASE.jar
+END
+spring-asm-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-asm-3.1.1.RELEASE.jar
+END
+commons-lang-2.6.jar
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-lang-2.6.jar
+END
+ezmorph-1.0.6.jar
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/ezmorph-1.0.6.jar
+END
+antlr-2.7.6.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/antlr-2.7.6.jar
+END
+poi-scratchpad-3.9-20121203.jar
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ijongro/!svn/ver/28/ijongro/WebContent/WEB-INF/lib/poi-scratchpad-3.9-20121203.jar
+END
+poi-ooxml-schemas-3.9-20121203.jar
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ijongro/!svn/ver/28/ijongro/WebContent/WEB-INF/lib/poi-ooxml-schemas-3.9-20121203.jar
+END
+dom4j-1.6.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/ijongro/!svn/ver/28/ijongro/WebContent/WEB-INF/lib/dom4j-1.6.1.jar
+END
+spring-aop-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-aop-3.1.1.RELEASE.jar
+END
+spring-beans-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-beans-3.1.1.RELEASE.jar
+END
+spring-tx-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-tx-3.1.1.RELEASE.jar
+END
+poi-ooxml-3.9-20121203.jar
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ijongro/!svn/ver/28/ijongro/WebContent/WEB-INF/lib/poi-ooxml-3.9-20121203.jar
+END
+spring-webmvc-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-webmvc-3.1.1.RELEASE.jar
+END
+commons-fileupload-1.2.2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-fileupload-1.2.2.jar
+END
+log4j-1.2.15.jar
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/log4j-1.2.15.jar
+END
+slf4j-log4j12-1.5.10.jar
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/slf4j-log4j12-1.5.10.jar
+END
+mybatis-spring-1.0.2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/mybatis-spring-1.0.2.jar
+END
+mssqljdbc4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ijongro/!svn/ver/1187/ijongro/WebContent/WEB-INF/lib/mssqljdbc4.jar
+END
+IPINClient.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/ijongro/!svn/ver/87/ijongro/WebContent/WEB-INF/lib/IPINClient.jar
+END
+mail.jar
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/ijongro/!svn/ver/1094/ijongro/WebContent/WEB-INF/lib/mail.jar
+END
+xmlbeans-2.3.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/ijongro/!svn/ver/28/ijongro/WebContent/WEB-INF/lib/xmlbeans-2.3.0.jar
+END
+aopalliance.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/aopalliance.jar
+END
+spring-web-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-web-3.1.1.RELEASE.jar
+END
+commons-logging.jar
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-logging.jar
+END
+ConnectionKCP.jar
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/ijongro/!svn/ver/668/ijongro/WebContent/WEB-INF/lib/ConnectionKCP.jar
+END
+standard.jar
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/standard.jar
+END
+spring-expression-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-expression-3.1.1.RELEASE.jar
+END
+ConnectionKCP.jar.linux
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/ijongro/!svn/ver/365/ijongro/WebContent/WEB-INF/lib/ConnectionKCP.jar.linux
+END
+jstl.jar
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/jstl.jar
+END
+aspectjweaver.jar
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/aspectjweaver.jar
+END
+mybatis-3.0.6.jar
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/mybatis-3.0.6.jar
+END
+spring-mobile-device-1.0.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ijongro/!svn/ver/1268/ijongro/WebContent/WEB-INF/lib/spring-mobile-device-1.0.1.RELEASE.jar
+END
+spring-core-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-core-3.1.1.RELEASE.jar
+END
+spring-oxm-3.1.1.RELEASE.jar
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/spring-oxm-3.1.1.RELEASE.jar
+END
+sqljdbc.jar
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/ijongro/!svn/ver/1187/ijongro/WebContent/WEB-INF/lib/sqljdbc.jar
+END
+sqljdbc4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/sqljdbc4.jar
+END
+poi-excelant-3.9-20121203.jar
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/ijongro/!svn/ver/28/ijongro/WebContent/WEB-INF/lib/poi-excelant-3.9-20121203.jar
+END
+NiceID_1.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/ijongro/!svn/ver/87/ijongro/WebContent/WEB-INF/lib/NiceID_1.1.jar
+END
+stax-api-1.0.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/ijongro/!svn/ver/28/ijongro/WebContent/WEB-INF/lib/stax-api-1.0.1.jar
+END
+commons-beanutils-1.8.3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-beanutils-1.8.3.jar
+END
+commons-pool-1.5.4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/commons-pool-1.5.4.jar
+END
+slf4j-api-1.5.10.jar
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/2/ijongro/WebContent/WEB-INF/lib/slf4j-api-1.5.10.jar
+END
+xecure.jar
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/ijongro/!svn/ver/1144/ijongro/WebContent/WEB-INF/lib/xecure.jar
+END

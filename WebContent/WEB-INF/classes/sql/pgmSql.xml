@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pgmSql">
+	<!-- 사업장 조회 -->
+	<select id="listUpId" parameterType="com.jnet.domain.OutPgm" resultType="com.jnet.domain.OutPgm">
+		SELECT com_cd codeId 
+		     , com_nm codeNm
+		  FROM SCCODTB 
+		 WHERE ini_cd = '01'
+		 	<![CDATA[ 
+		   AND com_cd <> '00'
+		   ]]> 
+		   AND st_tag = '0'
+	</select>
+	
+	<!-- 사엄장별 프로그램 선택 -->
+	<select id="listSaleIdByUpId" parameterType="com.jnet.domain.OutPgm" resultType="com.jnet.domain.OutPgm">
+	SELECT com_cd codeId 
+		 , com_nm codeNm
+	  FROM SCCODTB 
+	  WHERE ini_cd = '34' and st_tag = '0'
+	    AND com_cd in (SELECT distinct sale_com_cd
+					     FROM SCPGMTB a, SCRGLTB b
+						WHERE a.up_id = b.up_id
+						  AND a.pgm_cd = b.pgm_cd
+						  AND a.up_id = #{upId}
+						  AND a.ST_TAG = '0' 
+						  AND a.MM_QTY = '1'
+						  AND a.ONLINE_YN = 'Y'
+						  AND b.st_tag = '0'
+						  <if test="yymm != null and yymm != ''">
+						  	AND #{yymm} between b.start_mon and b.end_mon
+						  </if>
+						  )
+	   <if test="saleIdList != null">						  
+	   AND com_cd in 
+  		<foreach collection="saleIdList" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+       </if>
+	</select>
+	
+	<!-- 사업장에 프로그램별 카테고리  -->
+	<select id="listBasIdBySaleId" parameterType="com.jnet.domain.OutPgm" resultType="com.jnet.domain.OutPgm">
+	  SELECT com_cd codeId 
+		   , com_nm codeNm
+		FROM SCCODTB 
+		WHERE ini_cd = '03' and st_tag = '0'
+		AND com_cd in (SELECT distinct bas_cd
+						FROM SCPGMTB a, SCRGLTB b
+						WHERE a.up_id = b.up_id
+						AND a.pgm_cd = b.pgm_cd
+						<if test="saleId != null and saleId != ''">
+							AND a.sale_com_cd = #{saleId}
+						</if>
+						AND a.up_id = #{upId}
+						AND a.ST_TAG = '0' 
+						AND a.MM_QTY = '1'
+						AND a.ONLINE_YN = 'Y'
+						AND b.st_tag = '0'
+						<if test="yymm != null and yymm != ''">
+							AND #{yymm} between b.start_mon and b.end_mon
+						</if>)
+		<if test="menuSeqList != null">
+		AND com_cd in 
+  		<foreach collection="menuSeqList" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        </if>
+	</select>
+
+	<!-- 프로그램 총목록 수 조회 - 관리자 -->
+	<select id="findPgmTotCnt" parameterType="com.jnet.domain.OutPgm" resultType="Integer">
+		SELECT COUNT(*)
+		  FROM SCPGMTB A WITH(NOLOCK) 
+		  INNER JOIN SCCODTB B WITH(NOLOCK)
+			 ON B.INI_CD = '03' AND B.COM_CD = A.BAS_CD AND B.ST_TAG = '0' 
+		  INNER JOIN SCCODTB G WITH(NOLOCK)
+			 ON G.INI_CD = '34' AND G.COM_CD = A.SALE_COM_CD AND G.ST_TAG = '0'									
+		  INNER JOIN SCCODTB H WITH(NOLOCK)
+			 ON H.INI_CD = '01' AND H.COM_CD = A.UP_ID AND H.ST_TAG = '0'
+		  INNER JOIN SCRGLTB E WITH(NOLOCK)
+			 ON E.UP_ID = A.UP_ID AND E.PGM_CD = A.PGM_CD AND #{yymm} BETWEEN E.START_MON AND E.END_MON AND E.ST_TAG='0'
+		  WHERE A.UP_ID = #{upId}
+		<if test='saleId != null and saleId != ""'>
+			AND A.SALE_COM_CD = #{saleId}
+		</if>
+		<if test='basId != null and basId != ""'>
+			AND A.BAS_CD = #{basId}
+		</if>
+		<choose>
+			<when test='timeCd == "1"'>
+				<![CDATA[
+				AND SUBSTRING(A.START_T,1,2) < '09'
+				]]>
+			</when>
+			<when test='timeCd == "2"'>
+				AND SUBSTRING(A.START_T,1,2) BETWEEN '09' AND '11'
+			</when>	
+			<when test='timeCd == "3"'>
+				AND SUBSTRING(A.START_T,1,2) BETWEEN '12' AND '17'
+			</when>	
+			<when test='timeCd == "4"'>
+				AND SUBSTRING(A.START_T,1,2) >= '18'
+			</when>							
+		</choose>
+	      AND A.MM_QTY = '1'
+	      AND A.ONLINE_YN = 'Y'
+	      AND A.ST_TAG = '0'
+    </select>
+    
+	<!-- 프로그램 목록 조회 - 관리자 -->
+	<select id="listPgmMng" parameterType="com.jnet.domain.OutPgm" resultType="com.jnet.domain.OutPgm">
+					<if test='start != "0" and end != "0"'>
+					SELECT * FROM (
+					  SELECT TOP ${showPage} * FROM (
+					 </if>
+						 SELECT <if test='start != "0" and end != "0"'> 
+			  					TOP ${currentPage}
+			  					</if> 
+						 	    A.PGM_CD AS pgmCd
+						 	  , B.COM_NM AS comNm1
+						 	  , A.PGM_NM AS pgmNm
+						 	  , A.START_T startT
+						 	  , A.END_T endT
+						 	  , A.DT_WEEK_CD AS dtWeekCd
+						 	  , A.SALE_COM_CD saleComCd
+						 	  , G.COM_NM AS comNm2
+						 	  , A.ONLINE_YN onlineYn
+						 	  , H.COM_NM AS comNm4
+						 	  , A.BAS_CD basCd
+						  FROM SCPGMTB A WITH(NOLOCK),SCCODTB B WITH(NOLOCK),SCCODTB G WITH(NOLOCK),SCCODTB H WITH(NOLOCK),SCRGLTB E WITH(NOLOCK)
+						  WHERE A.UP_ID = #{upId}
+						<if test='saleId != null and saleId != ""'>
+							AND A.SALE_COM_CD = #{saleId}
+						</if>
+						<if test='basId != null and basId != ""'>
+							AND A.BAS_CD = #{basId}
+						</if>
+						<choose>
+							<when test='timeCd == "1"'>
+								<![CDATA[
+								AND SUBSTRING(A.START_T,1,2) < '09'
+								]]>
+							</when>
+							<when test='timeCd == "2"'>
+								AND SUBSTRING(A.START_T,1,2) BETWEEN '09' AND '11'
+							</when>	
+							<when test='timeCd == "3"'>
+								AND SUBSTRING(A.START_T,1,2) BETWEEN '12' AND '17'
+							</when>	
+							<when test='timeCd == "4"'>
+								AND SUBSTRING(A.START_T,1,2) >= '18'
+							</when>							
+						</choose>
+					      AND A.MM_QTY = '1'
+					      AND A.ONLINE_YN = 'Y'
+					      AND A.ST_TAG = '0'
+					      AND B.INI_CD = '03' 
+					      AND B.COM_CD = A.BAS_CD 
+					      AND B.ST_TAG = '0' 
+						  AND G.INI_CD = '34' 
+						  AND G.COM_CD = A.SALE_COM_CD 
+						  AND G.ST_TAG = '0'									
+						  AND H.INI_CD = '01' 
+						  AND H.COM_CD = A.UP_ID 
+						  AND H.ST_TAG = '0'
+						  AND E.UP_ID = A.UP_ID 
+						  AND E.PGM_CD = A.PGM_CD 
+						  AND #{yymm} BETWEEN E.START_MON AND E.END_MON 
+						  AND E.ST_TAG='0'
+				ORDER BY A.SALE_COM_CD DESC, A.BAS_CD DESC, A.START_T ASC
+				<if test='start != "0" and end != "0"'> 
+				) A 
+				ORDER BY  A.saleComCd,  A.basCd,  A.startT desc ) B 
+			ORDER BY B.saleComCd DESC , B.basCd DESC, B.startT ASC
+				</if> 
+    </select>
+    
+    
+    <!-- 프로그램 상세조회 - 관리자  -->
+    <select id="findOutPgmMngDtlInfo" parameterType="com.jnet.domain.Pgm" resultType="com.jnet.domain.Pgm">
+		SELECT A.PGM_CD AS pgmCd
+		 	 , B.COM_NM AS comNm1
+		 	 , A.PGM_NM AS pgmNm
+		 	 , A.START_T startT
+		 	 , A.END_T endT
+		 	 , A.DT_WEEK_CD AS dtWeekCd
+		 	 , S.U_PRICE AS uPrice
+		 	 , C.COM_NM AS comNm3
+		 	 , A.SALE_COM_CD saleComCd
+		 	 , G.COM_NM AS comNm2
+		 	 , A.ONLINE_YN onlineYn
+		 	 , S.TARGET_CD targetCd
+		 	 , H.COM_NM AS comNm4
+		 	 , K.COM_NM AS comNm5
+		    FROM SCPGMTB A WITH(NOLOCK) 
+			    ,SCCOSTTB S WITH(NOLOCK)
+			    ,SCCODTB B WITH(NOLOCK)
+			    ,SCCODTB C WITH(NOLOCK)
+			    ,SCCODTB G WITH(NOLOCK) 
+			    ,SCCODTB H WITH(NOLOCK) 
+			    ,SCCODTB K WITH(NOLOCK) 
+			    ,SCRGLTB E WITH(NOLOCK)
+			WHERE A.UP_ID = #{upId}
+			<if test='saleId != null and saleId != ""'>
+				AND A.SALE_COM_CD = #{saleId}
+			</if>
+			<if test='basId != null and basId != ""'>
+				AND A.BAS_CD = #{basId}
+			</if>
+			<choose>
+				<when test='timeCd == "1"'>
+					<![CDATA[
+					AND SUBSTRING(A.START_T,1,2) < '09'
+					]]>
+				</when>
+				<when test='timeCd == "2"'>
+					AND SUBSTRING(A.START_T,1,2) BETWEEN '09' AND '11'
+				</when>	
+				<when test='timeCd == "3"'>
+					AND SUBSTRING(A.START_T,1,2) BETWEEN '12' AND '17'
+				</when>	
+				<when test='timeCd == "4"'>
+					AND SUBSTRING(A.START_T,1,2) >= '18'
+				</when>							
+			</choose>
+		      AND A.MM_QTY = '1'
+		      AND A.ONLINE_YN = 'Y'
+		      AND A.ST_TAG = '0'
+		      AND A.PGM_CD = #{pgmCd}
+		      AND S.UP_ID = A.UP_ID 
+		      AND S.PGM_CD = A.PGM_CD 
+		      AND S.ST_TAG = '0' 
+			  AND B.INI_CD = '03' 
+			  AND B.COM_CD = A.BAS_CD 
+			  AND B.ST_TAG = '0' 
+			  AND C.INI_CD = '04' 
+			  AND C.COM_CD = S.TARGET_CD 
+			  AND C.ST_TAG = '0' 
+			  AND G.INI_CD = '34' 
+			  AND G.COM_CD = A.SALE_COM_CD 
+			  AND G.ST_TAG = '0'									
+			  AND H.INI_CD = '01' 
+			  AND H.COM_CD = A.UP_ID 
+			  AND H.ST_TAG = '0'
+			  AND K.INI_CD = '02' 
+			  AND K.COM_CD = A.AREA_CD 
+			  AND K.ST_TAG = '0'
+			  AND E.UP_ID = A.UP_ID 
+			  AND E.PGM_CD = A.PGM_CD 
+			  AND #{yymm} BETWEEN E.START_MON AND E.END_MON 
+			  AND E.ST_TAG='0'
+    </select>
+    
+    
+    <!-- 프로그램 총목록 수 조회 - 사용자 -->
+	<select id="findFrontPgmTotCnt" parameterType="com.jnet.domain.Pgm" resultType="Integer">
+		SELECT COUNT(*)
+		    FROM SCPGMTB A WITH(NOLOCK) 
+				, SCCOSTTB S WITH(NOLOCK) 
+				, SCCODTB B WITH(NOLOCK)
+				, SCCODTB C WITH(NOLOCK) 
+				, SCCODTB G WITH(NOLOCK) 
+				, SCCODTB H WITH(NOLOCK)
+				, SCRGLTB E WITH(NOLOCK)
+			WHERE A.UP_ID = #{upId}
+			  <if test='saleId != null and saleId != ""'>
+				AND A.SALE_COM_CD = #{saleId}
+			  </if>
+			  <if test='basId != null and basId != ""'>
+				AND A.BAS_CD = #{basId}
+			  </if>
+			  <choose>
+				<when test='timeCd == "1"'>
+					<![CDATA[
+					AND SUBSTRING(A.START_T,1,2) < '09'
+					]]>
+				</when>
+				<when test='timeCd == "2"'>
+					AND SUBSTRING(A.START_T,1,2) BETWEEN '09' AND '11'
+				</when>	
+				<when test='timeCd == "3"'>
+					AND SUBSTRING(A.START_T,1,2) BETWEEN '12' AND '17'
+				</when>	
+				<when test='timeCd == "4"'>
+					AND SUBSTRING(A.START_T,1,2) >= '18'
+				</when>							
+			  </choose>
+			  <if test='pgmCd != null and pgmCd != "" '>
+		      AND A.PGM_CD = #{pgmCd}
+		      </if>
+		      <if test='comCd3 != null and comCd3 != "" '>
+		      AND C.COM_CD = #{comCd3}
+		      </if>
+		      AND A.MM_QTY = '1'
+		      AND A.ONLINE_YN = 'Y'
+		      AND A.ST_TAG = '0'
+		      AND S.UP_ID = A.UP_ID 
+		      AND S.PGM_CD = A.PGM_CD 
+		      AND S.ST_TAG = '0' 
+			  AND B.INI_CD = '03' 
+			  AND B.COM_CD = A.BAS_CD 
+			  AND B.ST_TAG = '0' 
+			  AND C.INI_CD = '04' 
+			  AND C.COM_CD = S.TARGET_CD 
+			  AND C.ST_TAG = '0' 
+			  AND G.INI_CD = '34' 
+			  AND G.COM_CD = A.SALE_COM_CD 
+			  AND G.ST_TAG = '0'									
+			  AND H.INI_CD = '01'
+			  AND H.COM_CD = A.UP_ID 
+			  AND H.ST_TAG = '0'
+			  AND E.UP_ID = A.UP_ID 
+			  AND E.PGM_CD = A.PGM_CD 
+			  AND #{yymm} BETWEEN E.START_MON AND E.END_MON
+			  AND E.ST_TAG='0'
+    </select>
+    
+    
+    
+    
+    <!-- 프로그램 상세조회 - 사용자 페이지(리스트)  -->
+    <select id="listFrontPgm" parameterType="com.jnet.domain.Pgm" resultType="com.jnet.domain.Pgm">
+    	<if test='start != "0" and end != "0"'>
+		SELECT * FROM (
+		  SELECT TOP ${showPage} * FROM (
+		</if>
+		    SELECT   <if test='start != "0" and end != "0"'>
+		    			TOP ${currentPage}
+		    		 </if>
+		    			 T1.*
+					    	  	  ,(T1.RGL_QTY - ISNULL(T1.ONLINE_INWON, 0) - ISNULL(D.MEM_CNT, 0)) AS offlineAcceptCnt
+								  ,(ISNULL(T1.ONLINE_INWON, 0) - ISNULL(F.MEM_CNT, 0)) AS onlineAcceptCnt
+					    		FROM
+					    		( SELECT 
+					    				 A.BAS_CD AS basCd 	
+										 , A.PGM_CD AS pgmCd
+									 	 , B.COM_NM AS comNm1
+									 	 , A.PGM_NM AS pgmNm
+									 	 , A.START_T startT
+									 	 , A.END_T endT
+									 	 , A.DT_WEEK_CD AS dtWeekCd
+									 	 , S.U_PRICE AS uPrice
+									 	 , C.COM_NM AS comNm3
+									 	 , C.COM_cd AS comCd3
+									 	 , A.SALE_COM_CD saleComCd
+									 	 , G.COM_NM AS comNm2
+									 	 , A.ONLINE_YN onlineYn
+									 	 , S.TARGET_CD targetCd
+									 	 , H.COM_NM AS comNm4
+									 	 , E.RGL_QTY
+									 	 , ONLINE_INWON
+									 	 , A.UP_ID upId
+									    FROM SCPGMTB A WITH(NOLOCK) 
+											, SCCOSTTB S WITH(NOLOCK) 
+											, SCCODTB B WITH(NOLOCK)
+											, SCCODTB C WITH(NOLOCK) 
+											, SCCODTB G WITH(NOLOCK) 
+											, SCCODTB H WITH(NOLOCK)
+											, SCRGLTB E WITH(NOLOCK)
+										WHERE 1=1
+										  <if test='upId != null and upId != "" and upId != "00"'>
+											AND A.UP_ID = #{upId}
+									   	  </if>
+										  <if test='saleId != null and saleId != ""'>
+											AND A.SALE_COM_CD = #{saleId}
+										  </if>
+										  <if test='basId != null and basId != ""'>
+											AND A.BAS_CD = #{basId}
+										  </if>
+										  <if test='searchVal != null and searchVal != ""'>
+											and a.PGM_NM like '%'+#{searchVal}+'%'
+										  </if>
+										  <choose>
+											<when test='timeCd == "1"'>
+												<![CDATA[
+												AND SUBSTRING(A.START_T,1,2) < '09'
+												]]>
+											</when>
+											<when test='timeCd == "2"'>
+												AND SUBSTRING(A.START_T,1,2) BETWEEN '09' AND '11'
+											</when>	
+											<when test='timeCd == "3"'>
+												AND SUBSTRING(A.START_T,1,2) BETWEEN '12' AND '17'
+											</when>	
+											<when test='timeCd == "4"'>
+												AND SUBSTRING(A.START_T,1,2) >= '18'
+											</when>							
+										  </choose>
+										  <if test='pgmCd != null and pgmCd != "" '>
+									      AND A.PGM_CD = #{pgmCd}
+									      </if>
+									      <if test='comCd3 != null and comCd3 != "" '>
+									      AND C.COM_CD = #{comCd3}
+									      </if>
+									      AND A.MM_QTY = '1'
+									      AND A.ONLINE_YN = 'Y'
+									      AND A.ST_TAG = '0'
+									      AND S.UP_ID = A.UP_ID 
+									      AND S.PGM_CD = A.PGM_CD 
+									      AND S.ST_TAG = '0' 
+										  AND B.INI_CD = '03' 
+										  AND B.COM_CD = A.BAS_CD 
+										  AND B.ST_TAG = '0' 
+										  AND C.INI_CD = '04' 
+										  AND C.COM_CD = S.TARGET_CD 
+										  AND C.ST_TAG = '0' 
+										  AND G.INI_CD = '34' 
+										  AND G.COM_CD = A.SALE_COM_CD 
+										  AND G.ST_TAG = '0'									
+										  AND H.INI_CD = '01'
+										  AND H.COM_CD = A.UP_ID 
+										  AND H.ST_TAG = '0'
+										  AND E.UP_ID = A.UP_ID 
+										  AND E.PGM_CD = A.PGM_CD 
+										  AND #{yymm} BETWEEN E.START_MON AND E.END_MON
+										  AND E.ST_TAG='0'
+								) T1 
+								LEFT JOIN
+								( SELECT UP_ID, PGM_CD, COUNT(*) AS MEM_CNT 
+								    FROM SGREGTB WITH(NOLOCK)
+								   WHERE ENTER_YYMM= #{yymm} 
+								     AND ST_TAG='0'
+							     	<![CDATA[ 
+								     AND F_ENTER_MAN <> 'WEB'
+								     ]]> 
+								   GROUP BY UP_ID, PGM_CD) D
+								ON T1.upId = D.UP_ID AND T1.pgmCd = D.PGM_CD
+								LEFT JOIN
+								( SELECT UP_ID, PGM_CD, COUNT(*) AS MEM_CNT 
+								    FROM SGREGTB WITH(NOLOCK) 
+								   WHERE ENTER_YYMM= #{yymm}
+								     AND ST_TAG='0' 
+								     AND F_ENTER_MAN = 'WEB' 
+								   GROUP BY UP_ID, PGM_CD) F
+								 ON T1.upId = F.UP_ID AND T1.pgmCd = F.PGM_CD
+								  ORDER BY T1.pgmCd
+								  <if test='start != "0" and end != "0"'>
+								  ) A 
+		  ORDER BY A.pgmCd DESC) B 
+		ORDER BY B.pgmCd
+								 </if>
+    </select>
+    
+    
+    
+    <!-- 프로그램 상세조회 - 사용자 페이지(리스트/뷰)  -->
+    <select id="findOutPgmMng" parameterType="com.jnet.domain.Pgm" resultType="com.jnet.domain.Pgm">
+		    SELECT 
+   				   A.BAS_CD AS basCd 	
+				 , A.PGM_CD AS pgmCd
+			 	 , B.COM_NM AS comNm1
+			 	 , A.PGM_NM AS pgmNm
+			 	 , A.START_T startT
+			 	 , A.END_T endT
+			 	 , A.DT_WEEK_CD AS dtWeekCd
+			 	 , S.U_PRICE AS uPrice
+			 	 , C.COM_NM AS comNm3
+			 	 , C.COM_cd AS comCd3
+			 	 , A.SALE_COM_CD saleComCd
+			 	 , G.COM_NM AS comNm2
+			 	 , A.ONLINE_YN onlineYn
+			 	 , S.TARGET_CD targetCd
+			 	 , H.COM_NM AS comNm4
+			 	 , K.COM_NM AS comNm5
+			 	 , E.RGL_QTY
+			 	 , ONLINE_INWON
+			 	 , A.UP_ID AS upId
+			    FROM SCPGMTB A WITH(NOLOCK) 
+					, SCCOSTTB S WITH(NOLOCK) 
+					, SCCODTB B WITH(NOLOCK)
+					, SCCODTB C WITH(NOLOCK) 
+					, SCCODTB G WITH(NOLOCK) 
+					, SCCODTB H WITH(NOLOCK)
+					, SCCODTB K WITH(NOLOCK)
+					, SCRGLTB E WITH(NOLOCK)
+				WHERE A.UP_ID = #{upId}
+				  <if test='saleId != null and saleId != ""'>
+					AND A.SALE_COM_CD = #{saleId}
+				  </if>
+				  <if test='basId != null and basId != ""'>
+					AND A.BAS_CD = #{basId}
+				  </if>
+				  <choose>
+					<when test='timeCd == "1"'>
+						<![CDATA[
+						AND SUBSTRING(A.START_T,1,2) < '09'
+						]]>
+					</when>
+					<when test='timeCd == "2"'>
+						AND SUBSTRING(A.START_T,1,2) BETWEEN '09' AND '11'
+					</when>	
+					<when test='timeCd == "3"'>
+						AND SUBSTRING(A.START_T,1,2) BETWEEN '12' AND '17'
+					</when>	
+					<when test='timeCd == "4"'>
+						AND SUBSTRING(A.START_T,1,2) >= '18'
+					</when>							
+				  </choose>
+			      AND A.PGM_CD = #{pgmCd}
+			      AND C.COM_CD = #{comCd3}
+			      AND A.MM_QTY = '1'
+			      AND A.ONLINE_YN = 'Y'
+			      AND A.ST_TAG = '0'
+			      AND S.UP_ID = A.UP_ID 
+			      AND S.PGM_CD = A.PGM_CD 
+			      AND S.ST_TAG = '0' 
+				  AND B.INI_CD = '03' 
+				  AND B.COM_CD = A.BAS_CD 
+				  AND B.ST_TAG = '0' 
+				  AND C.INI_CD = '04' 
+				  AND C.COM_CD = S.TARGET_CD 
+				  AND C.ST_TAG = '0' 
+				  AND G.INI_CD = '34' 
+				  AND G.COM_CD = A.SALE_COM_CD 
+				  AND G.ST_TAG = '0'									
+				  AND H.INI_CD = '01'
+				  AND H.COM_CD = A.UP_ID 
+				  AND H.ST_TAG = '0'
+				  AND K.INI_CD = '02'
+				  AND K.COM_CD = A.AREA_CD 
+				  AND K.ST_TAG = '0'
+				  AND E.UP_ID = A.UP_ID 
+				  AND E.PGM_CD = A.PGM_CD 
+				  AND #{yymm} BETWEEN E.START_MON AND E.END_MON
+				  AND E.ST_TAG='0'
+    </select>
+    
+    <!-- 프로그램 부가정보 상세조회  -->
+    <select id="findPgmMng" parameterType="com.jnet.domain.Pgm" resultType="com.jnet.domain.PgmImg">
+    	  <!-- 	
+		  SELECT a.pgm_seq pgmSeq
+			    ,a.program_intro pgmIntro
+			    ,a.program_detail_content  pgmDtlCts
+			    ,a.supply
+			    ,a.out_pgm_cd pgmCd
+			    ,b.img_path imgPath
+			    ,b.orgnl_file_nm orgnlFileNm
+			    ,b.real_file_nm realFileNm
+			    ,b.pgm_img_seq pgmImgSeq
+		   FROM jongno_pgm a
+		   LEFT OUTER JOIN jongno_pgm_img b
+		     ON a.pgm_seq = b.pgm_seq
+		  WHERE a.out_pgm_cd = #{pgmCd}
+		    AND (b.THUMB_YN = 'Y' OR b.THUMB_YN IS NULL)
+		  -->
+		  SELECT 
+		  			P.pgm_cd pgmCd, P.up_id upId, J.*   
+		  FROM
+					lampsports.dbo.scpgmtb P LEFT OUTER JOIN
+					(SELECT 
+							a.pgm_seq pgmSeq ,
+							a.program_intro pgmIntro ,
+							a.program_detail_content pgmDtlCts ,
+							a.supply ,
+							a.out_pgm_cd,
+							a.out_up_id,
+							b.img_path imgPath ,
+							b.orgnl_file_nm orgnlFileNm ,
+							b.real_file_nm realFileNm ,
+							b.pgm_img_seq pgmImgSeq 
+					FROM 
+							jongno_pgm a LEFT OUTER JOIN jongno_pgm_img b ON a.pgm_seq = b.pgm_seq 
+					WHERE  (b.THUMB_YN = 'Y' OR b.THUMB_YN IS NULL)) J
+					ON J.out_pgm_cd = P.pgm_cd AND J.out_up_id = P.up_id
+		 WHERE
+					P.pgm_cd = #{pgmCd} AND P.up_id = #{upId}  
+    </select>
+    
+    <!-- 프로그램 부가정보 저장 -->
+    <insert id="savePgmMng" parameterType="com.jnet.domain.TeacherImg" useGeneratedKeys="true" keyProperty="pgmSeq">
+    	INSERT INTO JONGNO_PGM(out_pgm_cd
+    						  ,out_up_id
+						      ,program_intro
+						      ,program_detail_content
+						      ,supply
+						      ,create_id
+						   	  ,create_ip
+						      ,create_ymd
+						      ,create_hms
+						      ,modi_id
+						      ,modi_ip
+						      ,modi_ymd
+						      ,modi_hms)
+						VALUES(#{pgmCd}
+							  ,#{upId}
+						      ,#{pgmIntro}
+						      ,#{pgmDtlCts}
+						      ,#{supply}
+						      ,#{modiId}
+						      ,#{modiIp}
+						      ,#{modiYmd}
+						      ,#{modiHms}
+						      ,#{modiId}
+						      ,#{modiIp}
+						      ,#{modiYmd}
+						      ,#{modiHms})
+    </insert>
+    
+    <!-- 프로그램 부가정보 수정 -->
+    <update id="updatePgmMng" parameterType="com.jnet.domain.TeacherImg">
+    		UPDATE JONGNO_PGM
+    		   SET out_pgm_cd = #{pgmCd}
+    		   <!-- 
+    		   	  ,out_up_id = #{upId}
+    		   -->	  
+			      ,program_intro = #{pgmIntro}
+			      ,program_detail_content = #{pgmDtlCts}
+			      ,supply = #{supply}
+			      ,modi_id = #{modiId}
+			      ,modi_ip = #{modiIp}
+			      ,modi_ymd = #{modiYmd}
+			      ,modi_hms = #{modiHms}
+			WHERE pgm_seq = #{pgmSeq}
+				  AND out_up_id = ${upId}	
+    </update>
+    
+    <!-- 프로그램 - 강사저장 -->
+    <insert id="savePgmTeacher" parameterType="com.jnet.domain.TeacherImg">
+    	INSERT INTO jongno_pgm_teacher(teacher_seq, pgm_seq)
+    	 						VALUES(#{teacherSeq},#{pgmSeq})
+    </insert>
+    
+    <!-- 프로그램 - 강사삭제 -->
+    <delete id="removePgmTeacher" parameterType="com.jnet.domain.TeacherImg">
+    	DELETE FROM jongno_pgm_teacher WHERE pgm_seq = #{pgmSeq}
+    </delete>
+    
+    <!-- 프로그램 대표이미지 저장 -->
+    <insert id="savePgmImg" parameterType="com.jnet.domain.TeacherImg">
+    	INSERT INTO jongno_pgm_img(  img_path
+							    	,orgnl_file_nm
+							    	,real_file_nm
+							    	,thumb_yn
+							    	,create_id
+							    	,create_ip
+							    	,create_ymd
+							    	,create_hms
+							    	,modi_id
+							    	,modi_ip
+							    	,modi_ymd
+							    	,modi_hms
+							    	,rm_yn
+							    	,pgm_seq)
+						    VALUES(#{imgPath}
+						    	  ,#{orgnlFileNm}
+						    	  ,#{realFileNm}
+						    	  ,#{thumbYn}
+						    	  ,#{modiId}
+							      ,#{modiIp}
+							      ,#{modiYmd}
+							      ,#{modiHms}
+						    	  ,#{modiId}
+							      ,#{modiIp}
+							      ,#{modiYmd}
+							      ,#{modiHms}
+						    	  ,'N'
+						    	  ,#{pgmSeq})
+    </insert>
+    
+    <!-- 프로그램 대표이미지 삭제 -->
+    <delete id="removePgmImg" parameterType="com.jnet.domain.TeacherImg">
+    	DELETE FROM jongno_pgm_img WHERE pgm_seq = #{pgmSeq}
+    </delete>
+    
+    <!-- 단건으로 프로그램 권한조회(해당 건들이 arraylist 에 담김) -->
+	 <select id="findPgmAuth" parameterType="com.jnet.domain.TeacherImg" resultType="com.jnet.domain.TeacherImg">
+      SELECT DISTINCT a.up_id slctFacilId
+	   		  		 , b.COM_NM comNm1
+					 , a.sale_com_cd saleId
+					 , c.COM_NM comNm2
+					 , a.bas_cd menuSeqStr
+					 , d.COM_NM comNm3
+					 ,'PGM' pgmGbnCd
+	    FROM SCPGMTB a
+		INNER JOIN SCCODTB b WITH(NOLOCK)
+		  ON b.INI_CD = '01' AND b.COM_CD = A.UP_ID AND b.ST_TAG = '0'				
+		INNER JOIN SCCODTB c WITH(NOLOCK)
+		  ON c.INI_CD = '34' AND c.COM_CD = A.SALE_COM_CD AND c.ST_TAG = '0'		
+  	    INNER JOIN SCCODTB d WITH(NOLOCK)
+		  ON d.INI_CD = '03' AND d.COM_CD = A.BAS_CD AND d.ST_TAG = '0' 
+		WHERE a.up_id = #{upId}
+		  AND a.sale_com_cd = #{saleId} 
+		  AND a.bas_cd = #{basId}
+		  AND A.MM_QTY = '1'
+		  AND A.ONLINE_YN = 'Y'
+		  AND A.ST_TAG = '0'
+	</select>
+	
+	<!-- 접수일 설정 목록조회 -->
+	<select id="listAcceptDate" parameterType="com.jnet.domain.Pgm" resultType="com.jnet.domain.Pgm">
+	  SELECT accept_date_seq acceptDateSeq
+			,up_id_code upIdCode
+			,code_nm codeNm
+			,accept_st_ymd acceptStYmd
+			,accept_ed_ymd acceptEdYmd
+			,lastday_chk_yn lastDayChkYn
+		FROM jongno_accept_date a, jongno_comm_code b
+	   WHERE a.up_id_code = b.code_id
+		 AND b.code_gbn_cd = #{codeGbnCd}
+		 <if test='admAuthCode == "O"'>
+		 AND b.CODE_ID in ( SELECT DISTINCT slct_facil_id 
+		 					  FROM jongno_admin_menu 
+		 					 WHERE admin_seq = #{admSeq} 
+		 					   AND pgm_gbn_cd = #{pgmGbnCd})
+		 </if>
+	</select>
+	
+	<!-- 접수일 변경 -->
+	<update id="updateAccept" parameterType="com.jnet.domain.Pgm">
+		UPDATE jongno_accept_date
+		   SET accept_st_ymd = #{acceptStYmd}
+		     , accept_ed_ymd = #{acceptEdYmd}
+		     , lastday_chk_yn = #{lastDayChkYn}
+		 WHERE accept_date_seq = #{acceptDateSeq}
+	</update>
+	
+	<!-- 장바구니 담기 시 시설별 접수일 가능여부 확인 -->
+	<select id="findAcceptDateByUpId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT  
+	    		COUNT(1)
+  		  FROM jongno_accept_date a
+ 		 WHERE a.up_id_code = #{upId}
+	       AND #{today} BETWEEN CONVERT(char(6), GETDATE(), 112) + dbo.fn_lpad(accept_st_ymd, 2, '0')  AND (CASE WHEN ISNULL(lastday_chk_yn, 'N') = 'Y' THEN #{lastDay} ELSE CONVERT(char(6), GETDATE(), 112) + dbo.fn_lpad(accept_ed_ymd, 2, '0') END)
+	</select>
+</mapper>

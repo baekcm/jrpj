@@ -1,0 +1,50 @@
+<%@ include file="/XecureObject/xecure.jsp" %>
+
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=ks_c_5601-1987'>
+<title>암호화 데모 결과</title>
+</head>
+<body>
+
+<p align='center'><big><strong>암호화된 클라이언트 Request 복호화 결과입니다. </strong></big></p>
+
+<!---BEGIN_ENC--->
+<table border='1' width='100%'>
+<tr>
+<td width='17%'><strong>QueryString :</strong></td>
+<td width='83%'><strong>
+<%=request.getQueryString( ) %>
+</strong></td>
+</tr>
+<tr>
+<td width='17%'><strong>QueryString abc :</strong></td>
+<td width='83%'><strong>
+<%=request.getParameter("abc" ) %> 
+</strong></td>
+</tr>
+<tr>
+<td width='17%'><strong>QueryString pop :</strong></td>
+<td width='83%'><strong>
+<%=request.getParameter("pop" ) %>
+</strong></td>
+</tr>
+<tr>
+<td width='17%'><strong>text_field1 :</strong></td>
+<td width='83%'><strong>
+<%=request.getParameter("text_field1" ) %>
+</strong></td>
+</tr>
+<tr>
+<td width='17%'><strong>text_field2 :</strong></td>
+<td width='83%'><strong>
+<%=request.getParameter("text_field2" ) %>
+</strong></td>
+</tr>
+</table>
+<!---END_ENC--->
+
+<p> </p>
+<p align='center'><a href='/XecureDemo/jsp/enc_client_request.html'>이전 화면</a></p>
+</body></html>
+

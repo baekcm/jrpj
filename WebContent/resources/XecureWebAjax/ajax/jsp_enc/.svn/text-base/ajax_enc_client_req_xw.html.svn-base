@@ -1,0 +1,119 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Xecure Ajax Test</title>
+		<script language="javascript" src=xecureweb.js></script>
+		<script language="javascript">
+			PrintObjectTag();
+			var TRIM_PATTERN = /(^\s*)|(\s*$)/g;	// �� ����� trim�ϱ� ���� ��
+
+			String.prototype.trim = function() {
+				return this.replace(TRIM_PATTERN, "");
+			}
+		</script>
+
+		<script type="text/javascript">
+			var xmlHttp;
+
+			function createXMLHttpRequest()
+			{
+				if (window.ActiveXObject) {
+					try {
+						xmlHttp =  new ActiveXObject("Msxml2.XMLHTTP");	// IE6
+					}
+					 catch (e) {
+						try {
+							xmlHttp =  new ActiveXObject("Microsoft.XMLHTTP");	// IE4, IE5
+						} catch (e2) {}
+					}
+				} else if (window.XMLHttpRequest) {
+					xmlHttp =  new XMLHttpRequest();
+				}
+			}
+
+			function doRequestUsingGET(aaa) {
+				createXMLHttpRequest();
+				var url;
+				var queryString = "abc=def&pop=hi&" + XecureMakePlain(document.f1);
+
+				if(aaa == "servlet"){
+					url = "./ajax_enc_server_res_xw?"+queryString
+				}
+
+				else if (aaa == "jsp"){
+					url = "./ajax_enc_server_res_xw.jsp?"+queryString;
+				}
+				url = XecureAjaxGet(url);
+				xmlHttp.onreadystatechange = handleStateChange;
+				xmlHttp.open("GET", url, true);
+				xmlHttp.send(null);
+				return false;
+			}
+
+			function doRequestUsingPOST(aaa) {
+				createXMLHttpRequest();
+				var url;
+
+				if(aaa == 'servlet'){
+					url = "./ajax_enc_server_res_xw?abc=def&pop=hi";
+				}
+
+				else if (aaa == 'jsp'){
+					url = "./ajax_enc_server_res_xw.jsp?abc=def&pop=hi";
+				}
+				
+				url = XecureAjaxGet(url);
+				xmlHttp.open("POST", url, true);
+				xmlHttp.onreadystatechange = handleStateChange;
+				xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+				var p_value = XecureAjaxPost(XecureMakePlain(document.f1));
+				xmlHttp.send(p_value);
+
+				return false;
+			}
+
+			function handleStateChange() {
+				if(xmlHttp.readyState == 4) {
+					if(xmlHttp.status == 200) {
+						if(document.test.data1.value!="" || document.test.data2.value!="" || document.test.data3.value!=""){
+							document.test.data1.value="";
+							document.test.data2.value="";
+							document.test.data3.value="";
+							alert("text box clear");
+						}
+						var enc = xmlHttp.responseText;
+						document.test.data1.value = enc;
+
+						enc =  enc.trim();
+						document.test.data2.value = enc;
+
+						var dec = BlockDec(enc);
+						document.test.data3.value = dec;
+					}
+				}
+			}
+		</script>
+		<meta http-equiv="Content-Type" content="text/html; charset=ks_c_5601-1987">
+	</head>
+	<body>
+		<form action="#" name="f1">
+			<table width="600" border="0">
+				<tr>
+					<td>text_field1 : <input type="text" name="text_field1" id="text_field1" /></td>
+					<td>text_field2 : <input type="text" name="text_field2" id="text_field2" /></td>
+				</tr>
+			</table>
+			<input type="button" value="XecureLink�� �̿��� Ŭ���̾�Ʈ Request Get(���?)" onclick="doRequestUsingGET('servlet');" /><br><br>
+			<input type="button" value="XecureLink�� �̿��� Ŭ���̾�Ʈ Request Get(JSP)" onclick="doRequestUsingGET('jsp');" /><br><br>
+			<input type="button" value="XecureLink�� �̿��� Ŭ���̾�Ʈ Request Post(���?)" onclick="doRequestUsingPOST('servlet');" /><br><br>
+			<input type="button" value="XecureLink�� �̿��� Ŭ���̾�Ʈ Request Post(JSP)" onclick="doRequestUsingPOST('jsp');" /><br><br>
+		</form>
+		<form name="test">
+			xmlHttp.responseText Trim ��<br>
+			<textarea cols=100 rows=15 name='data1'></textarea><br>
+			xmlHttp.responseText Trim ��<br>
+			<textarea cols=100 rows=15 name='data2'></textarea><br>
+			BlockDec(xmlHttp.responseText.trim())<br>
+			<textarea cols=100 rows=15 name='data3'></textarea><br>
+		</form>
+	</body>
+</html>

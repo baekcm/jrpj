@@ -1,0 +1,422 @@
+package com.jnet.domain;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
+public class BbsData extends Bbs {
+	private static final long serialVersionUID = 1L;
+	//게시물 번호
+	private Integer dataSeq;
+	private Integer[] dataSeqArr;
+	
+	//게시물 제목
+	private String subject;
+	//게시물 내용
+	private String content;
+	//조회수
+	private int hitnum;
+	
+	
+	private String userNm;
+	///////////////////////////////////
+	/////////////// 클린 ///////////////
+	///////////////////////////////////
+	private Integer cleanSeq;
+	private String phone1;
+	private String phone2;
+	private String phone3;
+	private String email1;
+	private String email2;
+	/////////// 클린 파일 정보 ///////////
+	private Integer cleanFileSeq;
+	
+	///////////////////////////////////////
+	/////////////// 고객제안 ///////////////
+	///////////////////////////////////////
+	private Integer suggestSeq;
+	private String suggestGbnCd;
+	private String purpose;
+	private String problem;
+	private String way;
+	private String effect;
+	//상태구분(R:접수,I:처리중,C:완료)
+	private String statusCd;
+	/////////// 고객제안 파일 정보 ///////////
+	private Integer suggestFileSeq;
+	
+	private String learnYmd;
+	private String learnArea;
+	private String learnStoreYn;
+	private String urlNm;
+	private String catGbnCd;
+	private String pgmCatGbnCd;
+	private String newYn; 
+	private String filePathNm;
+	
+	//분류카테고리
+	private String grpCatCdYn;
+	
+	//무료강좌-장소
+	private String freePlace;
+	//무료강좌-일시
+	private String freeDtm;
+	//무료강좌-강사번호
+	private Integer[] teacherSeqArr;
+	private Integer teacherSeq;
+	//무료강좌-강사명
+	private String teacherNm;
+	
+	public String getTeacherNm() {
+		return teacherNm;
+	}
+
+
+	public void setTeacherNm(String teacherNm) {
+		this.teacherNm = teacherNm;
+	}
+
+
+	public Integer getDataSeq() {
+		return dataSeq;
+	}
+
+
+	public void setDataSeq(Integer dataSeq) {
+		this.dataSeq = dataSeq;
+	}
+
+
+	public Integer[] getDataSeqArr() {
+		return dataSeqArr;
+	}
+
+
+	public void setDataSeqArr(Integer[] dataSeqArr) {
+		this.dataSeqArr = dataSeqArr;
+	}
+
+
+	public String getSubject() {
+		return subject;
+	}
+
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+
+	public String getContent() {
+		return content;
+	}
+
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+
+	public int getHitnum() {
+		return hitnum;
+	}
+
+
+	public void setHitnum(int hitnum) {
+		this.hitnum = hitnum;
+	}
+
+
+	public String getUserNm() {
+		return userNm;
+	}
+
+
+	public void setUserNm(String userNm) {
+		this.userNm = userNm;
+	}
+
+
+	public Integer getCleanSeq() {
+		return cleanSeq;
+	}
+
+
+	public void setCleanSeq(Integer cleanSeq) {
+		this.cleanSeq = cleanSeq;
+	}
+
+
+	public String getPhone1() {
+		return phone1;
+	}
+
+
+	public void setPhone1(String phone1) {
+		this.phone1 = phone1;
+	}
+
+
+	public String getPhone2() {
+		return phone2;
+	}
+
+
+	public void setPhone2(String phone2) {
+		this.phone2 = phone2;
+	}
+
+
+	public String getPhone3() {
+		return phone3;
+	}
+
+
+	public void setPhone3(String phone3) {
+		this.phone3 = phone3;
+	}
+
+
+	public String getEmail1() {
+		return email1;
+	}
+
+
+	public void setEmail1(String email1) {
+		this.email1 = email1;
+	}
+
+
+	public String getEmail2() {
+		return email2;
+	}
+
+
+	public void setEmail2(String email2) {
+		this.email2 = email2;
+	}
+
+
+	public Integer getCleanFileSeq() {
+		return cleanFileSeq;
+	}
+
+
+	public void setCleanFileSeq(Integer cleanFileSeq) {
+		this.cleanFileSeq = cleanFileSeq;
+	}
+
+
+	public Integer getSuggestSeq() {
+		return suggestSeq;
+	}
+
+
+	public void setSuggestSeq(Integer suggestSeq) {
+		this.suggestSeq = suggestSeq;
+	}
+
+
+	public String getSuggestGbnCd() {
+		return suggestGbnCd;
+	}
+
+
+	public void setSuggestGbnCd(String suggestGbnCd) {
+		this.suggestGbnCd = suggestGbnCd;
+	}
+
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+
+	public String getProblem() {
+		return problem;
+	}
+
+
+	public void setProblem(String problem) {
+		this.problem = problem;
+	}
+
+
+	public String getWay() {
+		return way;
+	}
+
+
+	public void setWay(String way) {
+		this.way = way;
+	}
+
+
+	public String getEffect() {
+		return effect;
+	}
+
+
+	public void setEffect(String effect) {
+		this.effect = effect;
+	}
+
+
+	public String getStatusCd() {
+		return statusCd;
+	}
+
+
+	public void setStatusCd(String statusCd) {
+		this.statusCd = statusCd;
+	}
+
+
+	public Integer getSuggestFileSeq() {
+		return suggestFileSeq;
+	}
+
+
+	public void setSuggestFileSeq(Integer suggestFileSeq) {
+		this.suggestFileSeq = suggestFileSeq;
+	}
+
+
+	public String getLearnYmd() {
+		return learnYmd;
+	}
+
+
+	public void setLearnYmd(String learnYmd) {
+		this.learnYmd = learnYmd;
+	}
+
+
+	public String getLearnArea() {
+		return learnArea;
+	}
+
+
+	public void setLearnArea(String learnArea) {
+		this.learnArea = learnArea;
+	}
+
+
+	public String getLearnStoreYn() {
+		return learnStoreYn;
+	}
+
+
+	public void setLearnStoreYn(String learnStoreYn) {
+		this.learnStoreYn = learnStoreYn;
+	}
+
+
+	public String getUrlNm() {
+		return urlNm;
+	}
+
+
+	public void setUrlNm(String urlNm) {
+		this.urlNm = urlNm;
+	}
+
+
+	public String getCatGbnCd() {
+		return catGbnCd;
+	}
+
+
+	public void setCatGbnCd(String catGbnCd) {
+		this.catGbnCd = catGbnCd;
+	}
+
+
+	public String getPgmCatGbnCd() {
+		return pgmCatGbnCd;
+	}
+
+
+	public void setPgmCatGbnCd(String pgmCatGbnCd) {
+		this.pgmCatGbnCd = pgmCatGbnCd;
+	}
+
+
+	public String getNewYn() {
+		return newYn;
+	}
+
+
+	public void setNewYn(String newYn) {
+		this.newYn = newYn;
+	}
+
+
+	public String getFilePathNm() {
+		return filePathNm;
+	}
+
+
+	public void setFilePathNm(String filePathNm) {
+		this.filePathNm = filePathNm;
+	}
+
+
+	public String getGrpCatCdYn() {
+		return grpCatCdYn;
+	}
+
+
+	public void setGrpCatCdYn(String grpCatCdYn) {
+		this.grpCatCdYn = grpCatCdYn;
+	}
+
+
+	public String getFreePlace() {
+		return freePlace;
+	}
+
+
+	public void setFreePlace(String freePlace) {
+		this.freePlace = freePlace;
+	}
+
+
+	public String getFreeDtm() {
+		return freeDtm;
+	}
+
+
+	public void setFreeDtm(String freeDtm) {
+		this.freeDtm = freeDtm;
+	}
+
+
+	public Integer[] getTeacherSeqArr() {
+		return teacherSeqArr;
+	}
+
+
+	public void setTeacherSeqArr(Integer[] teacherSeqArr) {
+		this.teacherSeqArr = teacherSeqArr;
+	}
+
+
+	public Integer getTeacherSeq() {
+		return teacherSeq;
+	}
+
+
+	public void setTeacherSeq(Integer teacherSeq) {
+		this.teacherSeq = teacherSeq;
+	}
+
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+}

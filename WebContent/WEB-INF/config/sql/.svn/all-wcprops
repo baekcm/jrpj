@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/ijongro/!svn/ver/1373/ijongro/WebContent/WEB-INF/config/sql
+END
+pgmSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/1284/ijongro/WebContent/WEB-INF/config/sql/pgmSql.xml
+END
+bbsSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/1347/ijongro/WebContent/WEB-INF/config/sql/bbsSql.xml
+END
+satfactSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ijongro/!svn/ver/1263/ijongro/WebContent/WEB-INF/config/sql/satfactSql.xml
+END
+memMngSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ijongro/!svn/ver/1197/ijongro/WebContent/WEB-INF/config/sql/memMngSql.xml
+END
+commonSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ijongro/!svn/ver/1180/ijongro/WebContent/WEB-INF/config/sql/commonSql.xml
+END
+loginSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/ijongro/!svn/ver/1226/ijongro/WebContent/WEB-INF/config/sql/loginSql.xml
+END
+communitySql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/ijongro/!svn/ver/1198/ijongro/WebContent/WEB-INF/config/sql/communitySql.xml
+END
+empSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/1190/ijongro/WebContent/WEB-INF/config/sql/empSql.xml
+END
+paySql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/1373/ijongro/WebContent/WEB-INF/config/sql/paySql.xml
+END
+adminMainSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/ijongro/!svn/ver/1180/ijongro/WebContent/WEB-INF/config/sql/adminMainSql.xml
+END
+cptSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/1190/ijongro/WebContent/WEB-INF/config/sql/cptSql.xml
+END
+logSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/1190/ijongro/WebContent/WEB-INF/config/sql/logSql.xml
+END
+teacherSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ijongro/!svn/ver/1286/ijongro/WebContent/WEB-INF/config/sql/teacherSql.xml
+END
+ctsSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/1180/ijongro/WebContent/WEB-INF/config/sql/ctsSql.xml
+END
+menuSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ijongro/!svn/ver/1180/ijongro/WebContent/WEB-INF/config/sql/menuSql.xml
+END
+pollSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ijongro/!svn/ver/1359/ijongro/WebContent/WEB-INF/config/sql/pollSql.xml
+END
+myPageSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ijongro/!svn/ver/1230/ijongro/WebContent/WEB-INF/config/sql/myPageSql.xml
+END
+memberSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ijongro/!svn/ver/1348/ijongro/WebContent/WEB-INF/config/sql/memberSql.xml
+END
+mainSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ijongro/!svn/ver/1180/ijongro/WebContent/WEB-INF/config/sql/mainSql.xml
+END
+mgrSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ijongro/!svn/ver/1180/ijongro/WebContent/WEB-INF/config/sql/mgrSql.xml
+END
+noticeSql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ijongro/!svn/ver/1347/ijongro/WebContent/WEB-INF/config/sql/noticeSql.xml
+END

@@ -1,0 +1,91 @@
+BODY
+{
+    FONT-FAMILY: Arial, ±¼¸²;
+	FONT-SIZE: 9pt;
+    MARGIN-BOTTOM: 0px;
+    MARGIN-LEFT: 0px;
+    MARGIN-TOP: 0px
+}
+
+A
+{
+	color: navy;
+    FONT-SIZE: 9pt;
+    TEXT-DECORATION: none
+}
+
+A:active
+{
+	color:#970038;
+    TEXT-DECORATION: none
+}
+
+A:link
+{
+	color:0000ff;
+    TEXT-DECORATION: none
+}
+
+A:visited
+{
+	color:#5b6e94;
+    TEXT-DECORATION: none
+}
+
+A:hover
+{
+    COLOR: #0000ff;
+    TEXT-DECORATION: underline;
+}
+
+TD
+{
+    FONT-FAMILY: ±¼¸²;
+    FONT-SIZE: 9pt
+}
+
+
+.INLogin
+{
+	font-size: 9pt;
+	border:1 solid #0818A5;
+	color: 000000;
+}
+
+.INTXT
+{
+	font-size: 9pt;
+	border:1 solid #000000;
+	color: 000000;
+	background-color:#ffffff;
+}
+
+.INPTXT
+{
+	font-size: 9pt;
+	border:1 solid #000000;
+	color: 000000;
+	background-color:#ffffec;
+}
+.INBTN
+{
+	background-color:#dddddd;
+	color:#000000;
+	height: 19px;
+	border:1 solid #000000;
+	font-size: 9pt;
+}
+
+.n9 
+{ 
+   font-family:±¼¸²;
+   font-size:9pt;
+   line-height:140%;
+}
+.t9 
+{ 
+   font-family:±¼¸²;
+   font-size:9pt;
+}
+.line
+ { font-size:1pt; }

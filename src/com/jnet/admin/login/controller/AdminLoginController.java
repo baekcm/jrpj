@@ -1,0 +1,432 @@
+package com.jnet.admin.login.controller;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.apache.commons.validator.GenericValidator;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.jnet.admin.bbsMng.service.AdminBbsMngService;
+import com.jnet.admin.login.service.AdminLoginService;
+import com.jnet.domain.Admin;
+import com.jnet.domain.BbsFileReply;
+import com.jnet.domain.Common;
+import com.jnet.domain.Member;
+import com.jnet.domain.Menu;
+import com.jnet.front.login.service.FrontLoginService;
+import com.jnet.util.DateUtil;
+import com.jnet.util.ParsingUtil;
+
+@Controller
+public class AdminLoginController {
+	private Logger logger = Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private AdminLoginService adminLoginService;
+	
+	@Autowired
+	private AdminBbsMngService adminCtsBbsService;
+	
+	@Autowired
+	private FrontLoginService frontLoginService;
+	/**
+	 * 관리자 로그인 화면
+	 * @return String String
+	 */
+    @RequestMapping("/admin/formLogin")
+    public String formAdminLogin() {
+    	logger.info("AdminLoginController - formLogin");
+        return "admin/formLogin";
+    }
+    
+    /**
+     * 관리자 로그인정보 조회
+     * @param request request
+     * @param response response
+     * @param adminParam adminParam
+     */
+    @RequestMapping(value="/admin/findLoginInfo",method=RequestMethod.POST )
+    public void findAdminLoginInfo(HttpServletRequest request, HttpServletResponse response, Admin adminParam) {
+    	logger.info("AdminLoginController - findLoginInfo");
+    	JSONObject jsonObject = new JSONObject();
+    	try {
+    		adminParam.setAdmPwd(ParsingUtil.ShaParse(adminParam.getAdmPwd().trim()));
+			Admin adminResult = adminLoginService.findAdminLoginInfo(adminParam);
+			if(adminResult != null) {
+				
+				//로그인 할때마다 무조건 로그인접속정보 update
+				String inDate   = new SimpleDateFormat("yyyyMMdd").format(new Date());
+				adminParam.setLoginIp(request.getRemoteAddr());
+				adminParam.setLoginYmd(inDate);
+				adminParam.setAdmSeq(adminResult.getAdmSeq());
+				
+				adminLoginService.updateAdmLoginInfo(adminParam);
+				
+				//관리자(운영자) 권한
+				ArrayList<Menu> authResult = adminLoginService.listAdminAuth(adminResult);
+				ArrayList<Menu> authEtcResult = new ArrayList<Menu>();
+				ArrayList<Menu> authPgmResult = new ArrayList<Menu>();
+				for(Menu menu : authResult) {
+					if(menu.getPgmGbnCd().equals("PGM")) {
+						authPgmResult.add(menu);
+					} else {
+						authEtcResult.add(menu);
+					}
+				}
+				
+				adminResult.setLoginIp(adminParam.getLoginIp());
+				adminResult.setLoginYmd(adminParam.getLoginYmd());
+				adminResult.setLoginHitNum(adminResult.getLoginHitNum()+1);
+				Menu menuParam = null;
+				menuParam = new Menu();
+				menuParam.setPageGbnCd("ADMIN");
+				menuParam.setMenuLvl(1);
+				ArrayList<Menu> gnbResult = adminLoginService.listMenu(menuParam);
+				request.getSession().setAttribute("gnb", gnbResult);
+				jsonObject.put("flag", "Y");
+		    	request.getSession().setAttribute("adminInfo", adminResult);
+		    	request.getSession().setAttribute("authInfo", authEtcResult);
+		    	request.getSession().setAttribute("pgmAuthInfo", authPgmResult);
+			} else {
+				jsonObject.put("flag", "N");
+			}
+		} catch (Exception e) {
+			jsonObject.put("flag", "N");
+			printStackTrace(e);
+		} finally{
+			try {
+				ParsingUtil.getjsonObj(response, jsonObject);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				printStackTrace(e);
+			}	
+		}
+    }
+    
+    /**
+     * 관리자 메인화면
+     * @return String String
+     */
+	@RequestMapping("/admin/formMain")
+    public String formAdminMain(Common commonParam, HttpServletRequest request, Model model) {
+    	logger.info("AdminLoginController - formMain");
+    	try {
+    		String inDate   = new SimpleDateFormat("yyyyMMdd").format(new Date());
+    		model.addAttribute("year",new SimpleDateFormat("yyyy").format(new Date()));
+    		model.addAttribute("month",new SimpleDateFormat("MM").format(new Date()));
+    		
+    		Calendar cal = Calendar.getInstance(); 
+    		Date trialTime = new Date(); 
+    		cal.setTime(trialTime); 
+    		model.addAttribute("week",cal.get(Calendar.DAY_OF_WEEK_IN_MONTH));
+    		
+        	commonParam.setTodayYmd(inDate);
+        	//1. 회원수 + 민원수 조회
+        	Common commonResult = adminLoginService.findMemMinGrpCnt(commonParam);
+        	model.addAttribute("cntResult",commonResult);
+        	//2. 최근 게시물 목록 조회
+        	BbsFileReply bbsParam = null;
+        	ArrayList<BbsFileReply> listLeastBbsData = adminCtsBbsService.listLeastBbsData(bbsParam);
+        	model.addAttribute("listLeastBbsData",listLeastBbsData);
+		} catch (Exception e) {
+			printStackTrace(e);
+		}
+        return "admin/formMain";
+    }
+    
+    /**
+     * 관리자 로그아웃
+     * @param request request
+     * @return String String
+     */
+    @RequestMapping("/admin/logout")
+    public String adminLogOut(HttpServletRequest request) {
+    	logger.info("AdminLoginController - logout");
+    	request.getSession().removeAttribute("gnb");
+    	request.getSession().removeAttribute("adminInfo");
+    	request.getSession().removeAttribute("authInfo");
+        return "redirect:/admin/formLogin";
+    }
+    
+    /**
+     * 관리자 로그아웃
+     * @param request request
+     * @return String String
+     */
+    @RequestMapping("/admin/updateFormatUserPwd")
+    public void updateFormatUserPwd(HttpServletRequest request, HttpServletResponse response, Member memberParam) {
+    	
+    	logger.info("AdminLoginController - updateFormatUserPwd");
+    	JSONObject jsonObj = new JSONObject();
+    	
+    	try {
+    		String formatPwd = "1a2b3c";
+    		memberParam.setUserPw(formatPwd);
+			String inTime   = new SimpleDateFormat("HHmmss").format(new Date());
+			String inDate   = new SimpleDateFormat("yyyyMMdd").format(new Date());
+			memberParam.setModiYmd(inDate);
+			memberParam.setModiHms(inTime);
+			memberParam.setModiIp(request.getRemoteAddr());
+			frontLoginService.updatePassword(memberParam);
+			jsonObj.put("flag", "Y");
+		} catch (Exception e) {
+			printStackTrace(e);
+			jsonObj.put("flag", e.toString());
+		}finally{
+			try {
+				ParsingUtil.getjsonObj(response, jsonObj);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				printStackTrace(e);
+			}
+		}
+    }
+    
+    /**
+     * ========================================= 차트관련 ========================================= 
+     */
+    @RequestMapping(value="/admin/formChart",method=RequestMethod.POST)
+    public String formChart(HttpServletRequest request,Common commonParam, Model model) {
+    	logger.info("AdminLoginController - formChart");
+    	String inDate   = new SimpleDateFormat("yyyyMMdd").format(new Date());
+    	commonParam.setTodayYmd(inDate);
+    	String mainTab = request.getParameter("mainTab");
+    	String subTab = request.getParameter("subTab");
+    	String url = "";
+    	try {
+    		if(mainTab.equals("0")) {
+    			if(subTab.equals("0")) {
+    				url = "/admin/stats/formChartMemYear";
+    				
+    				ArrayList<Common> listMemYear = adminLoginService.listMemYear(commonParam);
+                	ArrayList<String> listYear = new ArrayList<String>();
+                	ArrayList<String> listCnt = new ArrayList<String>();
+                		for(Common common : listMemYear) {
+                			listYear.add(common.getMemYear());
+                			listCnt.add(String.valueOf(common.getMemCnt()));
+                		}
+                	model.addAttribute("listCnt",listCnt);
+                	model.addAttribute("listYear",listYear);
+    			} else if(subTab.equals("1")) {
+        			//회원 - 월별
+        			url = "/admin/stats/formChartMemMonth";
+        			
+        			if(!GenericValidator.isBlankOrNull(commonParam.getSty())){
+        				commonParam.setTodayYmd(commonParam.getSty());
+        			}
+        			
+        			ArrayList<Common> listMemMonth = adminLoginService.listMemMonth(commonParam);
+                	ArrayList<String> listCnt = new ArrayList<String>();
+                	for(int i=1; i<13; i++){
+                		int cnt = 0;
+                		String tmpMemCnt = "";
+                		for(Common common : listMemMonth) {
+                			if(Integer.parseInt(common.getMemMonth()) == i){
+                				cnt++;
+                				tmpMemCnt = String.valueOf(common.getMemCnt());
+                				break;
+                			}
+                		}
+                		if(cnt == 0) {
+                			listCnt.add("0");
+                		} else{
+                			listCnt.add(tmpMemCnt);
+                		}
+                	}
+                	
+                	model.addAttribute("listCnt",listCnt);
+                	
+        		} else if (subTab.equals("2")) {
+        			//회원 - 일별
+        			url = "/admin/stats/formChartMemDay";
+        			Calendar cal = Calendar.getInstance();
+        			if(GenericValidator.isBlankOrNull(commonParam.getSty())) {
+        				cal.set (cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),1);
+        			} else {
+        				cal.set (Integer.parseInt(commonParam.getSty()),Integer.parseInt(commonParam.getStm())-1,1);
+        				commonParam.setTodayYmd(commonParam.getSty()+commonParam.getStm());
+        			}
+        			int maxDay = cal.getActualMaximum ( Calendar.DATE );
+        			model.addAttribute("maxDay",maxDay);
+        			ArrayList<Common> listMemDay = adminLoginService.listMemDay(commonParam);
+                	ArrayList<String> listCnt = new ArrayList<String>();
+                	for(int i=1; i<=maxDay; i++){
+                		int cnt = 0;
+                		String tmpMemCnt = "";
+                		for(int j = 0; j<listMemDay.size(); j++) {
+                			if(Integer.parseInt(listMemDay.get(j).getMemDay()) == i){
+                				cnt++;
+                				tmpMemCnt = String.valueOf(listMemDay.get(j).getMemCnt());
+                				break;
+                			}
+                		}
+                		if(cnt == 0) {
+                			listCnt.add("0");
+                		} else{
+                			listCnt.add(tmpMemCnt);
+                		}
+                	}
+                	model.addAttribute("listCnt",listCnt);
+        		} else if (subTab.equals("3")) {
+        			//회원 - 요일별
+        			url = "/admin/stats/formChartMemDate";
+        			ArrayList<Common> listMemDate = adminLoginService.listMemDate();
+                	model.addAttribute("listMemDate",listMemDate);
+        		} else if(subTab.equals("4")){
+        			url = "/admin/stats/formChartMemSlctDate";
+        			String[] testDate = DateUtil.getDiffDays(commonParam.getStYmd(), commonParam.getEdYmd());
+        			ArrayList<Member> listMemSlctDate = adminLoginService.listMemSlctDate(commonParam);
+                	ArrayList<String> listCnt = new ArrayList<String>();
+                	ArrayList<String> listMemSlctDateNm = new ArrayList<String>();
+        			if(testDate != null && testDate.length > 0){
+        				for(int i=0; i<testDate.length; i++) {
+        					listMemSlctDateNm.add(testDate[i]);
+        					int cnt = 0;
+        					for(int j=0; j<listMemSlctDate.size(); j++) {
+        						if(testDate[i].equals(listMemSlctDate.get(j).getSignYmd())) {
+        							listCnt.add(String.valueOf(listMemSlctDate.get(j).getMemCnt()));
+        							cnt++;
+        						}
+        					}
+        					if(cnt == 0) {
+    							listCnt.add("0");
+    						}
+        				}
+        			}
+        			model.addAttribute("listMemSlctDateNm",listMemSlctDateNm);
+        			model.addAttribute("listCnt",listCnt);
+        		}
+        	} else if (mainTab.equals("1")) {
+        		if(subTab.equals("0")) {
+    				url = "/admin/stats/formChartSiteYear";
+    				ArrayList<Common> listSiteYear = adminLoginService.listSiteYear(commonParam);
+                	ArrayList<String> listYear = new ArrayList<String>();
+                	ArrayList<String> listCnt = new ArrayList<String>();
+                		for(Common common : listSiteYear) {
+                			listYear.add(common.getMemYear());
+                			listCnt.add(String.valueOf(common.getMemCnt()));
+                		}
+                	model.addAttribute("listCnt",listCnt);
+                	model.addAttribute("listYear",listYear);
+    			}  else if(subTab.equals("1")) {
+        			//사이트 - 월별
+        			url = "/admin/stats/formChartSiteMonth";
+        			
+        			if(!GenericValidator.isBlankOrNull(commonParam.getSty())){
+        				commonParam.setTodayYmd(commonParam.getSty());
+        			}
+        			
+        			ArrayList<Common> listSiteMonth = adminLoginService.listSiteMonth(commonParam);
+                	ArrayList<String> listCnt = new ArrayList<String>();
+                	for(int i=1; i<13; i++){
+                		int cnt = 0;
+                		String tmpMemCnt = "";
+                		for(Common common : listSiteMonth) {
+                			if(Integer.parseInt(common.getMemMonth()) == i){
+                				cnt++;
+                				tmpMemCnt = String.valueOf(common.getMemCnt());
+                				break;
+                			}
+                		}
+                		if(cnt == 0) {
+                			listCnt.add("0");
+                		} else{
+                			listCnt.add(tmpMemCnt);
+                		}
+                	}
+
+                	model.addAttribute("listCnt",listCnt);
+        		} else if (subTab.equals("2")) {
+        			//사이트 - 일별
+        			url = "/admin/stats/formChartSiteDay";
+        			Calendar cal = Calendar.getInstance();
+        			
+        			if(GenericValidator.isBlankOrNull(commonParam.getSty())) {
+        				cal.set (cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),1);
+        			} else {
+        				cal.set (Integer.parseInt(commonParam.getSty()),Integer.parseInt(commonParam.getStm())-1,1);
+        				commonParam.setTodayYmd(commonParam.getSty()+commonParam.getStm());
+        			}
+        			
+        			int maxDay = cal.getActualMaximum ( Calendar.DATE );
+        			model.addAttribute("maxDay",maxDay);
+        			
+        			ArrayList<Common> listSiteDay = adminLoginService.listSiteDay(commonParam);
+                	ArrayList<String> listCnt = new ArrayList<String>();
+                	for(int i=1; i<=maxDay; i++){
+                		int cnt = 0;
+                		String tmpMemCnt = "";
+                		for(int j = 0; j<listSiteDay.size(); j++) {
+                			if(Integer.parseInt(listSiteDay.get(j).getMemDay()) == i){
+                				cnt++;
+                				tmpMemCnt = String.valueOf(listSiteDay.get(j).getMemCnt());
+                				break;
+                			}
+                		}
+                		if(cnt == 0) {
+                			listCnt.add("0");
+                		} else{
+                			listCnt.add(tmpMemCnt);
+                		}
+                	}
+                	model.addAttribute("listCnt",listCnt);
+        		}else if (subTab.equals("3")) {
+        			//회원 - 요일별
+        			url = "/admin/stats/formChartSiteDate";
+        			ArrayList<Common> listSiteDate = adminLoginService.listSiteDate();
+                	model.addAttribute("listSiteDate",listSiteDate);
+        		} else if(subTab.equals("4")){
+        			url = "/admin/stats/formChartSiteSlctDate";
+        			String[] testDate = DateUtil.getDiffDays(commonParam.getStYmd(), commonParam.getEdYmd());
+        			ArrayList<Member> listSiteSlctDate = adminLoginService.listSiteSlctDate(commonParam);
+                	ArrayList<String> listCnt = new ArrayList<String>();
+                	ArrayList<String> listSiteSlctDateNm = new ArrayList<String>();
+        			if(testDate != null && testDate.length > 0){
+        				for(int i=0; i<testDate.length; i++) {
+        					listSiteSlctDateNm.add(testDate[i]);
+        					int cnt = 0;
+        					for(int j=0; j<listSiteSlctDate.size(); j++) {
+        						if(testDate[i].equals(listSiteSlctDate.get(j).getSignYmd())) {
+        							listCnt.add(String.valueOf(listSiteSlctDate.get(j).getMemCnt()));
+        							cnt++;
+        						}
+        					}
+        					if(cnt == 0) {
+    							listCnt.add("0");
+    						}
+        				}
+        			}
+        			model.addAttribute("listSiteSlctDateNm",listSiteSlctDateNm);
+        			model.addAttribute("listCnt",listCnt);
+        		}
+    		} 
+		} catch (Exception e) {
+			printStackTrace(e);
+		}
+    	
+        return url;
+    }
+    private void printStackTrace(Exception e){
+    	logger.error("======= error =========");
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+	    PrintStream pinrtStream = new PrintStream(out);
+	    e.printStackTrace(pinrtStream);
+	    String stackTraceString = out.toString();
+	    logger.error(stackTraceString);
+    }    
+}

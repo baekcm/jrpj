@@ -1,0 +1,29 @@
+@charset "utf-8";
+/* CSS Document */
+@import url("mlayout.css");
+@import url("mdefault.css");
+@import url("mcontents.css");
+@import url("madd02.css");
+
+
+
+/*facil Index*/
+.listIndex LI { position:relative; display:block; margin:0 38px 0 7px; background:url(../../image/bg_listBody.png) 0 0 no-repeat; background-size:auto 33px; height:33px; margin-bottom:10px;}
+.listIndex LI:before { content:"";
+width:7px; height:33px; display:inline-block; position:absolute; left:-7px; overflow:hidden; background:url(../../image/bg_listHead.png) 0 0 no-repeat; background-size:7px 33px;}
+.listIndex LI:after { content:"";
+width:38px; height:33px; display:inline-block; position:absolute; right:-38px; overflow:hidden; background:url(../../image/bg_listTail.png) 0 0 no-repeat; background-size:38px 33px;}
+.listIndex LI A { padding:8px 0 8px 30px; display:inline-block; width:80%;}
+
+.bbs_list LI {
+	background:url(../../image/list-middle_and.png) 0 0 no-repeat; background-size: 100% 100%;
+	overflow:hidden
+}
+.bbs_list LI > DIV {
+	padding:5px 10px; background:url(../../image/list-arrow_and.png) 95% 50% no-repeat; background-size:11px 14px;
+	overflow:hidden
+}
+.bbs_list LI  DL {}
+.bbs_list LI  DL > DT { font-weight:bold; clear:both; display:block}
+.bbs_list LI  DL > DD {float:left; margin-right:10px;}
+.bbs_list LI  DL > DD > SPAN.title { font-weight:bold; float:left; margin-right:4px;}

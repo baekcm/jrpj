@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert
+END
+cert_renew_op.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_renew_op.java
+END
+cert_replace.class
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_replace.class
+END
+cert_request_op.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_request_op.java
+END
+cert_get.class
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_get.class
+END
+cert_update_op.class
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_update_op.class
+END
+cacert_install.class
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cacert_install.class
+END
+cert_replace_op.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_replace_op.java
+END
+cert_revoke_op.class
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_revoke_op.class
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/Makefile
+END
+cert_get_op.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_get_op.java
+END
+cert_revoke.class
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_revoke.class
+END
+cert_update.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_update.java
+END
+cert_update.class
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_update.class
+END
+cert_revoke.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_revoke.java
+END
+cert_get_op.class
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_get_op.class
+END
+cert_revoke_op.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_revoke_op.java
+END
+cert_replace_op.class
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_replace_op.class
+END
+cacert_install.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cacert_install.java
+END
+cert_update_op.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_update_op.java
+END
+cert_get.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_get.java
+END
+cert_request_op.class
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_request_op.class
+END
+cert_replace.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_replace.java
+END
+cert_renew_op.class
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_renew_op.class
+END
+cert_main.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_main.java
+END
+cert_request.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_request.java
+END
+cert_renew.class
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_renew.class
+END
+cert_main.class
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_main.class
+END
+cert_request.class
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_request.class
+END
+cert_renew.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/WEB-INF_/WEB-INF/classes/XecureWeb/ibs/pri_cert/cert_renew.java
+END

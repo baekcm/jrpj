@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="teacherSql">
+	<!-- 강사 총 등록수 조회 -->
+	<select id="findTeacherTotCnt" parameterType="com.jnet.domain.Cts" resultType="Integer">
+	    SELECT COUNT(*) 
+	      FROM jongno_teacher
+	       WHERE rm_yn = 'N'
+	       <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+	    		AND ${searchKey} like  '%' + #{searchVal} + '%'
+    	   </if>
+    	   
+    </select>
+    
+    <!-- 강사 목록 조회 -->
+	<select id="listTeacherMng" parameterType="com.jnet.domain.Teacher" resultType="com.jnet.domain.Teacher">
+    		SELECT c.*
+	    	  FROM
+			    	(SELECT T1.*
+			    		  <if test='start != "0" and end != "0"'>
+			    	  	  , ROWNUM RNUM
+			    	  	  </if>
+			    		FROM
+			    		(SELECT   a.teacher_seq teacherSeq
+								, a.teacher_nm teacherNm
+								, a.teacher_phone1 teacherPhone1
+								, a.teacher_phone2 teacherPhone2
+								, a.teacher_phone3 teacherPhone3
+								, a.teacher_email1 teacherEmail1
+								, a.teacher_email2 teacherEmail2
+								, a.teacher_history teacherHistory
+								, a.zipcode1
+				 			    , a.zipcode2
+				 			    , a.teacher_dft_addr teacherDftAddr
+				 			    , a.teacher_dtl_addr teacherDtlAddr
+								, b.img_path imgPath
+								, b.real_file_nm realFileNm
+								<if test='start != "0" and end != "0"'>
+								,(SELECT COUNT(t1.teacher_seq)+1 
+      							    FROM jongno_teacher t1 
+      							   WHERE t1.teacher_seq > a.teacher_seq
+      							     AND t1.rm_yn ='N' 
+      							    <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+							    	  AND t1.${searchKey} like  '%' + #{searchVal} + '%'
+						    	 	</if>
+      							 ) rownum
+      							</if>
+								FROM jongno_teacher a 
+								LEFT OUTER JOIN (SELECT * FROM jongno_teacher_img where thumb_yn = 'Y' ) b
+								ON a.teacher_seq = b.teacher_seq
+								WHERE a.rm_yn = 'N'
+								 <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+							    	  AND ${searchKey} like  '%' + #{searchVal} + '%'
+						    	 </if>
+				    	  ) T1
+				    	  <if test='start != "0" and end != "0"'>
+   	  					  <![CDATA[
+				    	   WHERE rownum <= #{end}
+				    	   ]]>
+				    	  </if>			 
+					) c
+		<if test='start != "0" and end != "0"'>
+		WHERE RNUM >= #{start}
+		</if>
+		ORDER BY teacherSeq DESC
+		
+    </select>
+    
+    <!-- 강사 정보 저장 -->
+    <insert id="saveTeacherMng" parameterType="com.jnet.domain.TeacherImg" useGeneratedKeys="true" keyProperty="teacherSeq">
+    	INSERT INTO jongno_teacher(  teacher_nm
+							    	,teacher_history 
+							    	,teacher_phone1
+							    	,teacher_phone2
+							    	,teacher_phone3
+							    	,teacher_email1
+							    	,teacher_email2
+							    	,zipcode1
+							    	,zipcode2
+							    	,teacher_dft_addr
+							    	,teacher_dtl_addr
+							    	,create_id
+							    	,create_ip
+							    	,create_ymd
+							    	,create_hms
+							    	,modi_id
+							    	,modi_ip
+							    	,modi_ymd
+							    	,modi_hms
+							    	,rm_yn)
+							VALUES(  #{teacherNm}
+									,#{teacherHistory}
+									,#{teacherPhone1}
+									,#{teacherPhone2}
+									,#{teacherPhone3}
+									,#{teacherEmail1}
+									,#{teacherEmail2}
+									,#{zipcode1}
+									,#{zipcode2}
+									,#{teacherDftAddr}
+									,#{teacherDtlAddr}
+									,#{createId}
+									,#{createIp}
+									,#{createYmd}
+									,#{createHms}
+									,#{createId}
+									,#{createIp}
+									,#{createYmd}
+									,#{createHms}
+									,'N')
+    </insert>
+    
+    <!-- 강사 이미지 저장 -->
+    <insert id="saveTeacherImg" parameterType="com.jnet.domain.TeacherImg">
+    	INSERT INTO jongno_teacher_img(  teacher_seq
+								    	,img_path
+								    	,orgnl_file_nm
+								    	,real_file_nm
+								    	,thumb_yn
+								    	,create_id
+								    	,create_ip
+								    	,create_ymd
+								    	,create_hms
+								    	,modi_id
+								    	,modi_ip
+								    	,modi_ymd
+								    	,modi_hms
+								    	,rm_yn)
+								VALUES(  #{teacherSeq}
+									  	,#{imgPath}
+									  	,#{orgnlFileNm}
+									  	,#{realFileNm}
+									  	,#{thumbYn}
+									  	,#{createId}
+										,#{createIp}
+										,#{createYmd}
+										,#{createHms}
+										,#{createId}
+										,#{createIp}
+										,#{createYmd}
+										,#{createHms}
+										,'N')
+    </insert>
+    
+    <!-- 강사정보 수정 -->
+    <update id="updateTeacherMng" parameterType="com.jnet.domain.TeacherImg">
+    	UPDATE jongno_teacher
+    	SET  teacher_nm = #{teacherNm}
+	    	,teacher_history= #{teacherHistory}
+	    	,teacher_phone1= #{teacherPhone1}
+	    	,teacher_phone2= #{teacherPhone2}
+	    	,teacher_phone3= #{teacherPhone3}
+	    	,teacher_email1= #{teacherEmail1}
+	    	,teacher_email2= #{teacherEmail2}
+	    	,zipcode1 = #{zipcode1}
+	    	,zipcode2 = #{zipcode2}
+	    	,teacher_dft_addr= #{teacherDftAddr}
+	    	,teacher_dtl_addr= #{teacherDtlAddr}
+	    	,modi_id= #{modiId}
+	    	,modi_ip= #{modiIp}
+	    	,modi_ymd= #{modiYmd}
+	    	,modi_hms= #{modiHms}
+    	WHERE teacher_seq = #{teacherSeq}
+    </update>
+    
+    <!-- 강사 이미지 삭제 -->
+    <delete id="removeTeacherImg" parameterType="com.jnet.domain.TeacherImg">
+    	DELETE FROM jongno_teacher_img WHERE img_seq = #{imgSeq}
+    </delete>
+    
+    <!-- 썸네일 번호로 원본 이미지 정보포함 목록 조회 -->
+    <select id="listTeacherImgByFileSeq" parameterType="com.jnet.domain.TeacherImg" resultType="com.jnet.domain.TeacherImg">
+    	SELECT img_seq imgSeq
+			 , real_file_nm realFileNm
+		  FROM jongno_teacher_img 
+		 WHERE img_seq in(#{imgSeq}, #{imgSeq}-1) 
+    </select>
+    
+    
+    <!-- 강사정보 상세조회 -->
+    <select id="findTeacherMng" parameterType="com.jnet.domain.TeacherImg" resultType="com.jnet.domain.TeacherImg">
+    	SELECT   a.teacher_seq teacherSeq
+ 			   , a.teacher_nm teacherNm
+ 			   , a.teacher_history teacherHistory
+ 			   , a.teacher_phone1 teacherPhone1
+ 			   , a.teacher_phone2 teacherPhone2
+ 			   , a.teacher_phone3 teacherPhone3
+ 			   , a.teacher_email1 teacherEmail1
+ 			   , a.teacher_email2 teacherEmail2
+ 			   , a.zipcode1
+ 			   , a.zipcode2
+ 			   , a.teacher_dft_addr teacherDftAddr
+ 			   , a.teacher_dtl_addr teacherDtlAddr
+			   , b.img_path imgPath
+			   , b.real_file_nm realFileNm
+			   , b.img_seq imgSeq
+			   , b.orgnl_file_nm orgnlFileNm
+				FROM jongno_teacher a 
+				LEFT OUTER JOIN (SELECT * FROM jongno_teacher_img where teacher_seq = #{teacherSeq} and thumb_yn = 'Y' ) b
+				ON a.teacher_seq = b.teacher_seq
+				WHERE a.rm_yn = 'N'
+				  AND a.teacher_seq = #{teacherSeq}
+    </select>
+    
+    <!-- 프로그램에 등록된 강사 목록 조회  -->
+    <select id="listTeacherInfoByPgmSeq" parameterType="com.jnet.domain.TeacherImg" resultType="com.jnet.domain.TeacherImg">
+		   select t1.*
+				, c.img_path imgPath
+				, c.real_file_nm realFileNm
+				, c.img_seq imgSeq
+				, c.orgnl_file_nm orgnlFileNm
+		 FROM (SELECT a.teacher_seq teacherSeq
+				   	 ,a.teacher_nm teacherNm
+				   	 ,a.teacher_history teacherHistory
+				     FROM jongno_teacher a, jongno_pgm_teacher b, jongno_pgm c
+				    WHERE a.TEACHER_SEQ = b.teacher_seq
+				      AND b.pgm_seq = c.pgm_seq
+				      AND c.out_up_id = #{upId}
+				      AND b.pgm_seq = #{pgmSeq}
+				      AND a.rm_yn = 'N') t1 
+				      left outer join jongno_teacher_img c
+				      on t1.teacherSeq = c.teacher_seq and c.thumb_yn = 'Y'
+    </select>
+
+
+	<update id="removeTeacherMng" parameterType="com.jnet.domain.TeacherImg">
+		UPDATE jongno_teacher
+		SET rm_yn = 'Y'
+		WHERE teacher_seq in
+			 <foreach item="item" index="index" collection="teacherSeqList" open="(" separator="," close=")">
+			 	#{item}
+			 </foreach>
+	</update>    
+</mapper>

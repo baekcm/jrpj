@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/ijongro/!svn/ver/1171/ijongro/WebContent/WEB-INF/jnet/admin/memMng
+END
+formUpdateMemMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ijongro/!svn/ver/1057/ijongro/WebContent/WEB-INF/jnet/admin/memMng/formUpdateMemMng.jsp
+END
+formCreateSendMail.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/ijongro/!svn/ver/1171/ijongro/WebContent/WEB-INF/jnet/admin/memMng/formCreateSendMail.jsp
+END
+listMemOutMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/ijongro/!svn/ver/980/ijongro/WebContent/WEB-INF/jnet/admin/memMng/listMemOutMng.jsp
+END
+listMemMng.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ijongro/!svn/ver/1037/ijongro/WebContent/WEB-INF/jnet/admin/memMng/listMemMng.jsp
+END
+listStats.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/ijongro/!svn/ver/716/ijongro/WebContent/WEB-INF/jnet/admin/memMng/listStats.jsp
+END
+listMemMailPop.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ijongro/!svn/ver/1096/ijongro/WebContent/WEB-INF/jnet/admin/memMng/listMemMailPop.jsp
+END
+formMemStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ijongro/!svn/ver/1055/ijongro/WebContent/WEB-INF/jnet/admin/memMng/formMemStat.jsp
+END

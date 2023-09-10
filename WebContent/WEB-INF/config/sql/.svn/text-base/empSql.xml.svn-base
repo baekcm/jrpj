@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="empSql">
+	<!-- 조직 목록수 조회 -->
+	<select id="findEmpTotCnt" parameterType="com.jnet.domain.Emp" resultType="Integer">
+	    SELECT COUNT(*) 
+	      FROM jongno_emp
+	      WHERE 1=1
+	        AND rm_yn = 'N' 
+    	   <if test='searchVal != null and searchVal != "" '>
+		    	AND ${searchKey} like  '%' + #{searchVal} + '%'
+	       </if>
+	       <if test='empOutYn != null and empOutYn != "" and empOutYn != "all"'>
+		    	AND emp_out_yn = #{empOutYn} 
+	       </if>
+		    <if test='empDept != null and empDept != "" and empDept != "all"'>
+		    	AND emp_dept =    #{empDept} 
+	       </if>
+    </select>
+    
+    <!-- 조직 모두 조회- 엑셀다운용 -->
+    <select id="listAllMng" parameterType="com.jnet.domain.Emp" resultType="com.jnet.domain.Emp">
+    SELECT  emp_seq empSeq
+		 	,emp_nm empNm
+		 	,emp_dept empDept
+		 	,emp_job empJob
+		 	,emp_phone1 empPhone1
+		 	,emp_phone2 empPhone2
+		 	,emp_phone3 empPhone3
+		 	,emp_email1 empEmail1
+		 	,emp_email2 empEmail2
+		 	,emp_sabun empNo
+		 	,CASE
+		 	  WHEN emp_position = '팀장'
+		 	  THEN 1
+		 	  WHEN emp_position = '파트장'
+		 	  THEN 2
+		 	  WHEN emp_position = '대리'
+		 	  THEN 3
+		 	  WHEN emp_position = '주임'
+		 	  THEN 4
+		 	  WHEN emp_position = '사원'
+		 	  THEN 5
+		 	 END positionSeq
+   	   FROM jongno_emp
+   	  WHERE rm_yn = 'N'
+    </select>
+    
+    <!-- 부서리스트  -->
+    <select id="listDept" resultType="com.jnet.domain.Emp">
+		select distinct(emp_dept)  empDept, emp_order
+		from jongno_emp
+		where rm_yn = 'N'
+		order by emp_order
+    </select>
+    
+    <!-- 조직 목록 조회 -->
+	<select id="listEmpMng" parameterType="com.jnet.domain.Emp" resultType="com.jnet.domain.Emp">
+	 
+				<if test='start != "0" and end != "0"'>
+	    		SELECT * FROM (
+			  	SELECT TOP ${showPage} * 
+			    FROM (
+			    </if>
+			   SELECT <if test='start != "0" and end != "0"'>TOP ${currentPage}</if> cc.*
+			   FROM(SELECT  
+			   			 emp_seq empSeq
+	    				,emp_sabun empNo
+					 	,emp_nm empNm
+					 	,emp_dept empDept
+					 	,emp_part empPart
+					 	,emp_position empPosition
+					 	,emp_job empJob
+					 	,emp_email1 empEmail1
+					 	,emp_email2 empEmail2
+					 	,emp_phone1 empPhone1
+					 	,emp_phone2 empPhone2
+					 	,emp_phone3 empPhone3
+					 	,emp_mobile1 empMobile1
+						,emp_mobile2 empMobile2
+						,emp_mobile3 empMobile3
+						,emp_out_yn empOutYn
+						,emp_order
+						,CASE
+					 	 WHEN emp_position = '팀장'
+					 	  THEN 1
+					 	  WHEN emp_position = '파트장'
+					 	  THEN 2
+					 	  WHEN emp_position = '대리'
+					 	  THEN 3
+					 	  WHEN emp_position = '주임'
+					 	  THEN 4
+					 	  WHEN emp_position = '사원'
+					 	  THEN 5
+					 	 END positionSeq
+		    	   FROM jongno_emp
+		    	   WHERE 1=1
+		    	     AND rm_yn = 'N'
+			       <if test='searchVal != null and searchVal != "" '>
+				    	AND ${searchKey} like  '%' + #{searchVal} + '%'
+			       </if>
+			       <if test='empOutYn != null and empOutYn != "" and empOutYn != "all"'>
+				    	AND emp_out_yn = #{empOutYn} 
+			       </if>
+				    <if test='empDept != null and empDept != "" and empDept != "all"'>
+				    	AND emp_dept =    #{empDept} 
+			       </if>) cc
+			ORDER BY emp_order, positionSeq, empNm
+			<if test='start != "0" and end != "0"'>
+			) A 
+		ORDER BY A.emp_order DESC, A.positionSeq DESC, A.empNm DESC) B 
+	ORDER BY B.emp_order , B.positionSeq, B.empNm
+	</if>
+	
+	<!-- 
+		<if test='start != "0" and end != "0"'>
+		SELECT * FROM (
+		</if> 
+				 
+								SELECT cc.*, ROWNUM RNUM 
+								FROM (
+										SELECT 
+													emp_seq empSeq ,
+													emp_sabun empNo ,
+													emp_nm empNm ,
+													emp_dept empDept ,
+													emp_part empPart ,
+													emp_position empPosition ,
+													emp_job empJob ,
+													emp_email1 empEmail1 ,
+													emp_email2 empEmail2 ,
+													emp_phone1 empPhone1 ,
+													emp_phone2 empPhone2 ,
+													emp_phone3 empPhone3 ,
+													emp_mobile1 empMobile1 ,
+													emp_mobile2 empMobile2 ,
+													emp_mobile3 empMobile3 ,
+													emp_out_yn empOutYn ,
+													emp_order ,
+													CASE WHEN emp_position = '팀장' THEN 1 
+														WHEN emp_position = '파트장' THEN 2 
+														WHEN emp_position = '대리' THEN 3 
+														WHEN emp_position = '주임' THEN 4 
+														WHEN emp_position = '사원' THEN 5 
+													END positionSeq,
+													(SELECT (select count(1) from jongno_emp) - t1.emp_seq + 1 FROM jongno_emp t1 WHERE t1.emp_seq = jongno_emp.emp_seq AND t1.rm_yn = 'N' ) rownum  
+										FROM jongno_emp 
+										WHERE 1=1 
+										AND rm_yn = 'N'
+										<if test='searchVal != null and searchVal != "" '>
+				    					AND ${searchKey} like  '%' + #{searchVal} + '%'
+			       						</if>
+			       						<if test='empOutYn != null and empOutYn != "" and empOutYn != "all"'>
+				    					AND emp_out_yn = #{empOutYn} 
+			       						</if>
+				    					<if test='empDept != null and empDept != "" and empDept != "all"'>
+				    					AND emp_dept =    #{empDept} 
+			       						</if> ) cc
+			    <if test='start != "0" and end != "0"'>
+			       						 
+									WHERE rownum &lt;= ${currentPage} * ${numperPage} ) A 
+				WHERE RNUM &gt;= ${currentPage-1} * ${numperPage} + 1
+				 		
+				ORDER BY A.emp_order , A.positionSeq, A.empNm
+				</if>
+				-->
+    </select>
+    
+    
+    <!-- 조직정보 상세조회 -->
+    <select id="findEmpMng" parameterType="com.jnet.domain.Emp" resultType="com.jnet.domain.Emp">
+    	SELECT   emp_seq empSeq 
+    		    ,emp_sabun empNo  
+    			,emp_nm empNm
+    			,emp_dept empDept
+				,emp_part empPart
+				,emp_position empPosition
+				,emp_job empJob
+				,emp_email1 empEmail1
+				,emp_email2 empEmail2
+				,emp_phone1 empPhone1
+				,emp_phone2 empPhone2
+				,emp_phone3 empPhone3
+				,emp_mobile1 empMobile1
+				,emp_mobile2 empMobile2
+				,emp_mobile3 empMobile3
+				,emp_out_yn empOutYn
+		 FROM jongno_emp
+		WHERE emp_seq = #{empSeq}	
+		  AND rm_yn = 'N'			
+    </select>
+    
+    <!-- 조직등록 -->
+    <insert id="saveEmpMng" parameterType="com.jnet.domain.Emp">
+    	INSERT INTO jongno_emp(  emp_nm
+    							,emp_position
+    							,emp_job
+    							,emp_out_yn
+    							,create_id
+    							,create_ip
+    							,create_ymd
+    							,create_hms
+    							,modi_id
+    							,modi_ip
+    							,modi_ymd
+    							,modi_hms
+    							,emp_email1
+    							,emp_email2
+    							,emp_phone1
+    							,emp_phone2
+    							,emp_phone3
+    							,emp_mobile1
+    							,emp_mobile2
+    							,emp_mobile3
+    							,emp_dept
+    							,emp_part
+    							,emp_sabun
+    							,emp_order
+    							,rm_yn)
+    					 VALUES( #{empNm}
+		    					,#{empPosition}
+		    					,#{empJob}
+		    					,#{empOutYn}
+		    					,#{createId}
+		    					,#{createIp}
+		    					,#{createYmd}
+		    					,#{createHms}
+		    					,#{createId}
+		    					,#{createIp}
+		    					,#{createYmd}
+		    					,#{createHms}
+		    					,#{empEmail1}
+		    					,#{empEmail2}
+		    					,#{empPhone1}
+		    					,#{empPhone2}
+		    					,#{empPhone3}
+		    					,#{empMobile1}
+		    					,#{empMobile2}
+		    					,#{empMobile3}
+		    					,#{empDept}
+		    					,#{empPart}
+		    					,#{empNo}
+		    					,#{empOrder}
+		    					,'N')
+    </insert>
+    
+    <!-- 조직 수정 -->
+    <update id="updateEmpMng" parameterType="com.jnet.domain.Emp">
+    	UPDATE jongno_emp
+    	SET  emp_nm = #{empNm}
+			,emp_position = #{empPosition}
+			,emp_job = #{empJob}
+			,emp_out_yn = #{empOutYn}
+			,modi_id = #{modiId}
+			,modi_ip = #{modiIp}
+			,modi_ymd = #{modiYmd} 
+			,modi_hms = #{modiHms}
+			,emp_email1 = #{empEmail1}
+			,emp_email2 = #{empEmail2} 
+			,emp_phone1 = #{empPhone1}
+			,emp_phone2 = #{empPhone2}
+			,emp_phone3 = #{empPhone3}
+			,emp_mobile1 = #{empMobile1}
+			,emp_mobile2 = #{empMobile2}
+			,emp_mobile3 = #{empMobile3}
+			,emp_dept = #{empDept}
+			,emp_part = #{empPart}
+			,emp_sabun = #{empNo}
+			,emp_order = #{empOrder}
+    	WHERE emp_seq = #{empSeq}
+    </update>
+    
+    <!-- 직원삭제 -->
+    <update id="removeEmpMng" parameterType="com.jnet.domain.Emp">
+    	UPDATE jongno_emp
+    	SET rm_yn = 'Y'
+		   ,modi_id = #{modiId}
+	       ,modi_ip = #{modiIp}
+	       ,modi_ymd = #{modiYmd}
+	       ,modi_hms = #{modiHms} 
+    	WHERE emp_seq = #{empSeq}
+    </update>
+</mapper>

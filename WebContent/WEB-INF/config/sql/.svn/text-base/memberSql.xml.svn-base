@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberSql">
+    
+    
+    
+    
+     <select id="findOldMember" resultType="com.jnet.domain.Member" parameterType="com.jnet.domain.Member">
+    	SELECT user_id as userId
+    	,user_nm as userNm
+    	,user_di as userDi
+    	,user_no as userNo
+    	  FROM jongno_member
+    	 WHERE user_nm = #{userNm} and email = #{email}
+    	 and (user_di is null or user_di = '')
+     	 <if test='userId !=null and userId !="" and userId!="null" '>
+    	 and user_id=#{userId} 
+    	 </if> 
+    </select>
+    
+    <select id="findMemberInfo" resultType="com.jnet.domain.Member" parameterType="com.jnet.domain.Member">
+    	SELECT user_id as userId
+    	,user_nm as userNm
+    	,user_di as userDi
+    	,sex 
+    	,birthday
+    	,user_no as userNo
+    	,login_ymd loginYmd,login_hms loginHms,sign_ymd signYmd,sign_hms signHms
+    	,adult,email,email_yn emailYn,phone,sms,zipcode,addr,addr2
+    	,poll,location,tel,comp_zip compZip,comp_addr compAddr,comp_addr2 compAddr2,visit_cnt visitCnt
+    	,(select count(*) from jongno_board_data where create_id=#{userId} and use_yn='Y') as boardCnt
+    	,(select count(*) from jongno_reply where create_id=#{userId} and use_yn='Y') as replyCnt
+    	,location
+    	  FROM jongno_member
+    	 WHERE user_id = #{userId}
+    </select>
+    
+    
+    <select id="findMemberLogin" resultType="com.jnet.domain.Member" parameterType="com.jnet.domain.Member">
+    	SELECT user_id as userId
+    	,user_nm as userNm
+    	,user_di as userDi
+    	,user_pw as userPw
+    	,sex 
+    	,birthday
+    	,user_no as userNo
+    	,login_ymd loginYmd
+    	,email
+    	,phone
+    	,addr
+    	,addr2
+    	,zipcode
+    	,tel
+    	,location
+    	  FROM jongno_member
+    	 WHERE user_id = #{userId} and user_pw=damo.dbo.hash_str_data(#{userPw}) and user_out='N'
+    </select>
+    
+    <select id="findMemberIdPw" resultType="com.jnet.domain.Member" parameterType="com.jnet.domain.Member">
+    	SELECT 
+    	user_id as userId
+    	,user_di as userDi
+    	  FROM jongno_member
+    	 WHERE user_nm = #{userNm}
+    	 and user_di =#{userDi} 
+    	 and  user_out='N'
+    	 <if test='userId !=null and userId !="" and userId!="null" '>
+    	 and user_id=#{userId} 
+    	 </if> 
+    </select>
+    
+    
+    <select id="findMemberDuplicate" resultType="Integer" parameterType="java.util.Map">
+    	SELECT COUNT(*)
+    	  FROM jongno_member
+    	 WHERE user_di = #{userDi}
+    </select>
+    
+    <select id="findOffMember" resultType="com.jnet.domain.Member" parameterType="java.util.Map">
+		SELECT top 1 
+		    UP_ID as location
+			,MEM_NO as userNo 
+			,MEM_NM as userNm
+			,tel_no as tel 
+			,zip_no as zipcode 
+			,email as email 
+			,email_acpt_yn as emailYn
+			,sms_acpt_yn as sms 
+		FROM SGGSTTB 
+		
+		<if test='userNo != null'>
+			WHERE MEM_NO = #{userNo}
+		</if> 
+		<if test='userNm != null'>
+			WHERE MEM_NM LIKE #{userNm} AND BIRTH LIKE '%'+ #{birthday} +'%'
+		</if> 
+		order by f_enter_dt desc
+    </select>
+    
+    
+    <select id="findMemberIdDuplicate" resultType="Integer" parameterType="java.util.Map">
+    	SELECT COUNT(*)
+    	  FROM jongno_member
+    	 WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 사용자 정보 저장 -->
+	<insert id="saveMember" parameterType="com.jnet.domain.Member" useGeneratedKeys="true" keyProperty="userSeq">
+		INSERT INTO JONGNO_MEMBER(user_id
+								,user_pw
+								,user_di
+								,user_ci
+								,user_nm
+								,user_no
+								,birthday
+								,sex
+								,adult
+								,email
+								,email_yn
+								,phone
+								,sms
+								,zipcode
+								,addr
+								,addr2
+								,poll
+								,location
+								,tel
+								,comp_zip,comp_addr,comp_addr2,user_out,sign_ymd,sign_hms,modi_ymd,modi_hms,modi_ip)
+						  VALUES(#{userId}
+								,damo.dbo.hash_str_data(#{userPw})
+								,#{userDi}
+								,#{userCi}
+								,#{userNm}
+								,#{userNo}
+								,#{birthday}
+								,#{sex}
+								,#{adult}
+								,#{email}
+								,#{emailYn}
+								,#{phone}
+								,#{sms}
+								,#{zipcode}
+								,#{addr}
+								,#{addr2}
+								,#{poll}
+								,#{location}
+								,#{tel}
+								,#{compZip},#{compAddr},#{compAddr2},'N',#{signYmd},#{signHms},#{modiYmd},#{modiHms},#{modiIp})
+	</insert>
+	
+
+    <select id="offKey" resultType="String" >
+    	SELECT isnull(max(substring(mem_no,3,8))+1,'0') 
+    	FROM SCMEMNOTB WITH (updlock) 
+    	WHERE substring(mem_no,1,2) = substring(convert(char(8),getdate(),112),3,2) 
+    	
+    </select>
+    
+      
+	<insert id="saveScmemnotb" parameterType="com.jnet.domain.Member" >
+		INSERT INTO SCMEMNOTB VALUES(#{location},#{userNo},'0')
+	</insert>
+	
+	
+	   <!-- #{userNo}     mem_no                     
+	,#{location} up_id        
+	,#{userNm}   mem_nm       
+	,''          mem_enm      
+	,#{vNumber}  regi_no      
+	,#{vNumber}  birth        
+	,#{sex}      sex          
+	,'1'         sm_gu        
+	,''          wedding      
+	,#{tel}      tel_no       
+	,#{phone}    h_tel_no     
+	,'1'         addr_gu      
+	,#{zipcode}  zip_no       
+	,#{addr}     addr         
+	,''          dtl_addr     
+	,#{email}    email        
+	,''          mng_id       
+	,''          memo         
+	,''          mail_acpt_yn 우편물수령여부
+	,#{emailYn}  email_acpt_yn 이메일수령여부
+	,#{sms}      sms_acpt_yn   문자수령여부
+	,'0'         mileage      
+	,#{userId}   web_id       
+	,#{userPw}   web_pw       
+	,'Y'         web_yn       
+	,''          office_nm    
+	,''          office_jikwi 
+	,''          bnk_cd       
+	,''          acct_no      
+	,''          acct_chief   
+	,''          car_no       
+	,''          car_use_time 
+	,'00001'     dc_cd        
+	,'0'         st_tag       
+	,getdate()   f_enter_dt   
+	,'web'       f_enter_man   -->
+	
+	<insert id="saveSggsttb" parameterType="com.jnet.domain.Member" useGeneratedKeys="true" keyProperty="memNo">
+		INSERT INTO sggsttb (
+			mem_no
+			,up_id
+			,mem_nm
+			,mem_enm
+			,regi_no
+			,birth
+			,sex
+			,sm_gu
+			,wedding 
+			,tel_no
+			,h_tel_no
+			,addr_gu
+			,zip_no
+			,addr
+			,dtl_addr
+			,email
+			,mng_id
+			,memo
+			,mail_acpt_yn
+			,email_acpt_yn
+			,sms_acpt_yn
+			,mileage
+			,web_id
+			,web_pw
+			,web_yn
+			,office_nm
+			,office_jikwi 
+			,bnk_cd 
+			,acct_no
+			,acct_chief
+			,car_no
+			,car_use_time 
+			,dc_cd
+			,st_tag
+			,f_enter_dt
+			,f_enter_man 
+			) 
+VALUES (
+	   #{userNo}   
+		,#{location} 
+		,#{userNm}   
+		,''
+		,CASE WHEN substring(#{birthday}, 1, 4) >= '2000' AND #{sex} = '1' THEN substring(#{birthday}, 3, 6) + '3' + '000000'
+			  WHEN substring(#{birthday}, 1, 4) >= '2000' AND #{sex} = '2' THEN substring(#{birthday}, 3, 6) + '4' + '000000'
+			  ELSE substring(#{birthday}, 3, 6) + #{sex} + '000000' END
+		<!-- 	 
+		,#{vNumber}
+		-->  
+		,#{birthday}  
+		,#{sex}      
+		,'1'         
+		,''          
+		,#{tel}      
+		,#{phone}    
+		,'1'         
+		,#{zipcode}  
+		,#{addr}     
+		,#{addr2}    
+		,#{email}    
+		,''          
+		,''          
+		,''          
+		,#{emailYn}  
+		,#{sms}      
+		,'0'         
+		,#{userId}   
+		,#{userPw}   
+		,'Y'         
+		,''          
+		,''          
+		,''          
+		,''          
+		,''          
+		,''          
+		,''          
+		,'00001'     
+		,'0'         
+		,getdate()   
+		,'web'       
+	)
+	</insert>
+	
+	<update id="updateSggsttb" parameterType="com.jnet.domain.Member" >
+		update sggsttb 
+		  <trim prefix="SET" suffixOverrides=",">
+			modify_dt  =getdate(), 
+			<if test='location != null and location != "" ' >
+				up_id        =#{location}, 
+			</if>
+			<if test='userPw != null and userPw != "" ' > 
+				web_pw       =#{userPw}, 
+			</if>
+			<if test='userNm != null and userNm != "" ' >   
+				mem_nm       =#{userNm}, 
+			</if>
+			<if test='vNumber != null and vNumber != "" ' >   
+				regi_no      =#{vNumber}, 
+			</if>
+			<if test='birthday != null and birthday != "" ' >  
+				birth        =#{birthday}, 
+			</if>
+			<if test='tel != null and tel != "" '  > 
+				tel_no       =#{tel}, 
+			</if>
+			<if test='phone != null and phone != "" ' >      
+				h_tel_no     =#{phone}, 
+			</if>
+			<if test='zipcode != null and zipcode != "" ' >    
+				zip_no       =#{zipcode}, 
+			</if>
+			<if test='addr != null and addr != "" ' >  
+				addr         =#{addr}, 
+			</if>
+			<if test='addr2 != null and addr2 != "" ' >  
+				dtl_addr         =#{addr2}, 
+			</if>
+			<if test='email != null and email != "" ' >     
+				email        =#{email}, 
+			</if>
+			<if test='emailYn != null and emailYn != "" ' >    
+				email_acpt_yn=#{emailYn}, 
+			</if>
+			<if test='sms != null and sms != "" ' >  
+				sms_acpt_yn  =#{sms}, 
+			</if>
+			<if test='userOut == "Y" ' >  
+				st_tag  =4,
+				user_di='',
+			</if>
+		  </trim>
+				where    
+				web_id       =#{userId}
+		<if test='userNo !=null and userNo !="" and userNo != "null" '>
+		and mem_no       =#{userNo} 
+		</if>
+				
+				 
+				<!-- ,wedding      =''           -->
+				<!-- ,mem_enm      =''        -->   
+				<!-- ,sex          =#{sex}   -->    
+				<!-- ,sm_gu        ='1'          -->
+				<!-- ,addr_gu      ='1'          -->
+				<!-- ,dtl_addr     =''           -->
+				<!-- ,mng_id       =''          
+				,memo         =''          
+				,mail_acpt_yn =''           -->
+				<!-- ,mileage      ='0'    -->      
+				<!-- ,web_yn       ='Y'         
+				,office_nm    =''          
+				,office_jikwi =''          
+				,bnk_cd       =''          
+				,acct_no      =''          
+				,acct_chief   =''          
+				,car_no       =''          
+				,car_use_time =''          
+				,dc_cd        ='00001'     
+				,st_tag       ='0'         
+				,f_enter_dt   =getdate()   
+				,f_enter_man  ='web'     -->
+	</update>
+	
+	<update id="updateDi" parameterType="com.jnet.domain.Member" >
+		update jongno_member set
+		user_di= #{userDi}
+		where user_id=#{userId} 
+	</update>
+	
+	
+	<update id="updateVisit" parameterType="com.jnet.domain.Member" >
+		update jongno_member set
+		<if test='visitCnt == "0" '>
+			visit_cnt = visit_cnt+1,
+		</if>
+			login_ymd = #{loginYmd},
+			login_hms = #{loginHms},
+			login_ip  = #{loginIp}
+		where user_id = #{userId} 
+	</update>
+	
+	<update id="updateMember" parameterType="com.jnet.domain.Member" >
+		update jongno_member 
+		<trim prefix="SET" suffixOverrides=",">
+			<if test='userPw != null and userPw != "" ' >
+				user_pw= damo.dbo.hash_str_data(#{userPw}),
+			</if>
+			<if test='email != null and email != "" ' >
+				email= #{email},
+			</if>
+			<if test='emailYn != null and emailYn != "" ' >
+				email_yn= #{emailYn},
+			</if>
+			<if test='phone != null and phone != "" ' >
+				phone= #{phone},
+			</if>
+			<if test='sms != null and sms != "" ' >
+				sms= #{sms},
+			</if>
+			<if test='zipcode != null and zipcode != "" ' >
+				zipcode= #{zipcode},
+			</if>
+			<if test='addr != null and addr != "" ' >
+				addr= #{addr},
+			</if>
+			<if test='addr2 != null and addr2 != "" ' >
+				addr2= #{addr2},
+			</if>
+			<if test='poll != null and poll != "" ' >
+				poll= #{poll},
+			</if>
+			<if test='location != null and location != "" ' >
+				location= #{location},
+			</if>
+			<if test='tel != null and tel != "" ' >
+				tel= #{tel},
+			</if>
+			<if test='compZip != null and compZip != "" ' >
+				comp_zip= #{compZip},
+			</if>
+			<if test='compAddr != null and compAddr != "" ' >
+				comp_addr= #{compAddr},
+			</if>
+			<if test='compAddr2 != null and compAddr2 != "" ' >
+				comp_addr2= #{compAddr2},
+			</if>
+			<if test='userOut != null and userOut != "" ' >
+				user_out= #{userOut},
+			</if>
+			<if test='outDesc != null and outDesc != "" ' >
+				out_desc= #{outDesc},
+			</if>
+			<if test='modiYmd != null and modiYmd != "" ' >
+				modi_ymd= #{modiYmd},
+			</if>
+			<if test='modiHms != null and modiHms != "" ' >
+				modi_hms= #{modiHms},
+			</if>
+			<if test='modiIp != null and modiIp != "" ' >
+				modi_ip= #{modiIp},
+			</if>
+		</trim>
+		where user_id=#{userId}
+		<if test='userDi !=null and userDi !="" and userDi != "null" '>
+		and user_di =#{userDi} 
+		</if>
+		<if test='email !=null and email !="" and email != "null" '>
+		and email =#{email} 
+		</if>
+	</update>
+	
+	<insert id="saveLog" parameterType="com.jnet.domain.Log">
+		INSERT INTO jongno_log(log_url,log_id, log_ip, log_ymd, log_hms)
+		VALUES(#{logUrl},#{logId},#{logIp},#{logYmd},#{logHms})
+	</insert>
+    
+</mapper>

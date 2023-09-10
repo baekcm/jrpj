@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="KS_C_5601-1987"?>
+<?xml-stylesheet type='text/xsl' href='http://127.0.0.1:8080/MoctDemo/file/contract.xsl'?>
+<Mulgun>
+	<index>2004-000001</index>
+	<zipcode>123-234</zipcode>
+	<addr1>서울시 서초구 방배동</addr1>
+	<addr2>123-45</addr2>
+	<gubun>주택</gubun>
+	<law>건물</law>
+	<real>건물</real>
+	<area>100</area>
+	<yongdo>주거지</yongdo>
+	<price>200000000</price>
+	<maesuja>
+		<name>금한돈</name>
+		<ssn>2000402-1000002</ssn>
+		<zipcode>123-123</zipcode>
+		<addr1>서울시 서초구 서초동</addr1>
+		<addr2>222-33</addr2>
+		<gubun>개인</gubun>
+		<area>100</area>
+	</maesuja>
+	<maedoja>
+		<name>김부자</name>
+		<ssn>2000402-1000001</ssn>
+		<zipcode>222-333</zipcode>
+		<addr1>서울시 서초구 방배동</addr1>
+		<addr2>111-22</addr2>
+		<gubun>개인</gubun>
+		<area>100</area>
+	</maedoja>
+	<budongsan>
+		<coname>한솔부동산</coname>
+		<name>김기영</name>
+	</budongsan>
+</Mulgun>

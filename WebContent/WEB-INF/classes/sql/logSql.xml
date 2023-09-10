@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="logSql">
+
+	<!-- 로그 목록수 조회 -->
+	<select id="findLogTotCnt" parameterType="com.jnet.domain.Common" resultType="Integer">
+		SELECT COUNT(*) FROM jongno_log
+	</select>
+	
+	<!-- 로그 목록수 조회 -->
+	<select id="listLogMng" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Common">
+	<if test='start != "0" and end != "0"'>
+					SELECT * FROM (
+					  SELECT TOP ${showPage} * FROM (
+					 </if>
+						SELECT <if test='start != "0" and end != "0"'> 
+			  					TOP ${currentPage}
+			  					</if> 
+							   log_seq logSeq
+							  ,log_url logUrl
+							  ,log_id createId
+							  ,log_ip createIp
+				  			  ,log_ymd createYmd
+							  ,log_hms createHms
+						  FROM jongno_log
+						 ORDER BY log_seq DESC
+						 <if test='start != "0" and end != "0"'> 
+						) A 
+						ORDER BY  A.logSeq) B 
+					ORDER BY B.logSeq DESC
+						</if> 
+	</select>
+</mapper>

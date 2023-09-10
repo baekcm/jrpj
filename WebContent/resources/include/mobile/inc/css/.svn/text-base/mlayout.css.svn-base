@@ -1,0 +1,196 @@
+@charset "utf-8";
+/* CSS Document */
+#totop { position:fixed; right:10px; bottom:30px;z-index: 999;}
+#header {
+	position: relative;
+	display: block;
+	width: 100%;
+	margin-bottom: 10px;
+	margin: 0 auto;
+	max-width: 640px;
+	min-width: 320px;
+}
+#header #headTop {
+	position: relative;
+	overflow: hidden
+}
+#header #logo {
+	float: left;
+	margin: 10px 0 10px 10px;
+}
+#header #logo IMG { height:32px; width:auto;}
+#header #hutil {
+	float: right;
+	margin: 13px 10px 18px 0;
+}
+
+#visualLine { display:block; overflow:hidden; margin:0 auto; border-top:1px solid #b17f7a}
+#vl1 { width:33%; overflow:hidden; height:11px; float:left; background:#e95b4f}
+#vl2 { width:34%; overflow:hidden; height:11px; float:left; background:#ff9000}
+#vl3 { width:33%; overflow:hidden; height:11px; float:left; background:#ad73cc}
+
+
+#headNavi {
+	padding:6px 10px;
+	background: url(/resources/include/mobile/image/bg_headMenu.png) 0 -1px repeat-x; 
+	height:23px;
+	background-size:1px 36px;
+	margin: 0 auto;
+	overflow:hidden;
+	position:relative;
+}
+#headNavi .prev { position:absolute; top:5px; left:10px;}
+#headNavi .title { display:block; margin:0 30px; text-align:center; color:#00fff6; font-size:1.3em}
+#headNavi .home {position:absolute; top:5px; right:15px;}
+
+.submenu { display:block; margin:0; overflow:hidden; background:url(../../image/bg_submenu.png) 0 0 repeat-x; background-size: 1px 60px}
+.submenu LI { float:left; display:inline-block; overflow:hidden; text-align:center; height: 30px;}
+.submenu LI A { display:inline-block;padding-top:8px; width:100%; background:url(../../image/bg_list4sub.png) 0 0 no-repeat; background-size:1px 30px;
+color:#fff;
+font-weight:bold;
+text-shadow:1px 1px 1px #000,-1px 1px 1px #000,1px -1px 1px #000,-1px -1px 1px #000;
+}
+.submenu LI A.on,.submenu LI A:hover,.submenu LI A:focus {color:#FF0}
+.submenu LI:first-child A {background:none;}
+#submenu2 LI{ width:50%}
+#submenu3 LI{ width:33%}
+#submenu3 LI:first-child{ width:34%}
+
+
+
+.pageTopTitle DD {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	white-space: nowrap;
+	}
+.wd_instructor DT { background-position:5px 2px !important;}
+.wd_instructor DD { padding-left:25px; margin-top:10px;}
+@media only screen and (min-width: 570px) {
+	#submenu1 LI:first-child {width:19%}
+	#submenu1 LI {width:15%}
+	#submenu1 { padding-left:10px}
+	#submenu4 LI{ width:20%}
+	.imgTable { display:none}
+	.wideTable { display:block}
+	.pageTopTitle DD {width:auto !important; max-width:80% !important;}
+	.bg_instructor .image3 { max-width:28% !important; float:left !important; display:inline !important}
+	.bg_instructor .image3 IMG { max-width:170px !important}
+	.bg_instructor .image3 P { max-width:190px !important}
+	.partInSection { padding-left:0 !important; background:none !important}
+	.wd_instructor { float:left; max-width:70% !important}
+	.bg_instructor .wd_sports { max-width:70% !important; float:right}
+}
+@media only screen and (min-width: 300px) and (max-width: 570px) {
+	#submenu1 LI {width:33%}
+	#submenu1 LI.none A { background:none;}	
+	#submenu4 LI{ width:33%}
+	#submenu4 LI.half1{ width:50%}
+	#submenu4 LI.half1 A { background:none;}	
+	#submenu4 LI.half2{ width:50%}
+	.imgTable { display:block; width:100%;}
+	.wideTable { display:none}
+	.imgFixTable IMG { width:30px}
+	.pageTopTitle DD {width:auto !important; max-width:80% !important;}
+	.partInSection { padding-left:0 !important; background:none !important}
+}
+@media only screen and (min-width: 480px) and (max-width: 570px) {
+	.maintab .listx a {max-width:85% !important}
+	.pageTopTitle DD {width:auto !important; max-width:70% !important;}
+	.bg_instructor .image3 { max-width:23% !important; float:left !important; display:inline !important}
+	.bg_instructor .image3 IMG { max-width:100px !important}
+	.bg_instructor .image3 P { max-width:120px !important}
+	.partInSection { padding-left:0 !important; background:none !important}
+}
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+	.maintab .listx a {max-width:75% !important}
+	.pageTopTitle DD {width:auto !important; max-width:70% !important;}
+	.bg_instructor .image3 IMG { max-width:180px !important}
+	.bg_instructor .image3 P { max-width:200px !important; text-align:center; margin:0 auto !important}
+	.bg_instructor .image3 { float:none !important; margin:0 auto !important}
+	.partInSection { padding-left:0 !important; background:none !important}
+}
+@media only screen and (min-width: 300px) and (max-width: 350px) {
+	.maintab .listx a {max-width:66% !important}
+	.pageTopTitle DD {width:auto !important; max-width:70% !important;}
+	.partInSection { padding-left:0 !important; background:none !important}
+	.pageTopTitle DD {width:auto !important; max-width:70% !important;}
+	.bg_instructor .image3 IMG { max-width:180px !important}
+	.bg_instructor .image3 P { max-width:200px !important; text-align:center; margin:0 auto !important}
+	.bg_instructor .image3 { float:none !important; margin:0 auto !important}
+	.maintab .btnMore { display:none !important}
+}
+#navi { text-align:right; padding:5px 10px; background:#eeeeee}
+#body {
+	overflow: hidden;
+	padding: 10px 10px 20px 10px;
+	display: block;
+	margin: 0 auto;
+	max-width: 620px;
+	min-width: 300px;
+}
+#body2 {
+	overflow: hidden;
+	display: block;
+	margin: 0 auto;
+	max-width: 640px;
+	min-width: 320px;
+}
+#footer {
+	background: #fff;
+	position: relative;
+	overflow: hidden;
+	padding: 10px 0;
+	height: 48px;
+	margin: 0 auto;
+}
+#footer .copy {
+	text-align: center;
+	color: #818080
+}
+#footer .copy img {
+	width: 280px;
+	height: auto;
+}
+#footer .futils {
+	text-align: center;
+	color: #fff;
+	margin-bottom: 8px;
+}
+#footer .futils span a {
+	color: #fff;
+	font-size: 11px
+}
+#footer .futils .first {
+	background: url(/resources/include/mobile/image/common/bg_futil.gif) left top no-repeat;
+	width: 5px;
+	height: 15px;
+	overflow: hidden;
+	display: inline-block;
+	background: url(/resources/include/mobile/image/common/bg_futil.gif) 0 0 no-repeat;
+	background-size: auto 15px;
+}
+#footer .futils .futil1 {
+	background: #b2b2b2;
+	width: 65px;
+	height: 15px;
+	overflow: hidden;
+	display: inline-block
+}
+#footer .futils .futil {
+	background: #b2b2b2 url(/resources/include/mobile/image/common/foot_slit.gif) 0 0 no-repeat;
+	background-size: 1px 15px;
+	width: 65px;
+	height: 15px;
+	overflow: hidden;
+	display: inline-block
+}
+#footer .futils .last {
+	background: url(/resources/include/mobile/image/common/bg_futilLast.gif) right top no-repeat;
+	background-size: auto 15px;
+	width: 5px;
+	height: 15px;
+	overflow: hidden;
+	display: inline-block
+}

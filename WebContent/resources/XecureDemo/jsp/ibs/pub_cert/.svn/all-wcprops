@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert
+END
+change_userid_response.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/change_userid_response.jsp
+END
+diff.txt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/diff.txt
+END
+cert_man.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_man.jsp.new
+END
+authdata_view.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/authdata_view.jsp
+END
+cert_renew.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_renew.jsp
+END
+cert_revoke.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_revoke.jsp.new
+END
+cert_request.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_request.jsp
+END
+cert_main.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_main.jsp
+END
+result_view.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/result_view.jsp.new
+END
+cert_man.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_man.jsp
+END
+cert_revoke.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_revoke.jsp
+END
+cert_update.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_update.jsp
+END
+del.html.new
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/del.html.new
+END
+result_view.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/result_view.jsp
+END
+cert_request_offline.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_request_offline.jsp.new
+END
+cert_force_revoke_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_force_revoke_op.jsp
+END
+result_view_op.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/result_view_op.jsp.new
+END
+cert_register.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_register.jsp.new
+END
+authdata.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/authdata.jsp
+END
+cert_view.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_view.jsp.new
+END
+cert_man_op.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_man_op.jsp.new
+END
+cert_force_revoke.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_force_revoke.jsp
+END
+del.html
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/del.html
+END
+cert_rereg.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_rereg.jsp.new
+END
+cert_request_offline.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_request_offline.jsp
+END
+result_view_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/result_view_op.jsp
+END
+cert_register.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_register.jsp
+END
+cert_view.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_view.jsp
+END
+cert_man_op.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_man_op.jsp
+END
+cert_renew.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_renew.jsp.new
+END
+change_userid_request.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/change_userid_request.jsp
+END
+cert_main.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_main.jsp.new
+END
+cert_request.jsp.new
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_request.jsp.new
+END
+cert_rereg.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/ijongro/!svn/ver/1143/ijongro/WebContent/resources/XecureDemo/jsp/ibs/pub_cert/cert_rereg.jsp
+END

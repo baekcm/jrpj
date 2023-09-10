@@ -1,0 +1,37 @@
+10
+
+dir
+1400
+https://172.16.0.7:8443/svn/ijongro/ijongro/src/com/jnet/admin/login
+https://172.16.0.7:8443/svn/ijongro
+
+
+
+2014-01-10T02:32:57.839000Z
+1271
+jgh
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+24699295-5bf6-f141-97a7-9c3b5454fc1c
+
+controller
+dir
+
+dao
+dir
+
+service
+dir
+

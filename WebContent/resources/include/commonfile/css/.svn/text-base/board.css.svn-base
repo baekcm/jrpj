@@ -1,0 +1,281 @@
+@charset "utf-8";
+/* CSS Document */
+
+.thumbList  { border-top:2px solid #333;}
+.thumbList LI { padding:10px; display:block; border-bottom:1px solid #ccc; position:relative; height:90px;}
+.thumbList LI > DL { margin-left:140px;}
+.thumbList LI > DL > DT A { font-weight:bold; font-size:13px; font-family:'NanumGothic'; color:#333;}
+.thumbList LI > DL > DD.photo { position:absolute; top:10px; left:10px; padding:5px; border:1px solid #ccc;}
+.thumbList LI > DL > DD.photo IMG { width:110px; height:80px}
+
+
+
+/*게시판 페이징*/
+.pgeAbs {
+	clear: both;
+	position: relative;
+	overflow: hidden;
+	height: 20px;
+	border-top:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	padding:5px 0;
+}
+.pgeAbs .frBtn {
+	right: 10px;
+	top: 3px;;
+	position: absolute
+}
+.pgeAbs .flBtn {
+	left: 0;
+	top: 0;
+	position: absolute
+}
+.paging {
+	text-align: center;
+	margin: 0;
+	overflow: hidden
+}
+.paging span{
+	padding:  0 1px  0 3px;}
+	
+.paging span a {
+	color: #262626;
+	font-size: 11px;
+	font-weight: normal;
+	text-decoration: none
+}
+.paging span.tp {
+	color: #c95000;
+	font-weight: bold;
+	text-decoration: underline
+}
+.paging span.paging {
+	text-align: center;
+	background:url(/resources/include/commonfile/image/board/pageSlit.gif) left center no-repeat;
+	display:inline-block
+}
+.paging span.first { background:none; padding-left:0;}
+/*.paging span.prev {
+	margin-right: 5px;
+}*/
+.paging span.next {
+	/*margin-left: 5px;*/
+}
+/*search*/
+#pageSearch {
+	margin-top: 20px;
+	padding: 3px 0;
+	background: #f2f2f2
+}
+#pageSearch p {
+	text-align: center
+}
+#pageSearch select {
+	height: 22px;
+}
+#pageSearch input[type=text] {
+	height: 20px;
+	width:120px;
+	border: 1px solid #cccccc
+}
+
+
+/*버튼 위치*/
+.btn_farm {
+	float: right;
+	text-align: right;
+}
+.btn_farmL {
+	float: left;
+	text-align: left;
+}
+.btn_farm2 {
+	text-align: center;
+}
+
+
+/**/
+.boardWrap { background:url(/resources/include/commonfile/image/board/bg_pagehr.png) 0 0 no-repeat; *padding-top:2px;}
+.boardWrap2 { background:url(/resources/include/commonfile/image/board/bg_tbl.gif) 0 0 repeat-x; padding-top:7px;}
+/*게시판스타일 01타입*/
+.bd00 {
+	table-layout: fixed;
+	border-collapse: separate;
+	border-spacing: 0;
+	padding-top:2px;
+	overflow: hidden;
+	empty-cells:show;
+}
+.bd00 th {
+	border-bottom: 1px solid #666;
+}
+.bd00 td {
+	border-bottom: 1px solid #d7d7d7;
+	text-align: center;
+}
+.bd00 td.title {
+	text-align: left;
+	padding: 0 4px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	-webkit-text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+
+/* 타입 01용 게시판 보기*/
+.bd00view {
+	padding-top:2px;
+	table-layout: fixed;
+	border-collapse: separate;
+	border-spacing: 0px;
+	empty-cells:show;
+	
+}
+.bd00view th.bd01th {
+	background: #f8f8f8;
+	border-bottom: 1px solid #d7d7d7;
+	text-align: center;
+	
+}
+.bd00view th.ta_l, .bd00view td.ta_l {text-align:left; 
+	padding:6px 0;
+	padding-left:10px;
+	background: #f8f8f8;
+	border-bottom: 1px solid #d7d7d7;
+	}
+.bd00view td.bd01td {
+	padding:6px 0;
+	border-bottom: 1px solid #d7d7d7;
+	text-align: left;
+	padding-left:10px;
+	
+}
+.bd00view th.last_l, .bd00view td.last_l {border-right: 1px solid #d7d7d7;}
+.bd00view td.bd01td a {
+	display: inline-block;
+	margin: 0 5px;
+}
+.bd00view td.bd01tdC {
+	height: auto;
+	min-height: 300px;
+	*height:300px;
+	padding: 20px 10px;
+	border-top: 1px solid #666;
+	border-bottom: 1px solid #d7d7d7;
+	vertical-align:top;
+}
+.bd00view td.bd01tdC textarea {
+	width: 100%;
+	/*height: 150px*/
+}
+.bd00view td.bd01tdD {
+	border-bottom: 1px solid #d7d7d7;
+	padding:10px;
+}
+.bd00view td.bd01tdD textarea {
+	width: 96%;
+	/*height: 150px*/
+}
+
+/*넓은간격용 게시판 스킨*/
+.bd00big {
+	margin: 20px 0
+}
+.bd00big th {
+	height: 48px;
+}
+.bd00big td {
+	height: 60px
+}
+/*좁은간격용 게시판 스킨*/
+.bd00Bbs {
+	margin: 0;
+}
+.bd00Bbs th {
+	padding:7px 0;
+	background:rgb(248, 248, 248)
+}
+.bd00Bbs td {
+	padding:7px 0;
+	empty-cells:show;
+}
+.prevNext {
+	table-layout:fixed;
+	border-top: 1px solid #666;
+	border-bottom: 1px solid #666;
+}
+.prevNext th {
+	padding:7px 0;
+	border-bottom: 1px solid #dedede;
+	/*background: #ededed;*/ 
+	width:70px;
+}
+.prevNext td {
+	border-bottom: 1px solid #dedede;
+	text-align: left;
+	padding: 5px 10px;
+	width:630px;
+}
+.listx {
+	/*width: 630px;*/
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	-webkit-text-overflow: ellipsis;
+	white-space: nowrap;
+}
+/*공지용 스킨*/
+.notice td {
+	background: #f5fbff
+}
+
+
+/*input style*/
+#btitle, #bwriter, #blostDate, #blostPlace { height:18px !important; width:570px;}
+#save { width:300px; border:#ccc 1px solid; height:22px;padding:2px;}
+
+.msatis li { float:left; overflow:hidden; display:inline-block; width:90px; }
+.msatis { float:left; width:450px;}
+
+
+
+.galleryList {}
+.galleryList > LI { float:left; margin:10px 7px; width:158px; height:140px; overflow:hidden; padding:5px; border:1px solid #d4d4d4}
+
+.galleryList > LI > DL > DT { border:1px solid #d4d4d4; padding:5px; overflow:hidden; text-align:center}
+.galleryList > LI > DL > DT IMG {width:130px; height:100px; overflow:hidden;}
+.galleryList > LI > DL > DD {
+	text-align:center;
+	margin-top:5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	-webkit-text-overflow: ellipsis;
+	white-space: nowrap;}
+
+
+
+
+/*댓글 스타일 추가*/
+
+.replyInput { background:#ededed; padding:14px; overflow:hidden;clear:both;}
+.replyInput  .fl { width:630px;}
+.replyInput  .fl> textarea { width:628px; height:60px; }
+.replyInput  .fr { width:60px }
+
+#wtitle { width:580px; height:18px;}
+#writeInput { height: 350px; width:100%}
+
+
+.replyList { border-top:2px solid #ccc;}
+.replyList > LI  { border-bottom:1px solid #ccc; padding:5px 10px; position:relative; min-height:20px;}
+.replyList > LI  > DL > DT { font-size:11px; font-weight:normal; color:#333;  display:block; margin-right:50px;}
+.replyList > LI  > DL > DD { font-size:11px; font-weight:normal; color:#262626; display:block; margin-right:50px;}
+.replyList > LI  > DL > DD.btnDel { position:absolute; right:0px; bottom:10px; margin-right:0; display:inline-block;}
+
+

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="menuSql">
+	<!-- 관리자 목록수 조회 -->
+	<select id="listMenu" parameterType="com.jnet.domain.Menu" resultType="com.jnet.domain.Menu">
+		SELECT menu_seq menuSeq
+		, prnt_menu_seq prntMenuSeq
+		, menu_nm menuNm
+		, menu_url menuUrl
+		  FROM jongno_menu
+		 WHERE page_gbn_cd = #{pageGbnCd}
+		   AND menu_lvl = #{menuLvl}
+		   <if test="gseq > 0">
+		   AND prnt_menu_seq = #{gseq}
+		   </if>
+		   AND use_yn = 'Y'
+    </select>
+    
+	<select id="frontContents" parameterType="com.jnet.domain.Menu" resultType="com.jnet.domain.Menu">
+		SELECT menu_seq menuSeq
+		, prnt_menu_seq prntMenuSeq
+		, menu_nm menuNm
+		, menu_url menuUrl
+		  FROM jongno_menu
+		 WHERE page_gbn_cd = 'FRONT'
+		   AND menu_seq = #{menuSeq}
+		   AND use_yn = 'Y'
+    </select>
+</mapper>

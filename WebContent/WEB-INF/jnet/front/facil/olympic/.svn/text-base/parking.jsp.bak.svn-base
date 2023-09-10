@@ -1,0 +1,86 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>종로구시설관리공단</title>
+<script type="text/javascript" src="/resources/include/commonfile/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="/resources/include/commonfile/js/gnb.js"></script>
+<link href="/resources/include/commonfile/css/sub.css" rel="stylesheet" type="text/css" />
+<!--// 아래의 header.jsp include는 개발의 필요 또는 서브페이지의 테마적인 속성이 다를 경우, 추가적인 css와 js를 로딩 할 수 있도록 구성하는데 사용해주십시오. //-->
+<%@ include file="/resources/include/commonfile/inc/header.jsp" %>
+</head>
+
+<body>
+<div class="accessibility"> <a href="#contentcore">본문바로가기</a> </div>
+<div id="topheader">
+	<%@ include file="/resources/include/commonfile/inc/top.jsp" %>
+</div>
+<div id="topVisual">
+	<div id="visual"><img src="/resources/include/commonfile/image/visual/visual01.jpg" alt="눈과 귀를 열고 고객만족 1등 공기업을 만들기위해 최선을 다하겠습니다." /> </div>
+</div>
+<div id="middle">
+	<div id="contbody">
+		<div id="contleft">
+			<h2></h2>
+			<div class="lnbBody">
+				<ul id="lnb" class="lnbul">
+					<li></li>
+				</ul>
+			</div>
+			<!--lnb Bottom Icon Area -->
+			<%@ include file="/resources/include/commonfile/inc/lnb_bottom.jsp" %>
+			<!--lnb Bottom Icon Area --> 
+		</div>
+		<div id="contentcore">
+			<div class="naviandtitle">
+				<h3></h3>
+				<p class="navi"></p>
+			</div>
+			<div class="contents"> 
+				<!-- tabMaker  -->
+				<div class="ttabWrap">
+					<ul id="ttab3">
+						<li></li>
+					</ul>
+				</div>
+				<!-- tabMaker  --> 
+				<!-- real Contents -->
+				<div class="pageSection">
+					<ul class="guide">
+						<li><strong>주차장 이용시간안내</strong>
+							<ul>
+								<li><strong>09:00~18:00</strong></li>
+							</ul>
+						</li>
+						<li><strong>주차요금</strong>
+							<ul>
+								<li><p class="point_blue01"><strong>기본 30분 1,000원, 초과 10분당 500원</strong></p></li>
+								<li><strong>회원요금</strong> : <span class="point_blue01">3시간 무료 (프로그램 이용요일만 가능)</span>
+<ul>
+										<li>단 , 문의 · 접수 · 자녀등하원 등의 이용 시 고객지원실 또는 사무실에서 방문확인하시면 무료입니다</li>
+										<li>주차는 전자태그 부착차량만 입장 가능합니다.</li>
+										<li>요일제부착 차량도 주차 전자태그를 부착하셔야 합니다.</li>
+										<li>서울 차량은 전자테그 부착 차량만이 이용 가능</li>
+										<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!-- real Contents --> 
+				<!--만족도 조사가 들어갈 영역 -->
+				<jsp:include page="/front/satfact/${menuSeq }" />
+				<!--만족도 조사가 들어갈 영역 --> 
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footer">
+	<%@ include file="/resources/include/commonfile/inc/bottom.jsp" %>
+</div>
+<script type="text/javascript">initMenu(1,1,1,4);</script>
+</body>
+</html>

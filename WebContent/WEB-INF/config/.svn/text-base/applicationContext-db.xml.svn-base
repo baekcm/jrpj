@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	   http://www.springframework.org/schema/aop
+	   http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	   http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<!-- DataBase 어노테이션 설정 -->
+	<context:annotation-config />
+	
+	<context:component-scan base-package="com.jnet" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<!-- PROPERTIES 파일 경로 설정 -->
+    <context:property-placeholder location="classpath:config.properties"/>
+
+	<!-- 데이터베이스 접속환경설정 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+    
+	<!-- SESSIONFACTORY 설정 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <!-- <bean id="sqlSessionFactory" class="com.jnet.util.RefreshableSqlSessionFactoryBean"> -->
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath*:sql/**/*.xml" />
+    </bean>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory" />
+    </bean>
+    
+    <!-- 데이터베이스 접속환경설정 -->
+    <bean id="dataSource2" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName2}" />
+        <property name="url" value="${jdbc.url2}" />
+        <property name="username" value="${jdbc.username2}" />
+        <property name="password" value="${jdbc.password2}" />
+    </bean> 
+    
+	<!-- SESSIONFACTORY 설정 -->
+    <bean id="sqlSessionFactory2" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <!-- <bean id="sqlSessionFactory2" class="com.jnet.util.RefreshableSqlSessionFactoryBean"> -->
+        <property name="dataSource" ref="dataSource2" />
+        <property name="mapperLocations" value="classpath*:sql/**/*.xml" />
+    </bean>
+    <bean id="sqlSession2" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory2" />
+    </bean>
+    
+ 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    
+    <!-- DAO AOP -->
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="daoOperation" expression="execution(public * com.jnet..dao.*Dao.*(..))" />
+	</aop:config>
+	
+	<!-- Service AOP -->
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="serviceOperation" expression="execution(public * com.jnet..service.*Service.*(..))" />
+		<aop:advisor id="transactionAdvisor" pointcut-ref="serviceOperation" advice-ref="txAdvice"/>
+	</aop:config>
+	
+	<!--  트랜잭션 매니저 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" rollback-for="Exception"/>
+			<tx:method name="update*" rollback-for="Exception"/>
+			<tx:method name="remove*" rollback-for="Exception"/>
+			<tx:method name="proc*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>

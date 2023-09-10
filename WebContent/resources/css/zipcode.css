@@ -1,0 +1,56 @@
+@charset "UTF-8";
+body{margin:0; padding:0; font-family:Dotum, Gulim; font-size:12px; line-height:140%; color:#262626; word-wrap:break-word;word-break:break-all;}
+table {border-collapse:collapse;}
+ul,ol{list-style:none; margin:0; padding:0; }
+input, select {font:normal 12px/12px dotum; vertical-align:middle; }
+.BgNone {background:none !important;}
+.BdNone {border:none !important;}
+.hidden {position:absolute; top:0; left:0; overflow:hidden;text-indent:-9999px; margin-top:-10000px;}
+caption, legend {position:absolute; top:0; left:0; overflow:hidden;text-indent:-9999px; *height:0; line-height:0; }
+.inputText {border:solid 1px #ccc; }
+.MAL0 {margin-left:0px !important;}
+.MAL5 {margin-left:5px !important;}
+.MAL10 {margin-left:10px !important;}
+.MAL15 {margin-left:15px !important;}
+
+/* 강조색 */
+.emp1 {color:#306cbc !important;} /* 파란색 */
+.emp2 {color:#0b8e68 !important;} /* 녹색 */
+.emp3 {color:#157e98 !important;} /* 진청색 */
+.emp4 {color:#5c6dac !important;} /* 파보중간 */
+.emp5 {color:#408839 !important;} /* 연한녹색 */
+.emp6 {color:#000000 !important;} /* 검정 */
+.emp7 {color:#ab2424 !important;} /* 빨간 */
+.emp8 {color:#cb6f1d !important;} /* 연한오렌지 */
+.emp9 {color:#ff6000 !important;} /* 오렌지 */
+
+/*페이지 css*/
+.wrap { width:500px;  }
+.titArea {height:80px; background:#80C915; margin-bottom:10px;}
+.titArea .engT {margin-left:20px; padding-top:10px; font:bold 12px/18px dotum; color:#fff;display:block;}
+.titArea .korT {margin-left:20px; font:bold 30px/40px dotum; color:#fff;display:block;}
+.input_area .searchArea {font:bold 14px/30px dotum; color:#0F5CB0; text-align:center; border-top:solid 1px #ddd;  border-bottom:solid 1px #ddd; }
+.input_area .infoArea {font:normal 11px/18px dotum; margin:10px;}
+.input_area .regiArea {background:#efefef; padding:10px;text-align:center;}
+.input_area .regiArea label{font:bold 12px/18px dotum;}
+.btn {font:bold 11px/12px dotum; height:18px; background:#0F5CB0; color:#fff; }
+.btn_close {font:bold 11px/16px dotum; height:20px; padding:0px 30px; background:#04436A; color:#fff; }
+.btnArea {text-align:center; margin:20px 0px;}
+.post_titleArea {margin:15px 0 0 8px; padding:0px 8px 0px 0px; width:472px; height:270px; border-top:#82c61d 2px solid; background:#fff; font:normal 11px/16px dotum; text-align: center;}
+.post_listArea {margin-bottom:10px; padding:0px; width:480px; height:25px; overflow:auto; overflow-x:hidden; background:#fff; font:normal 11px/16px dotum; border-bottom:solid 1px #ccc;}
+.postTable {margin:0; width:480px; display:block; }
+.formarea { width: 440px; margin-bottom: 5px; margin-right: 15px; display:inline-block; }
+.formarea li { height: 20px; }
+.formarea li .title { display:inline-block; width: 60px; text-align: right; }
+.formarea li.first { float: left; }
+.formarea li.second { float: right; }
+
+.postTable thead {}
+.postTable thead th {height:30px; color:#262626; background:#ddd; border-bottom:solid 1px #ccc;}
+.postTable tbody td {text-align:center; padding:5px 1px; border-bottom:solid 1px #dddddd; line-height:150%;}
+.postTable tbody td.addList { text-align:left; padding-left:10px; }
+.postTable tbody td.noData {height:100px; background:none; width:480px;}
+.postInputTable {margin:0; width:480px; display:block; }
+.postInputTable tbody th {height:30px; color:#262626; background:#ddd; border-top:solid 1px #ccc; border-bottom:solid 1px #ccc;}
+.postInputTable tbody td {padding:5px 1px 4px 4px; border-top:solid 1px #dddddd; border-bottom:solid 1px #dddddd;}
+.pagingTable { margin:0; width:480px; }

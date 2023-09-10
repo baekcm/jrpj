@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>인사말</title>
+</head>
+<body>
+<ul>
+	<li>이사장
+		<ul>
+			<li>이사회 감사(비상임)</li>
+			<li>본부장</li>
+			<li>기획경영팀
+				<ul>
+					<li>관리,시설</li>
+					<li>운영,청소년센터</li>
+				</ul>
+			</li>
+			<li>생활관팀
+				<ul>
+					<li>관리,시설</li>
+					<li>운영,청소년센터</li>
+				</ul>
+			</li>
+			<li>구민회관팀
+				<ul>
+					<li>관리,시설</li>
+					<li>운영,동부여성센터</li>
+				</ul>
+			</li>
+			<li>문화체육센터팀
+				<ul>
+					<li>관리,시설</li>
+					<li>운영,삼청테니스장</li>
+				</ul>
+			</li>
+			<li>주차사업팀
+				<ul>
+					<li>주차장관리</li>
+					<li>견인보관소관리</li>
+				</ul>
+			</li>
+			<li>공공시설팀
+				<ul>
+					<li>시설통합관리,지원</li>
+					<li>공원시설관리</li>
+					<li>동청사,문화지구</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

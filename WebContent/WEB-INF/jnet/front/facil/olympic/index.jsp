@@ -1,0 +1,249 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>종로구시설관리공단</title>
+<script type="text/javascript" src="/resources/include/commonfile/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="/resources/include/commonfile/js/jquery.bxSlider.js"></script>
+<script type="text/javascript" src="/resources/include/commonfile/js/maintab.js"></script>
+<script type="text/javascript" src="/resources/include/commonfile/js/gnb.js"></script>
+<link href="/resources/include/commonfile/css/sub.css" rel="stylesheet" type="text/css" />
+<!--// 아래의 header.jsp include는 개발의 필요 또는 서브페이지의 테마적인 속성이 다를 경우, 추가적인 css와 js를 로딩 할 수 있도록 구성하는데 사용해주십시오. //-->
+<%@ include file="/resources/include/commonfile/inc/header.jsp" %>
+</head>
+
+<body>
+<div class="accessibility"> <a href="#contentcore">본문바로가기</a> </div>
+<div id="topheader">
+	<%@ include file="/resources/include/commonfile/inc/top.jsp" %>
+</div>
+<div id="topVisual">
+	<div id="visual"><img src="/resources/include/commonfile/image/visual/visual01.jpg" alt="눈과 귀를 열고 고객만족 1등 공기업을 만들기위해 최선을 다하겠습니다." /> </div>
+</div>
+<div id="middle">
+	<div id="contbody">
+		<div id="contleft">
+			<h2></h2>
+			<div class="lnbBody">
+				<ul id="lnb" class="lnbul">
+					<li></li>
+				</ul>
+			</div>
+			<!--lnb Bottom Icon Area -->
+			<%@ include file="/resources/include/commonfile/inc/lnb_bottom.jsp" %>
+			<!--lnb Bottom Icon Area --> 
+		</div>
+		<div id="contentcore">
+			<div class="naviandtitle">
+				<h3></h3>
+				<p class="navi"></p>
+			</div>
+			<div class="contents"> 
+				<!-- real Contents --> 
+				<!-- page Top -->
+				<div id="pageTop">
+					<div id="pageTopNews">
+						<p><a href="/facil/olympic/apply.jsp">회원접수 안내, 회원가입 시 주의사항 등을 알려드립니다</a></p>
+					</div>
+					<div id="pageTopSearch">
+						<form name="ptsearch" id="ptsearch" action="/result/result1.jsp?msearchKWD=&amp;x=35&amp;y=5">
+							<input type="text" name="ptschKwd" id="ptschKwd" title="검색어 입력" />
+							<input type="image" alt="검색" id="ptschBtn" src="/resources/include/commonfile/image/common/btn_search.gif"/>
+						</form>
+					</div>
+				</div>
+				<!-- page Top --> 
+				<!-- Sub main rolling banner-->
+				<div id="subRollBan"> 
+					
+					<!-- 팝업존 S --> 
+					
+					<script type="text/javascript">
+                    
+                    $(function(){
+                    var banner = $('#popZone').bxSlider({
+                    mode: 'fade',
+                    infiniteLoop: false,
+                    //hideControlOnEnd: false,
+                    pager: true,  //페이지 설정 css 설정값
+                    auto: true,
+                    controls: false
+                    //randomStart: true
+                    });
+                    
+                    $('#popZoneStart').click(function(){banner.startShow();    return false;  });
+                    $('#popZoneStop').click(function(){banner.stopShow();    return false;  });
+                    $('#popZoneGoback').click(function(){banner.goToPreviousSlide();    return false;  });
+                    $('#popZoneGofor').click(function(){banner.goToNextSlide();    return false;  });
+                    });
+                    
+                    </script>
+					<div class="popzoneArea" id="GoContent">
+						<ul class="controlArea">
+							<li><a id="popZoneStop" href="#none"><img src="/resources/include/commonfile/image/main/btn_rollStop.png" alt="팝업존멈춤" /></a></li>
+							<li><a id="popZoneStart" href="#none"><img src="/resources/include/commonfile/image/main/btn_rollPlay.png" alt="팝업존시작" /></a></li>
+						</ul>
+						<ul class='popView numbg04' id='popZone'>
+							<!--<li><a href=""  class="popImgArea"><img src='/image/main/sampic.gif'width="349" alt="alt값은 이미지에 있는 모든 글자!!" /></a></li>-->
+							<li><a href="#"  class="popImgArea"> <img src="/resources/include/commonfile/image/main/rban01.gif"  alt="종로구 나눔주차장 가이드맵" /></a></li>
+							<li><a href="#"  class="popImgArea"> <img src="/resources/include/commonfile/image/main/rban02.gif"  alt="CMS 결제 시행" /></a></li>
+							<li><a href="#"  class="popImgArea"> <img src="/resources/include/commonfile/image/main/rban03.gif"  alt="공공기관 청렴도 측정 관련 개인정보 제3차 제공사항 알림" /></a></li>
+						</ul>
+					</div>
+					
+					<!-- 팝업존 E --> 
+				</div>
+				<!-- Sub main rolling banner--> 
+				
+				<!-- sub news tab & gal post -->
+				<div class="mainmiddle"> 
+					<!-- sub main news area -->
+					<div id="newsArea">
+						<div id="tabcontainer" class="maintab">
+							<h2 class="tabtit1"><a href="#sttab1"><img src="/resources/include/commonfile/image/common/tab_news_on.png" alt="공지사항"/></a></h2>
+							<div id="sttab1">
+								<ul>
+									<li><span class="listx"><a href="/notice/notice_view.jsp">아시아 문화탐험 연극(몽골, 중국, 베트남) 안내</a></span><img src="/resources/include/commonfile/image/common/icon_new.png" alt="새 글" /><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/notice_view.jsp">주말 H.W수영(Happy Weekend) 모집안내</a></span><img src="/resources/include/commonfile/image/common/icon_new.png" alt="새 글" /><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/notice_view.jsp">2013 여름 방학 특강 및 2013 레벨업 방학 실전 연애스킬</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/notice_view.jsp">미라클 유아 스포츠 악당단 단원 대모집</a></span><span class="date">2013-08-19</span></li>
+									<!--<li><span class="listx"><a href="/notice/notice_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>-->
+								</ul>
+								<p class="btnMore"><a href="/notice/notice_list.jsp"><img src="/resources/include/commonfile/image/common/btn_more.gif" alt="더 보기"/></a></p>
+							</div>
+							<h2 class="tabtit2"><a href="#sttab2"><img src="/resources/include/commonfile/image/common/tab_notice_off.png" alt="입찰정보"/></a></h2>
+							<div id="sttab2">
+								<ul>
+									<li><span class="listx"><a href="/notice/bid_view.jsp">생활관 수영장 1차 여과기 여재 교체 공사</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/bid_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/bid_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/bid_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<!--<li><span class="listx"><a href="/notice/bid_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>-->
+								</ul>
+								<p class="btnMore"><a href="/notice/bid_list.jsp"><img src="/resources/include/commonfile/image/common/btn_more.gif" alt="더 보기"/></a></p>
+							</div>
+							<h2 class="tabtit3"><a href="#sttab3"><img src="/resources/include/commonfile/image/common/tab_free_off.png" alt="채용공고"/></a></h2>
+							<div id="sttab3">
+								<ul>
+									<li><span class="listx"><a href="/notice/recruit_view.jsp">종로구시설관리공단 비상임이사 면접시험 일정 공고 </a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/recruit_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/recruit_view.jsp">free 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/recruit_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<!--<li><span class="listx"><a href="/notice/recruit_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>-->
+								</ul>
+								<p class="btnMore"><a href="/notice/recruit_list.jsp"><img src="/resources/include/commonfile/image/common/btn_more.gif" alt="더 보기"/></a></p>
+							</div>
+							<h2 class="tabtit4"><a href="#sttab4"><img src="/resources/include/commonfile/image/common/tab_faq_off.png" alt="강좌안내"/></a></h2>
+							<div id="sttab4">
+								<ul>
+									<li><span class="listx"><a href="/notice/news_view.jsp">12월 신설예정프로그램 지금바로 가접수 하세요^^</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/news_view.jsp">FAQ신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/news_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<li><span class="listx"><a href="/notice/news_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>
+									<!--<li><span class="listx"><a href="/notice/news_view.jsp">신규전입구민을 위한 수영 &amp;헬스 특별반 신규 모집에 관한 슬픈 전설 이야기</a></span><span class="date">2013-08-19</span></li>-->
+								</ul>
+								<p class="btnMore"><a href="/notice/news_list.jsp"><img src="/resources/include/commonfile/image/common/btn_more.gif" alt="더 보기"/></a></p>
+							</div>
+						</div>
+						<script type="text/javascript">tabList('tabcontainer', 0);</script> 
+					</div>
+					<!-- sub main news area --> 
+					<!-- sub main photo gal area -->
+					<div id="photoGal">
+						<div class="pgTop">
+							<h2><img src="/resources/include/commonfile/image/common/title_submainphoto.gif" alt="포토갤러리" /></h2>
+							<div class="btn_more"> <a href="/open/gallery_list.jsp"><img src="/resources/include/commonfile/image/common/btn_more.gif" alt="더 보기" /></a> </div>
+						</div>
+						<ul>
+							<li>
+								<dl>
+									<dd><a href="/open/gallery_view.jsp"><img src="/resources/include/commonfile/image/common/thumb01.gif" alt="포토갤러리 사진" /></a></dd>
+									<dt><a href="/open/gallery_view.jsp">매월 격주로 운동하고 있는 혜화 Hans입니다.</a></dt>
+								</dl>
+							</li>
+							<li>
+								<dl>
+									<dd><a href="/open/gallery_view.jsp"><img src="/resources/include/commonfile/image/common/thumb02.gif" alt="포토갤러리 사진" /></a></dd>
+									<dt><a href="/open/gallery_view.jsp">즐거운 농구시간 인걸까? 싸우자는게냐?</a></dt>
+								</dl>
+							</li>
+						</ul>
+					</div>
+					<!-- sub main photo gal area --> 
+				</div>
+				<div class="pageSection">
+					<div class="pgTop mb10">
+						<h2><img src="/resources/include/commonfile/image/common/title_program.gif" width="107" height="19" alt="프로그램 안내" /></h2>
+						<div class="btn_more"><a href="/facil/olympic/sports_list.jsp"><img src="/resources/include/commonfile/image/common/btn_total.gif" width="50" height="17" alt="전체보기" /></a> </div>
+					</div>
+					<div class="tblWrap">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0" summary="과정별 프로그램명과 운영 요일 시간, 대상을 안내한 표. " class="tbl01 tdCenter">
+							<caption>
+							프로그램안내
+							</caption>
+							<colgroup>
+							<col style="width:90px;" />
+							<col />
+							<col style="width:90px;" />
+							<col style="width:130px;" />
+							<col style="width:90px;" />
+							</colgroup>
+							<tr>
+								<th scope="col">과정명</th>
+								<th scope="col">프로그램명</th>
+								<th scope="col">요일</th>
+								<th scope="col">시간</th>
+								<th scope="col">대상</th>
+							</tr>
+							<tr>
+								<td class="progThumb"><a href="/facil/olympic/sports_view.jsp"><img src="/resources/include/commonfile/image/common/propic01.gif" alt="프로그램 사진" /></a></td>
+								<td><a href="/facil/olympic/sports_view.jsp">06시 해오름 수영 A</a></td>
+								<td>월 수 금</td>
+								<td>06:00~06:50</td>
+								<td>성인남녀</td>
+							</tr>
+							<tr>
+								<td class="progThumb"><a href="/facil/olympic/sports_view.jsp"><img src="/resources/include/commonfile/image/common/propic02.gif" alt="프로그램 사진" /></a></td>
+								<td><a href="/facil/olympic/sports_view.jsp">06시 해오름 수영 A</a></td>
+								<td>월 수 금</td>
+								<td>06:00~06:50</td>
+								<td>성인남녀</td>
+							</tr>
+							<tr>
+								<td class="progThumb"><a href="/facil/olympic/sports_view.jsp"><img src="/resources/include/commonfile/image/common/propic03.gif" alt="프로그램 사진" /></a></td>
+								<td><a href="/facil/olympic/sports_view.jsp">06시 해오름 수영 A</a></td>
+								<td>월 수 금</td>
+								<td>06:00~06:50</td>
+								<td>성인남녀</td>
+							</tr>
+							<tr>
+								<td class="progThumb"><a href="/facil/olympic/sports_view.jsp"><img src="/resources/include/commonfile/image/common/propic04.gif" alt="프로그램 사진" /></a></td>
+								<td><a href="/facil/olympic/sports_view.jsp">06시 해오름 수영 A</a></td>
+								<td>월 수 금</td>
+								<td>06:00~06:50</td>
+								<td>성인남녀</td>
+							</tr>
+							<tr>
+								<td class="progThumb"><a href="/facil/olympic/sports_view.jsp"><img src="/resources/include/commonfile/image/common/propic05.gif" alt="프로그램 사진" /></a></td>
+								<td><a href="/facil/olympic/sports_view.jsp">06시 해오름 수영 A</a></td>
+								<td>월 수 금</td>
+								<td>06:00~06:50</td>
+								<td>성인남녀</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- sub news tab & gal post --> 
+				
+				<!-- real Contents --> 
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footer">
+	<%@ include file="/resources/include/commonfile/inc/bottom.jsp" %>
+</div>
+<script type="text/javascript">initMenu(1,1,0,0);</script>
+</body>
+</html>

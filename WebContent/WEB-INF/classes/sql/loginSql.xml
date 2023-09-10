@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loginSql">
+
+	<!-- 관리자 로그인정보 상세조회 -->
+	<select id="findAdminLoginInfo" parameterType="com.jnet.domain.Admin" resultType="com.jnet.domain.Admin">
+	SELECT 	CASE 
+				WHEN admin_auth = 'S'
+				THEN '관리자'
+				WHEN admin_auth = 'O'
+				THEN '운영자'
+			END admType
+			,admin_id admId
+			,admin_nm admNm
+			,admin_email1 admEmail1
+			,admin_email2 admEmail2
+			,modi_ymd modiYmd
+			,modi_ip modiIp
+			,admin_seq admSeq
+			,admin_auth admAuthCode
+			,login_ymd loginYmd
+			,login_ip loginIp
+			,login_hitnum loginHitNum
+	FROM JONGNO_ADMIN
+	WHERE admin_id = #{admId}
+	  AND admin_pwd = #{admPwd} 	
+	  AND rm_yn ='N'
+	</select>
+	
+	<!-- 관리자 할당권한 목록 조회 -->
+	<select id="listAdminAuth" parameterType="com.jnet.domain.Admin" resultType="com.jnet.domain.Menu">
+		SELECT am.menu_seq menuSeq
+			 , am.slct_facil_id slctFacilId
+		     , m.menu_nm menuNm
+		     , m.prnt_menu_seq prntMenuSeq
+		     , m.menu_url menuUrl
+			 , m.page_gbn_cd pageGbnCd
+		     , m.menu_type menuType
+		     , m.comm_code_seq commCodeSeq
+		     , am.pgm_gbn_cd pgmGbnCd
+		     , am.sale_id saleId
+		  FROM jongno_admin_menu am, jongno_menu m
+		 WHERE admin_seq = #{admSeq}
+		   AND am.menu_Seq = m.menu_seq
+		   AND m.use_yn ='Y'
+		 ORDER BY am.menu_seq
+	</select>
+	
+	<!-- 회원가입 연도별통계 -->
+	<select id="listMemYear" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Common">
+		<!-- SELECT CONVERT (INT,substring(sign_ymd,1,4)) memYear
+		     , COUNT(sign_ymd) memCnt
+		  FROM jongno_member  
+		 WHERE user_out = 'N'
+		 GROUP BY CONVERT (INT,substring(sign_ymd,1,4)) -->
+		 <!-- select *
+			from (SELECT substring(sign_ymd,1,4) memYear
+					     , COUNT(sign_ymd) memCnt
+					  FROM jongno_member  
+					 WHERE user_out = 'N'
+					 GROUP BY CONVERT (INT,substring(sign_ymd,1,4))
+					 ) a
+			order by a.memYear -->
+			SELECT ye memYear
+				  ,COUNT(ye) memCnt
+			FROM (SELECT sign_ymd,LEFT(sign_ymd, 4) ye,SUBSTRING(sign_ymd, 5,2) mon,RIGHT(sign_ymd, 2) da
+					FROM jongno_member
+					WHERE user_out = 'N') a
+			GROUP BY ye	
+			ORDER BY ye
+	</select>
+	
+	<!-- 회원가입 월별통계 -->
+	<select id="listMemMonth" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Common">
+		<!-- SELECT substring(sign_ymd,5,2) memMonth 
+		     , COUNT(sign_ymd) memCnt
+		  FROM jongno_member  
+		 WHERE substring(sign_ymd,1,4) = substring(#{todayYmd},1,4)
+		   AND user_out = 'N'
+		 GROUP BY CONVERT (INT,substring(sign_ymd,5,2)) -->
+		 	SELECT mon memMonth
+		 		  ,COUNT(mon) memCnt
+			FROM (SELECT sign_ymd,LEFT(sign_ymd, 4) ye,SUBSTRING(sign_ymd, 5,2) mon,RIGHT(sign_ymd, 2) da
+					FROM jongno_member
+					 WHERE user_out = 'N') a
+			WHERE ye = LEFT(#{todayYmd}, 4)  		
+			GROUP BY mon	
+			ORDER BY mon
+	</select>
+	
+	<!-- 회원가입 일별통계 -->
+	<select id="listMemDay" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Common">
+		<!-- SELECT substring(sign_ymd,7,2) memDay 
+		     , COUNT(sign_ymd) memCnt
+		  FROM jongno_member  
+		 WHERE substring(sign_ymd,1,6) = substring(#{todayYmd},1,6)
+		   AND user_out = 'N'
+		  GROUP BY CONVERT (INT,substring(sign_ymd,7,2)) -->
+		   SELECT da memDay
+		   		 ,COUNT(da) memCnt
+			 FROM (SELECT sign_ymd,LEFT(sign_ymd, 4) ye,SUBSTRING(sign_ymd, 5,2) mon,RIGHT(sign_ymd, 2) da
+					 FROM jongno_member
+					  WHERE user_out = 'N') a
+			WHERE ye = LEFT(#{todayYmd}, 4)
+		  	  AND mon = SUBSTRING(#{todayYmd}, 5,2)
+			GROUP by da 	
+			ORDER by da 
+	</select>
+	
+	<!-- 회원가입 요일별통계 -->
+	<select id="listMemDate" resultType="com.jnet.domain.Common">
+			SELECT a.thisday memDay
+			     , ISNULL(b.signYmdCnt,0) memCnt
+			  FROM (SELECT CONVERT(varchar, GETDATE() - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+1 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+2 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL 
+					SELECT CONVERT(varchar, GETDATE()+3 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+4 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+5 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+6 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday) a
+			   LEFT OUTER JOIN
+					(SELECT sign_ymd signYmd
+		       			   ,COUNT(sign_ymd) signYmdCnt
+		  			   FROM jongno_member
+		 			  WHERE user_out = 'N'
+		 			    AND sign_ymd BETWEEN   CONVERT(varchar, GETDATE() - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112)  
+   		  			                AND  CONVERT(varchar, GETDATE() + 7 - DATEPART(dw, CONVERT(varchar, GETDATE(), 112)), 112) 
+		 			  GROUP BY sign_ymd) b
+		 		ON a.thisday = b.signYmd
+	</select>
+	
+	<!-- 회원가입 기간별 통계 -->
+	<select id="listMemSlctDate" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Member">
+		SELECT sign_ymd signYmd
+			  , ISNULL(COUNT(sign_ymd),0) memCnt
+		  FROM jongno_member
+		 WHERE sign_ymd BETWEEN #{stYmd} AND #{edYmd}
+		   AND user_out = 'N'
+		 GROUP by sign_ymd
+		 ORDER by sign_ymd
+	</select>
+
+ 
+	<!-- 사이트방문 연도별통계 -->
+	<select id="listSiteYear" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Common">
+		SELECT ye memYear
+			  ,COUNT(ye) memCnt
+		FROM (SELECT distinct log_ip, LEFT(log_ymd, 4) ye,SUBSTRING(log_ymd, 5,2) mon,RIGHT(log_ymd, 2) da
+		  		FROM jongno_log) a
+		GROUP BY ye 
+		order by ye 
+		<!-- SELECT CONVERT (INT,substring(t1.log_ymd,1,4)) memYear
+		     , COUNT(t1.log_ymd) memCnt
+		  FROM (SELECT distinct log_id,log_ymd 
+  				  From jongno_log) t1
+		 GROUP BY CONVERT (INT,substring(t1.log_ymd,1,4)) -->
+	</select>
+	
+	<!-- 사이트방문 월별통계 -->
+	<select id="listSiteMonth" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Common">
+		SELECT CONVERT (INT,mon) memMonth
+			  ,COUNT(mon) memCnt
+		FROM (SELECT distinct log_ip, LEFT(log_ymd, 4) ye,SUBSTRING(log_ymd, 5,2) mon,RIGHT(log_ymd, 2) da
+		  		FROM jongno_log) a
+		WHERE ye = LEFT(#{todayYmd}, 4) 
+		GROUP BY mon
+		order by mon
+		<!-- SELECT CONVERT (INT,substring(t1.log_ymd,5,2)) memMonth 
+		     , COUNT(t1.log_ymd) memCnt
+		  FROM (SELECT distinct log_ip,log_ymd 
+  				  From jongno_log) t1
+		 WHERE substring(t1.log_ymd,1,4) = substring(#{todayYmd},1,4)
+		 GROUP BY CONVERT (INT,substring(t1.log_ymd,5,2)) -->
+	</select>
+	
+	<!-- 사이트방문 일별통계 -->
+	<select id="listSiteDay" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Common">
+		SELECT CONVERT (INT,da) memDay
+			  ,COUNT(da) memCnt
+		FROM (SELECT distinct log_ip, LEFT(log_ymd, 4) ye,SUBSTRING(log_ymd, 5,2) mon,RIGHT(log_ymd, 2) da
+		  		FROM jongno_log) a
+		WHERE ye = LEFT(#{todayYmd}, 4)
+		  AND mon = SUBSTRING(#{todayYmd}, 5,2)
+		GROUP BY da 
+		ORDER BY da
+		<!-- SELECT CONVERT (INT,substring(t1.log_ymd,7,2)) memDay 
+		     , COUNT(t1.log_ymd) memCnt
+		  FROM (SELECT distinct log_ip,log_ymd 
+  				  From jongno_log) t1  
+		 WHERE substring(t1.log_ymd,1,6) = substring(#{todayYmd},1,6)
+		  GROUP BY CONVERT (INT,substring(t1.log_ymd,7,2)) -->
+	</select>
+	
+	<!-- 사이트방문 요일별통계 -->
+	<select id="listSiteDate" resultType="com.jnet.domain.Common">
+			SELECT a.thisday memDay
+			     , ISNULL(b.logYmdCnt,0) memCnt
+			  FROM (SELECT CONVERT(varchar, GETDATE() - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+1 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+2 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL 
+					SELECT CONVERT(varchar, GETDATE()+3 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+4 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+5 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday
+					UNION ALL
+					SELECT CONVERT(varchar, GETDATE()+6 - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112) thisday) a
+			   LEFT OUTER JOIN
+					(SELECT log_ymd logYmd
+		       			   ,COUNT(log_ymd) logYmdCnt
+		  			   FROM (SELECT distinct log_ip, log_ymd FROM jongno_log) a
+   		  			  WHERE log_ymd BETWEEN   CONVERT(varchar, GETDATE() - (DATEPART(dw, CONVERT(varchar, GETDATE(), 112)) - 1), 112)  
+   		  			                AND  CONVERT(varchar, GETDATE() + 7 - DATEPART(dw, CONVERT(varchar, GETDATE(), 112)), 112) 
+		 			  GROUP BY log_ymd) b
+		 		ON a.thisday = b.logYmd
+	</select>
+	
+	<!-- 사이트방문 기간별 통계 -->
+	<select id="listSiteSlctDate" parameterType="com.jnet.domain.Common" resultType="com.jnet.domain.Member">
+		SELECT log_ymd signYmd
+			  , ISNULL(COUNT(log_ymd),0) memCnt
+		  FROM  (SELECT distinct log_ip, log_ymd FROM jongno_log) a
+		 WHERE log_ymd BETWEEN #{stYmd} AND #{edYmd}
+		 GROUP by log_ymd
+		 order by log_ymd
+	</select>
+	
+	
+	<update id="updateAdmLoginInfo" parameterType="com.jnet.domain.Admin">
+		UPDATE jongno_admin
+		SET login_ymd = #{loginYmd}
+		   ,login_ip = #{loginIp}
+		   ,login_hitnum = login_hitnum+1 
+		WHERE admin_seq = #{admSeq}
+	</update>
+</mapper>

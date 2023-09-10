@@ -1,0 +1,27 @@
+
+########################
+# Java Compile Options #
+########################
+
+XECUREWEB_VER6 = $(HOME)/xecureweb_ver6
+
+JSDK_VERSION = jsdk21
+
+ifdef JAVA_HOME
+	JAVAC = $(JAVA_HOME)/bin/javac
+	JAVAH = $(JAVA_HOME)/bin/javah
+else
+	JAVAC = javac
+	JAVAH = javah
+endif
+
+
+JSDK_CLASSPATH = $(XECUREWEB_VER6)/lib/java/$(JSDK_VERSION)/$(JSDK_VERSION).jar
+
+XECURE_SERVLET_CLASSPATH = $(XECUREWEB_VER6)/lib/java/$(JSDK_VERSION)
+
+.SUFFIXES: .class .java
+
+.java.class:
+	CLASSPATH=$(XECURE_SERVLET_CLASSPATH):$(JSDK_CLASSPATH) $(JAVAC) $<
+

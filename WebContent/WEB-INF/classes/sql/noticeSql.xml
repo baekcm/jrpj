@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="noticeSql">
+
+	<!-- 게시판 게시데이터 목록수 조회 -->
+	<select id="noticeListTotCnt" parameterType="com.jnet.domain.BbsFileReply" resultType="Integer">
+	    	SELECT 
+	    			COUNT(1)
+		   	FROM 
+		   		JONGNO_BOARD_DATA a
+		  	WHERE a.board_seq = #{boardSeq}
+		  	AND a.use_yn = 'Y'
+		<if test='commCodeSeq != null and commCodeSeq != ""'>
+			AND a.comm_code_seq = #{commCodeSeq}
+	   	</if>
+		<if test='pgmCatGbnCd != null and pgmCatGbnCd != ""'>
+			AND a.pgm_cat_gbn_cd = #{pgmCatGbnCd}
+	   	</if>
+		  		<!-- 
+	   	   		-->
+ 		  		<if test='searchVal != null and searchVal != ""  '>
+			    	<if test='searchKey == "subject"'>
+			    		AND a.subject like  '%' + #{searchVal} + '%'
+			    	</if>
+			    	<if test='searchKey == "content"'>
+			    		AND a.content like  '%' + #{searchVal} + '%'
+			    	</if>
+			    	<if test='searchKey == "name"'>
+			    		AND a.create_nm like  '%' + #{searchVal} + '%'
+			    	</if>
+    	   		</if>
+    </select>
+    
+
+	<!-- 게시판 게시데이터 목록 조회 -->
+	<select id="noticeList" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+		<!-- sqlserver 2005 over sql
+    	<![CDATA[
+    		SELECT 
+    			c.*
+	    	FROM
+			    (
+			    SELECT 
+			    	T2.*, 
+			    	ROWNUM RNUM
+			    FROM
+			    	(
+			    	SELECT 
+			    		T1.*, 
+			    		ROW_NUMBER() OVER (ORDER BY dataSeq DESC) AS rownum
+			    	FROM 
+				    	(
+				    	SELECT  
+				    		a.data_seq dataSeq
+				    		,a.board_seq boardSeq
+				    		,a.subject
+				    		,a.create_nm createNm
+				    		,a.create_ymd createYmd
+				    		,a.comm_code_seq commCodeSeq
+				    		,(SELECT b.board_type FROM jongno_board b WHERE a.board_seq = b.board_seq) boardType 
+				    		,(SELECT b.code_nm from jongno_comm_code b where a.comm_code_seq = b.comm_code_seq) codeNm
+				    		,(SELECT b.code_id from jongno_comm_code b where a.comm_code_seq = b.comm_code_seq) codeId
+				    		,CASE 
+							      WHEN b.board_type = 'GALL'
+							      	THEN (SELECT TOP 1 c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+							      WHEN b.board_type = 'LOSE'
+							      	THEN (SELECT c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+							      WHEN b.board_type = 'FREE'
+							      	THEN (SELECT c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+							      ELSE (SELECT TOP 1 c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq)
+							     END filePathNm
+							,CASE 
+						      WHEN b.board_type = 'GALL'
+						      	THEN (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+						      WHEN b.board_type = 'LOSE'
+						      	THEN (SELECT c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+						      WHEN b.board_type = 'FREE'
+						      	THEN (SELECT c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+						      ELSE (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq)
+						     END fileSeq
+							,a.learn_ymd learnYmd
+							,a.learn_area learnArea
+							,a.learn_store_yn learnStoreYn
+							,a.hitnum
+							,a.pgm_cat_gbn_cd pgmCatGbnCd
+							,a.free_place freePlace
+							,a.free_dtm freeDtm
+							,(select cat_cd_yn from JONGNO_BOARD b where a.board_seq = b.board_seq) as catCdYn
+						FROM 
+							JONGNO_BOARD_DATA a ,jongno_board b
+	 					WHERE a.board_seq = #{boardSeq}
+	 					AND a.board_seq = b.board_seq
+	 					AND a.use_yn = 'Y'
+	 					]]>
+					<if test='commCodeSeq != null and commCodeSeq != ""'>
+						AND a.comm_code_seq = #{commCodeSeq}
+				   	</if>
+					<if test='pgmCatGbnCd != null and pgmCatGbnCd != ""'>
+						AND a.pgm_cat_gbn_cd = #{pgmCatGbnCd}
+				   	</if>
+			   	 <if test='searchVal != null and searchVal != "" '>
+				  	<if test='searchKey == "subject"'>
+				    		AND a.subject like  '%' + #{searchVal} + '%'
+				    </if>
+				    <if test='searchKey == "content"'>
+				    		AND a.content like  '%' + #{searchVal} + '%'
+				    </if>
+				    <if test='searchKey == "name"'>
+				    		AND a.create_nm like  '%' + #{searchVal} + '%'
+				    </if>
+	   	   		</if>
+	 				) T1
+			<![CDATA[ 
+			   	) T2
+			WHERE rownum <= #{end}
+			) c
+		WHERE RNUM >= #{start}
+		]]>
+		-->
+		<![CDATA[
+    		SELECT 
+    			c.*
+	    	FROM
+			    (
+			    SELECT 
+			    	TOP ${showPage} T2.* 
+			    FROM
+			    	(
+			    	SELECT 
+			    		TOP ${currentPage} T1.*
+			    	FROM 
+				    	(
+				    	SELECT  
+				    		a.data_seq dataSeq
+				    		,a.board_seq boardSeq
+				    		,a.subject
+				    		,a.create_nm createNm
+				    		,a.create_ymd createYmd
+				    		,a.comm_code_seq commCodeSeq
+				    		,(SELECT b.board_type FROM jongno_board b WHERE a.board_seq = b.board_seq) boardType 
+				    		,(SELECT b.code_nm from jongno_comm_code b where a.comm_code_seq = b.comm_code_seq) codeNm
+				    		,(SELECT b.code_id from jongno_comm_code b where a.comm_code_seq = b.comm_code_seq) codeId
+				    		,CASE 
+							      WHEN b.board_type = 'GALL'
+							      	THEN (SELECT TOP 1 c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+							      WHEN b.board_type = 'LOSE'
+							      	THEN (SELECT TOP 1 c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+							      WHEN b.board_type = 'FREE'
+							      	THEN (SELECT TOP 1 c.file_path + c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+							      ELSE (SELECT TOP 1 c.real_file_nm  FROM jongno_file c WHERE c.data_seq = a.data_seq)
+							     END filePathNm
+							,CASE 
+						      WHEN b.board_type = 'GALL'
+						      	THEN (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+						      WHEN b.board_type = 'LOSE'
+						      	THEN (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+						      WHEN b.board_type = 'FREE'
+						      	THEN (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq AND thumb_yn = 'Y')
+						      ELSE (SELECT TOP 1 c.file_seq  FROM jongno_file c WHERE c.data_seq = a.data_seq)
+						     END fileSeq
+							,a.learn_ymd learnYmd
+							,a.learn_area learnArea
+							,a.learn_store_yn learnStoreYn
+							,a.hitnum
+							,a.pgm_cat_gbn_cd pgmCatGbnCd
+							,a.free_place freePlace
+							,a.free_dtm freeDtm
+							,(select cat_cd_yn from JONGNO_BOARD b where a.board_seq = b.board_seq) as catCdYn
+						FROM 
+							JONGNO_BOARD_DATA a ,jongno_board b
+	 					WHERE a.board_seq = #{boardSeq}
+	 					AND a.board_seq = b.board_seq
+	 					AND a.use_yn = 'Y'
+	 					]]>
+					<if test='commCodeSeq != null and commCodeSeq != ""'>
+						AND a.comm_code_seq = #{commCodeSeq}
+				   	</if>
+					<if test='pgmCatGbnCd != null and pgmCatGbnCd != ""'>
+						AND a.pgm_cat_gbn_cd = #{pgmCatGbnCd}
+				   	</if>
+			   	 <if test='searchVal != null and searchVal != "" '>
+				  	<if test='searchKey == "subject"'>
+				    		AND a.subject like  '%' + #{searchVal} + '%'
+				    </if>
+				    <if test='searchKey == "content"'>
+				    		AND a.content like  '%' + #{searchVal} + '%'
+				    </if>
+				    <if test='searchKey == "name"'>
+				    		AND a.create_nm like  '%' + #{searchVal} + '%'
+				    </if>
+	   	   		</if>
+	 				) T1
+	 		ORDER BY dataSeq DESC		
+			<![CDATA[ 
+			   	) T2
+			ORDER BY dataSeq
+			) c
+		ORDER BY dataSeq DESC
+		]]>			 
+    </select>
+    
+    
+    <!-- 게시판 게시데이터 상세조회 -->
+    <select id="noticeView" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT 
+    		a.data_seq dataSeq
+			,a.board_seq boardSeq
+			,aa.menu_seq menuSeq
+			,a.subject
+			,a.content
+			,a.create_nm createNm
+			,a.create_ymd createYmd
+			,a.create_hms createHms
+			,a.learn_ymd learnYmd
+			,a.learn_area learnArea
+			,a.learn_store_yn learnStoreYn
+			,a.url_nm urlNm
+			,a.comm_code_seq commCodeSeq
+			,a.cat_gbn_cd catGbnCd
+			,a.hitnum
+			,b.file_path filePath
+			,b.orgnl_file_nm orgnlFileNm
+			,b.real_file_nm realFileNm
+			,b.file_seq fileSeq
+			,b.thumb_yn thumbYn
+			,aa.board_type boardType
+			,aa.cat_cd_yn catCdYn
+			,aa.board_nm boardNm
+			,a.pgm_cat_gbn_cd pgmCatGbnCd
+			,aa.pgm_cat_cd_yn pgmCatCdYn
+			,aa.grp_cat_cd_yn grpCatCdYn
+			,a.free_place freePlace
+			,a.free_dtm freeDtm
+			,(SELECT b.code_nm from jongno_comm_code b where a.comm_code_seq = b.comm_code_seq) codeNm
+		FROM 
+			JONGNO_BOARD aa, JONGNO_BOARD_DATA a
+		LEFT OUTER JOIN JONGNO_FILE b
+		ON a.DATA_SEQ = b.DATA_SEQ
+		WHERE  AA.board_seq = a.board_seq
+		AND a.board_seq = #{boardSeq}
+		AND a.data_seq = #{dataSeq}
+		AND aa.use_yn = 'Y'
+    </select>
+    
+    
+    <!-- 게시판 게시데이터 상세조회 내의 이전 글 -->
+    <select id="noticePrev" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT top 1 
+    		board_seq boardSeq,
+			data_seq dataSeq,
+			subject
+		From
+			JONGNO_BOARD_DATA a
+		WHERE a.board_seq = #{boardSeq}
+		  AND a.use_yn = 'Y'
+	<![CDATA[ 
+		AND data_seq < #{dataSeq}
+	]]>
+		ORDER BY data_seq DESC
+    </select>
+    
+    
+    <!-- 게시판 게시데이터 상세조회 내의 다음 글 -->
+    <select id="noticeNext" parameterType="com.jnet.domain.BbsFileReply" resultType="com.jnet.domain.BbsFileReply">
+    	SELECT top 1 
+    		board_seq boardSeq,
+			data_seq dataSeq,
+			subject
+		From 
+			JONGNO_BOARD_DATA a
+		WHERE a.board_seq = #{boardSeq}
+		  AND a.use_yn = 'Y'
+	<![CDATA[
+		AND data_seq > #{dataSeq}
+	]]>
+		ORDER BY data_seq ASC
+    </select>
+    
+</mapper>

@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document */
+@import url("layout.css");
+@import url("default.css");
+
+
+#wrap {
+}
+#middle {padding-top:40px;}

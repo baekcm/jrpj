@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mgrSql">
+	<!-- 관리자 목록수 조회 -->
+	<select id="findMgrTotCnt" parameterType="com.jnet.domain.Menu" resultType="Integer">
+		<![CDATA[
+	    	SELECT COUNT(*) 
+	    	  FROM jongno_admin
+	    	  WHERE 1=1 
+	    ]]>
+	    	<if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+	    		AND ${searchKey} like  '%' + #{searchVal} + '%'
+	    	</if>
+	    	<if test='searchLvl != null and searchLvl != "" and searchLvl != "all"'>
+	    		AND admin_auth = #{searchLvl}
+	    	</if>
+	    	AND rm_yn ='N'
+    </select>
+    
+    <!-- 관리자 목록 조회 -->
+	<select id="listMgrMng" parameterType="com.jnet.domain.Menu" resultType="com.jnet.domain.Menu">
+	    		SELECT c.*
+		    	  FROM
+				    	(SELECT T1.*
+				    	  	  , ROWNUM RNUM
+				    		FROM
+				    		(SELECT
+				    			 admin_seq admSeq
+				    			,admin_id admId
+				    			,admin_nm admNm
+				    			,admin_phone1 admPhone1
+				    			,admin_phone2 admPhone2
+				    			,admin_phone3 admPhone3
+				    			,admin_auth admType
+				    			,rm_yn rmYn
+				    			,(SELECT COUNT(t1.admin_seq)+1 
+      							    FROM jongno_admin t1 
+      							   WHERE t1.admin_seq > jongno_admin.admin_seq
+      							     AND rm_yn ='N' 
+      							    <if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+							    		AND t1.${searchKey} like  '%' + #{searchVal} + '%'
+							        </if>
+							        <if test='searchLvl != null and searchLvl != "" and searchLvl != "all"'>
+							    		AND t1.admin_auth = #{searchLvl}
+							        </if>
+							        AND t1.rm_yn ='N'
+      							 ) rownum
+					    	FROM jongno_admin
+					    	WHERE 1=1
+					    	<if test='searchKey != null and searchKey != "" and searchKey != "all"'>
+						   	AND ${searchKey} like  '%' + #{searchVal} + '%'
+						    </if>
+						    <if test='searchLvl != null and searchLvl != "" and searchLvl != "all"'>
+						    AND admin_auth = #{searchLvl}
+						    </if>
+						    AND rm_yn ='N'
+   	   <![CDATA[
+					    	  ) T1
+					    	   WHERE rownum <= #{end}
+					    	      
+						) c
+			WHERE RNUM >= #{start}
+			ORDER BY admSeq DESC
+		]]>			 
+    </select>
+	
+	<!-- 관리자 중복체크 -->
+	<select id="findDpAdmId" parameterType="com.jnet.domain.Menu" resultType="Integer">
+		SELECT COUNT(*)
+		  FROM JONGNO_ADMIN
+		 WHERE admin_id = #{admId}
+		   AND rm_yn = 'N'
+	</select>
+	
+	<!-- 관리자 정보 저장 -->
+	<insert id="saveMgrMng" parameterType="com.jnet.domain.Menu" useGeneratedKeys="true" keyProperty="admSeq">
+		INSERT INTO JONGNO_ADMIN(admin_id
+								,admin_nm
+								,admin_phone1
+								,admin_phone2
+								,admin_phone3
+								,admin_email1
+								,admin_email2
+								,admin_pwd
+								,admin_auth
+								,create_ymd
+								,create_hms
+								,create_id
+								,create_ip
+								,modi_ymd
+								,modi_hms
+								,modi_id
+								,modi_ip
+								,rm_yn
+								,login_hitnum)
+						  VALUES(#{admId}
+						  		,#{admNm}
+						  		,#{admPhone1}
+						  		,#{admPhone2}
+						  		,#{admPhone3}
+						  		,#{admEmail1}
+						  		,#{admEmail2}
+						  		,#{admPwd}
+						  		,#{admType}
+						  		,#{createYmd}
+						  		,#{createHms}
+						  		,#{createId}
+						  		,#{createIp}
+						  		,#{createYmd}
+						  		,#{createHms}
+						  		,#{createId}
+						  		,#{createIp}
+						  		,'N'
+						  		,0)
+	</insert>
+	
+	<!-- 관리자 정보 수정 -->
+	<update id="updateMgrMng" parameterType="com.jnet.domain.Menu">
+		UPDATE JONGNO_ADMIN
+		   SET 	 <!-- admin_id = #{admId} -->
+				admin_nm = #{admNm}
+				<if test="admPhone1 != null and admPhone1 != ''">
+					,admin_phone1 = #{admPhone1}
+				</if>
+				<if test="admPhone2 != null and admPhone2 != ''">
+				,admin_phone2 = #{admPhone2}
+				</if>
+				<if test="admPhone3 != null and admPhone3 != ''">
+				,admin_phone3 = #{admPhone3}
+				</if>
+				<if test="admEmail1 != null and admEmail1 != ''">
+				,admin_email1 = #{admEmail1}
+				</if>
+				<if test="admEmail2 != null and admEmail2 != ''">
+				,admin_email2 = #{admEmail2}
+				</if>
+				<!-- ,admin_auth = #{admType} -->
+				,modi_ymd = #{modiYmd}
+				,modi_hms = #{modiHms}
+				,modi_id = #{modiId}
+				,modi_ip = #{modiIp}
+		 WHERE admin_seq = #{admSeq}
+	</update>
+	
+	<delete id="removeAdminAuth" parameterType="com.jnet.domain.Menu">
+		DELETE FROM JONGNO_ADMIN_MENU WHERE admin_seq = #{admSeq}
+	</delete>
+	
+	<!-- 관리자 메뉴권한 저장 -->
+	<insert id="saveAdminAuth" parameterType="com.jnet.domain.Menu">
+		INSERT INTO JONGNO_ADMIN_MENU(admin_seq,menu_seq, slct_facil_id,pgm_gbn_cd,sale_id)
+							   VALUES(#{admSeq},#{menuSeqStr}, #{slctFacilId},#{pgmGbnCd},#{saleId})
+	</insert>
+	
+	<!-- 관리자 정보조회  -->
+	<select id="findAdminAuth" parameterType="com.jnet.domain.Menu" resultType="com.jnet.domain.Menu">
+		SELECT admin_id admId
+			 , admin_pwd admPwd
+			 , admin_seq admSeq
+			 , admin_nm admNm
+			 , admin_phone1 admPhone1
+			 , admin_phone2 admPhone2
+			 , admin_phone3 admPhone3
+			 , admin_email1 admEmail1
+			 , admin_email2 admEmail2
+			 , admin_auth admType
+		  FROM JONGNO_ADMIN 
+		 WHERE admin_seq = #{admSeq}
+		   AND rm_yn = 'N'
+	</select>
+	
+	<!-- 권한 저장목록 조회  -->
+	<select id="listAdminAuthMenu" parameterType="com.jnet.domain.Menu" resultType="com.jnet.domain.Menu">
+		SELECT b.menu_seq menuSeqStr
+			 , b.menu_nm menuNm
+			 , a.slct_facil_id slctFacilId
+			 , CASE 
+			   WHEN b.menu_type = 'ACPT'
+			   THEN (SELECT code_nm FROM jongno_comm_code WHERE code_gbn_cd = 'minwon' AND code_id = a.slct_facil_id )
+			   WHEN b.menu_type = 'BBS'
+			   THEN (SELECT code_nm FROM jongno_comm_code WHERE code_gbn_cd = 'board_id' AND code_id = a.slct_facil_id )
+			   ELSE
+			   (SELECT code_nm FROM jongno_comm_code WHERE code_gbn_cd = 'up_id' AND code_id = a.slct_facil_id )
+			   END slctFacilNm
+			 , b.menu_type menuType
+			 , a.PGM_GBN_CD pgmGbnCd
+			 , a.SALE_ID saleId
+		  FROM JONGNO_ADMIN_MENU a, JONGNO_MENU b,  JONGNO_ADMIN c
+		 WHERE a.menu_seq = b.menu_seq
+		   AND a.admin_seq = c.admin_seq
+		   AND a.admin_seq = #{admSeq}
+		   AND b.use_yn = 'Y'
+		   AND c.rm_yn = 'N'
+	</select>
+	
+	<!-- 관리자 삭제(수정) -->
+	<update id="removeMgrMng" parameterType="com.jnet.domain.Menu">
+		UPDATE JONGNO_ADMIN
+		SET  rm_yn = 'Y'
+			,modi_ymd = #{modiYmd}
+			,modi_hms = #{modiHms}
+			,modi_id = #{modiId}
+			,modi_ip = #{modiIp}
+		WHERE admin_seq in
+		<foreach item="item" index="index" collection="admChk" open="(" separator="," close=")">
+        	#{item}
+  		</foreach>
+	</update>
+	
+	<!-- 관리자 비밀번호 변경 -->
+	<update id="updateAdmPwd" parameterType="com.jnet.domain.Menu">
+		UPDATE JONGNO_ADMIN
+		   SET admin_pwd = #{admPwd}
+			   ,modi_ymd = #{modiYmd}
+			   ,modi_hms = #{modiHms}
+			   ,modi_id = #{modiId}
+			   ,modi_ip = #{modiIp}
+		 WHERE admin_seq = #{admSeq}
+	</update>
+</mapper>

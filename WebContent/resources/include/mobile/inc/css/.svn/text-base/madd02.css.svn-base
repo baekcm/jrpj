@@ -1,0 +1,57 @@
+@charset "utf-8";
+/* CSS Document */ 
+
+/*jculture/facil*/
+.partSection ul.guide2 li.desc {font-size:13px;color:#1692ea; background:none; font-weight:bold;}
+
+.tb_board {margin:10px 0;}
+
+
+/*public/insadong*/
+.btn_back {background:url(/resources/include/commonfile/image/content/public/btn_request_on.gif) 0 0 no-repeat;}
+
+/*info/intro*/
+.total td {padding-left:3px !important; letter-spacing:-1.2px; font-size:11px;}
+.refix th { padding:7px 0px !important; }
+.refix td { padding:7px 2px !important; }
+.tb00 td {margin-left:0}
+
+/*greeting*/
+.sign {font-size:16px;font-weight:bold;color:#333333;}
+
+/*finstate*/
+ul.comment li ol li{margin-bottom:10px;}
+ul.comment li ol li ol li{margin-bottom:5px;}
+ul.comment li table {margin-bottom:10px;padding:0;}
+
+
+.satis img {width:700px;}
+
+
+ /*bid*/
+.top_info {background:#f5f5f5;border:1px solid #d2d2d2; padding:15px;}
+.infom { background:url(/resources/include/commonfile/image/common/bul_dot6.gif) 0 4px no-repeat; padding-left:15px}
+
+/*find-id*/
+.bg_memseh {background:url(/resources/include/commonfile/image/member/bg_memseh.jpg) 0 0 no-repeat !important;}
+.txColor {color:#dc6f6f;font-weight:bold}
+.wid {width:500px !important;}
+.call {width:395px;}
+
+.bg_memPw {background:url(/resources/include/commonfile/image/member/bg_memPw.jpg) 0 0 no-repeat !important;}
+.poTop {top:255px !important;}
+
+/*member_out*/
+.input_size input {width:190px;height:20px;}
+
+/*youth culture*/
+.announce li {color:#9931cc;font-weight:bold}
+
+/*result*/
+.seh_board {width:963px;}
+.seh_board > div {height:40px;padding:8px 20px 0 15px;background:url(/resources/include/commonfile/image/result/bg_title.gif) 0 0 no-repeat;}
+.seh_board > div p {font-size:16px;font-weight:bold;}
+.seh_board .s_title {float:left}
+.seh_board .s_title img {margin-right:8px;}
+.seh_board li dl {padding:10px 0 10px 30px;background:url(/resources/include/commonfile/image/result/dot_gray.gif) 0 bottom repeat-x;}
+.point_pulple {color:#9931cc;}

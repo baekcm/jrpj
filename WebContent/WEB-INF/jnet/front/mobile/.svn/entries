@@ -1,0 +1,117 @@
+10
+
+dir
+1400
+https://172.16.0.7:8443/svn/ijongro/ijongro/WebContent/WEB-INF/jnet/front/mobile
+https://172.16.0.7:8443/svn/ijongro
+
+
+
+2013-12-19T01:36:27.450000Z
+1081
+hkm1212
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+24699295-5bf6-f141-97a7-9c3b5454fc1c
+
+facil
+dir
+
+index.jsp
+file
+
+
+
+
+2014-01-20T03:00:42.772000Z
+71dd4c570f2081d604f0636854578579
+2013-12-11T02:20:29.597000Z
+880
+hkm1212
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8250
+
+index_c.jsp
+file
+
+
+
+
+2014-01-20T03:00:42.782000Z
+a47271bdaace54e3b4113872a6b38e95
+2013-12-09T08:15:34.432059Z
+816
+hkm1212
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4216
+
+intro
+dir
+
+notice
+dir
+
+parking
+dir
+
+program
+dir
+
+prototype
+dir
+
+public
+dir
+

@@ -1,0 +1,140 @@
+<?xml version="1.0"  encoding="euc-kr"?>
+ <?xml:stylesheet type="text/xsl" href="http://phobos.softforum.co.kr:80/XecureDemo/xml/card.xsl"?>
+ <Interest>
+ <Bank>
+    <BankName>광주</BankName>
+    <AccountName>황금보너스예금</AccountName>
+    <Interest>5.00</Interest>
+    <LeastInflow>5백만원</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>국민</BankName>
+    <AccountName>하이플러스통장</AccountName>
+    <Interest>4.00</Interest>
+    <LeastInflow>5백만원</LeastInflow>
+    <InterestOutflow>4개월마다 원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>기업</BankName>
+    <AccountName>스피드고수익예금</AccountName>
+    <Interest>4.50</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>농협</BankName>
+    <AccountName>알짜배기저축예금</AccountName>
+    <Interest>4.50</Interest>
+    <LeastInflow>5백만원</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>부산</BankName>
+    <AccountName>초단기슈퍼통장</AccountName>
+    <Interest>4.50</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>3개월마다 원가 </InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>산업</BankName>
+    <AccountName>다모아수퍼저축</AccountName>
+    <Interest>5.50</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+          
+ <Bank>
+    <BankName>서울</BankName>
+    <AccountName>하이프리저축예금</AccountName>
+    <Interest>5.50</Interest>
+    <LeastInflow>5백만원</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>수협</BankName>
+    <AccountName>스페셜플러스예금</AccountName>
+    <Interest>5.00</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>신한</BankName>
+    <AccountName>수퍼저축예금</AccountName>
+    <Interest>5.00</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>외환</BankName>
+    <AccountName>YES 점프예금</AccountName>
+    <Interest>5.00</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>3개월마다 원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>전북</BankName>
+    <AccountName>시장금리부저축예금</AccountName>
+    <Interest>3.50</Interest>
+    <LeastInflow>1백만원</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>제일</BankName>
+    <AccountName>일복리저축예금</AccountName>
+    <Interest>4.50</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>분할지급식</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>제주</BankName>
+    <AccountName>고수익가계형예금</AccountName>
+    <Interest>6.00</Interest>
+    <LeastInflow>5백만원</LeastInflow>
+    <InterestOutflow>3개월마다 원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>조흥</BankName>
+    <AccountName>조흥일일재테크통장</AccountName>
+    <Interest>4.50</Interest>
+    <LeastInflow>5백만원</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>주택</BankName>
+    <AccountName>파워우대저축통장</AccountName>
+    <Interest>4.50</Interest>
+    <LeastInflow>5백만원</LeastInflow>
+    <InterestOutflow>분기별 복리 </InterestOutflow> 
+ </Bank>
+        
+ <Bank>
+    <BankName>평화</BankName>
+    <AccountName>평화뱅크탑예금</AccountName>
+    <Interest>5.00</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>3개월마다 원가</InterestOutflow> 
+ </Bank>
+         
+ <Bank>
+    <BankName>하나</BankName>
+    <AccountName>하나수퍼플러스</AccountName>
+    <Interest>4.50</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>인출시 이자지급</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>한미</BankName>
+    <AccountName>스코어플러스통장</AccountName>
+    <Interest>4.00</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>매월원가</InterestOutflow> 
+ </Bank>
+ <Bank>
+    <BankName>한빛</BankName>
+    <AccountName>개인MMDA 상품</AccountName>
+    <Interest>5.20</Interest>
+    <LeastInflow>제한없음</LeastInflow>
+    <InterestOutflow>매월 넷째토요일 이자 원가</InterestOutflow> 
+ </Bank>
+ </Interest>

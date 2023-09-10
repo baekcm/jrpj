@@ -1,0 +1,2 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<img src="/resources/include/commonfile/image/content/info/cust2010.jpg" alt="2010년도 고객만족도" longdesc="satisfaction_2010.html" />

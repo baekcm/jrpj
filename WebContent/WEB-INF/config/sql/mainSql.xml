@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mainSql">
+        
+    <!-- 메인 게시물 조회(공지사항,입찰정보,채용공고,강좌안내) -->
+	<select id="listLeastBbsDataMain" parameterType="com.jnet.domain.BbsData" resultType="com.jnet.domain.BbsData">
+	<![CDATA[
+		SELECT TOP 5 *
+		 FROM (SELECT 
+			 		   board_seq boardSeq
+			 		 , data_seq dataSeq
+					 , subject					 
+					 , SUBSTRING(create_ymd,1,4)+'-'+SUBSTRING(create_ymd,5,2)+'-'+SUBSTRING(create_ymd,7,2) createYmd
+					 , CASE WHEN DATEDIFF(DD, create_ymd, CONVERT(VARCHAR, GETDATE(), 112)) < 5 THEN 'Y' ELSE 'N' END newYn
+				    FROM jongno_board_data 
+				   WHERE board_seq = #{boardSeq}
+				   AND use_yn = 'Y'
+				   ) T1
+		  ORDER BY T1.dataSeq DESC
+	]]>	  
+	</select>
+	
+	<!-- 메인 팝업(팝업존, 배너) -->
+	<select id="listPopupMain" parameterType="com.jnet.domain.Popup" resultType="com.jnet.domain.Popup">
+	<![CDATA[
+		SELECT 
+ 		   pop_seq popSeq
+ 		 , file_path filePath
+		 , real_file_nm realFileNm
+		 , orgnl_file_nm orgnlFileNm
+		 , link_url linkUrl
+		 , link_tgt linkTgt		
+		 , pop_gbn_cd popGbnCd			
+	    FROM jongno_popup 
+	   WHERE pop_gbn_cd = #{popGbnCd}
+	     AND thumb_yn = 'N'				     
+	     AND rm_yn = 'N'
+	     AND comm_code_seq = #{commCodeSeq}
+		 ORDER BY ordinary
+	]]>	  
+	</select>
+	
+	<!-- 문화체육시설별 메인 게시물 조회(공지사항,입찰정보,채용공고,강좌안내) -->
+	<select id="listLeastBbsDataSubMain" parameterType="com.jnet.domain.BbsData" resultType="com.jnet.domain.BbsData">
+	<![CDATA[
+		SELECT TOP 4 *
+		 FROM (SELECT 
+			 		   board_seq boardSeq
+			 		 , data_seq dataSeq
+			 		 , comm_code_seq commCodeSeq
+					 , subject					 
+					 , SUBSTRING(create_ymd,1,4)+'-'+SUBSTRING(create_ymd,5,2)+'-'+SUBSTRING(create_ymd,7,2) createYmd
+					 , CASE WHEN DATEDIFF(DD, create_ymd, CONVERT(VARCHAR, GETDATE(), 112)) < 5 THEN 'Y' ELSE 'N' END newYn
+				    FROM jongno_board_data 
+				   WHERE board_seq = #{boardSeq}
+				     AND comm_code_seq = #{commCodeSeq}
+				     AND use_yn = 'Y'				     
+				     ) T1
+		  ORDER BY T1.dataSeq DESC
+	]]>	  
+	</select>
+	
+	<!-- 문화체육시설별 메인 팝업존 -->
+	<select id="listPopupSubMain" parameterType="com.jnet.domain.Popup" resultType="com.jnet.domain.Popup">
+	<![CDATA[
+		 SELECT 
+	 		   pop_seq popSeq
+	 		 , comm_code_seq commCodeSeq 
+	 		 , file_path filePath
+			 , real_file_nm realFileNm
+			 , orgnl_file_nm orgnlFileNm
+			 , link_url linkUrl
+			 , link_tgt linkTgt		
+			 , pop_gbn_cd popGbnCd			
+		    FROM jongno_popup 
+		   WHERE pop_gbn_cd = 'POPUP'
+		     AND comm_code_seq = #{commCodeSeq}
+		     AND thumb_yn = 'N'				     
+		     AND rm_yn = 'N'
+		   ORDER BY ordinary
+	]]>	  
+	</select>
+	
+	<!-- 문화체육시설별 메인 포토갤러리 -->
+	<select id="listLeastBbsDataPhotoSubMain" parameterType="com.jnet.domain.BbsData" resultType="com.jnet.domain.BbsData">
+	<![CDATA[
+		select top 2 * from (
+			select
+				  a.board_seq boardSeq
+				, a.data_seq dataSeq
+				, a.comm_code_seq commCodeSeq
+				, a.subject
+				, b.filePathNm
+			from jongno_board_data a
+			left outer join(
+				select file_path+real_file_nm as filePathNm, data_seq 
+				from jongno_file
+				where thumb_yn='Y'
+				and rm_yn = 'N'
+			) b on a.data_seq = b.data_seq
+			where a.board_seq=#{boardSeq}
+			and a.comm_code_seq = #{commCodeSeq}
+			and a.use_yn = 'Y'
+	) T1
+	order by T1.dataSeq desc
+	]]>	  
+	</select>
+	
+	<!-- 최상단 프로그램 5개만 호출 -->
+   <select id="listFrontLeastPgm" parameterType="com.jnet.domain.Pgm" resultType="com.jnet.domain.Pgm">
+	     SELECT   TOP 5 T1.*
+					    	  	  ,(T1.RGL_QTY - ISNULL(T1.ONLINE_INWON, 0) - ISNULL(D.MEM_CNT, 0)) AS offlineAcceptCnt
+								  ,(ISNULL(T1.ONLINE_INWON, 0) - ISNULL(F.MEM_CNT, 0)) AS onlineAcceptCnt
+					    		FROM
+					    		( SELECT 
+					    				 A.BAS_CD AS basCd 	
+										 , A.PGM_CD AS pgmCd
+									 	 , B.COM_NM AS comNm1
+									 	 , A.PGM_NM AS pgmNm
+									 	 , A.START_T startT
+									 	 , A.END_T endT
+									 	 , A.DT_WEEK_CD AS dtWeekCd
+									 	 , S.U_PRICE AS uPrice
+									 	 , C.COM_NM AS comNm3
+									 	 , C.COM_cd AS comCd3
+									 	 , A.SALE_COM_CD saleComCd
+									 	 , G.COM_NM AS comNm2
+									 	 , A.ONLINE_YN onlineYn
+									 	 , S.TARGET_CD targetCd
+									 	 , H.COM_NM AS comNm4
+									 	 , E.RGL_QTY
+									 	 , ONLINE_INWON
+									 	 , A.UP_ID upId
+									    FROM SCPGMTB A WITH(NOLOCK) 
+											, SCCOSTTB S WITH(NOLOCK) 
+											, SCCODTB B WITH(NOLOCK)
+											, SCCODTB C WITH(NOLOCK) 
+											, SCCODTB G WITH(NOLOCK) 
+											, SCCODTB H WITH(NOLOCK)
+											, SCRGLTB E WITH(NOLOCK)
+										WHERE 1=1
+										  <if test='upId != null and upId != "" and upId != "00"'>
+											AND A.UP_ID = #{upId}
+									   	  </if>
+										  <if test='searchVal != null and searchVal != ""'>
+											and a.PGM_NM like '%'+#{searchVal}+'%'
+										  </if>
+									      AND A.MM_QTY = '1'
+									      AND A.ONLINE_YN = 'Y'
+									      AND A.ST_TAG = '0'
+									      AND S.UP_ID = A.UP_ID 
+									      AND S.PGM_CD = A.PGM_CD 
+									      AND S.ST_TAG = '0' 
+										  AND B.INI_CD = '03' 
+										  AND B.COM_CD = A.BAS_CD 
+										  AND B.ST_TAG = '0' 
+										  AND C.INI_CD = '04' 
+										  AND C.COM_CD = S.TARGET_CD 
+										  AND C.ST_TAG = '0' 
+										  AND G.INI_CD = '34' 
+										  AND G.COM_CD = A.SALE_COM_CD 
+										  AND G.ST_TAG = '0'									
+										  AND H.INI_CD = '01'
+										  AND H.COM_CD = A.UP_ID 
+										  AND H.ST_TAG = '0'
+										  AND E.UP_ID = A.UP_ID 
+										  AND E.PGM_CD = A.PGM_CD 
+										  AND substring(convert(varchar, getdate(), 112), 1, 6) BETWEEN E.START_MON AND E.END_MON
+										  AND E.ST_TAG='0'
+								) T1 
+								LEFT JOIN
+								( SELECT UP_ID, PGM_CD, COUNT(*) AS MEM_CNT 
+								    FROM SGREGTB WITH(NOLOCK)
+								   WHERE ENTER_YYMM= substring(convert(varchar, getdate(), 112), 1, 6)
+								     AND ST_TAG='0'
+							     	<![CDATA[ 
+								     AND F_ENTER_MAN <> 'WEB'
+								     ]]> 
+								   GROUP BY UP_ID, PGM_CD) D
+								ON T1.upId = D.UP_ID AND T1.pgmCd = D.PGM_CD
+								LEFT JOIN
+								( SELECT UP_ID, PGM_CD, COUNT(*) AS MEM_CNT 
+								    FROM SGREGTB WITH(NOLOCK) 
+								   WHERE ENTER_YYMM= substring(convert(varchar, getdate(), 112), 1, 6)
+								     AND ST_TAG='0' 
+								     AND F_ENTER_MAN = 'WEB' 
+								   GROUP BY UP_ID, PGM_CD) F
+								 ON T1.upId = F.UP_ID AND T1.pgmCd = F.PGM_CD
+								  ORDER BY T1.pgmCd
+    </select>
+    
+    
+	<!-- 문화체육시설별 메인 프로그램 이미지 -->
+	<select id="findOutPgmImgSubMain" parameterType="com.jnet.domain.Pgm" resultType="com.jnet.domain.Pgm">
+	<![CDATA[
+		select 
+			  a.out_pgm_cd
+			, b.img_path+real_file_nm pgmFileImg 
+		from jongno_pgm a, jongno_pgm_img b
+		where a.pgm_seq = b.pgm_seq
+		and b.thumb_yn = 'Y'
+		and a.out_pgm_cd = #{pgmCd}
+	]]>	  
+	</select>
+	
+	
+	<select id="listLeastBbsDataSearchMain" parameterType="com.jnet.domain.BbsData" resultType="com.jnet.domain.BbsData">			
+		select top 5 * from(
+			select 
+				  a.data_seq dataSeq
+				, a.subject subject
+				, a.board_seq boardSeq
+				, a.comm_code_seq commCodeSeq
+				, b.board_nm boardNm
+				, b.menu_seq menuSeq
+				, c.code_id codeId
+				, c.code_nm codeNm
+			FROM JONGNO_BOARD_DATA a 
+			LEFT OUTER JOIN jongno_board b 
+			 ON a.board_seq = b.board_seq
+			LEFT OUTER JOIN jongno_comm_code c
+			 ON a.comm_code_seq = c.comm_code_seq
+			WHERE a.use_yn = 'Y'
+			  AND b.use_yn = 'Y'
+			<if test="commCodeSeq != null and commCodeSeq != ''">
+				AND a.comm_code_seq = #{commCodeSeq}
+			</if>
+			<if test='searchVal != null and searchVal != ""'>
+				AND a.subject like '%'+#{searchVal}+'%'
+			</if>
+			) T1
+		order by T1.dataSeq desc
+	</select>
+	
+	<select id="listBbsDataSearchMainMore" parameterType="com.jnet.domain.BbsData" resultType="com.jnet.domain.BbsData">	
+		SELECT T3.*
+	    	  FROM
+			    	(SELECT T2.*
+			    	  	  , ROWNUM RNUM
+			    	FROM(SELECT 
+							  a.data_seq dataSeq
+							, a.subject subject
+							, a.board_seq boardSeq
+							, a.comm_code_seq commCodeSeq
+							, b.board_nm boardNm
+							, b.menu_seq menuSeq
+							, c.code_id codeId
+							, c.code_nm codeNm
+							,(SELECT COUNT(t1.data_seq)+1 
+								FROM JONGNO_BOARD_DATA t1 
+							   WHERE t1.data_seq > a.data_seq
+								 AND t1.use_yn = 'Y'
+								 <if test="commCodeSeq != null and commCodeSeq != ''">
+					 			  AND t1.comm_code_seq = #{commCodeSeq}
+								 </if>
+								 <if test='searchVal != null and searchVal != ""'>
+								  AND t1.subject like '%'+#{searchVal}+'%'
+								 </if>
+							 ) rownum
+						FROM JONGNO_BOARD_DATA a 
+						LEFT OUTER JOIN jongno_board b 
+						 ON a.board_seq = b.board_seq
+						LEFT OUTER JOIN jongno_comm_code c
+						 ON a.comm_code_seq = c.comm_code_seq
+						WHERE a.use_yn = 'Y'
+						  AND b.use_yn = 'Y'
+						<if test="commCodeSeq != null and commCodeSeq != ''">
+			 			  AND a.comm_code_seq = #{commCodeSeq}
+						</if>
+						<if test='searchVal != null and searchVal != ""'>
+						  AND a.subject like '%'+#{searchVal}+'%'
+						</if>) T2
+				<![CDATA[
+				WHERE rownum <= #{end}
+				]]>
+			) T3
+		WHERE RNUM >= #{start}
+		ORDER by T3.dataSeq DESC
+	</select>
+	
+	<select id="listBbsDataSearchMainTotCnt" parameterType="com.jnet.domain.BbsData" resultType="Integer">			
+		select count(*)
+		from jongno_board_data a 
+		left outer join(
+			select board_seq, board_nm, menu_seq 
+			from jongno_board 
+			where use_yn = 'Y'
+		) b on a.board_seq=b.board_seq
+		left outer join(
+				select code_id, code_nm, comm_code_seq 
+				from jongno_comm_code
+			) c on a.comm_code_seq=c.comm_code_seq
+		where a.use_yn = 'Y'
+		<if test="commCodeSeq != null and commCodeSeq != ''">
+		and a.comm_code_seq = #{commCodeSeq}
+		</if>
+		and a.subject like '%'+#{searchVal}+'%'
+	</select>
+	
+	<select id="listPgmSearchMainTotCnt" parameterType="com.jnet.domain.Pgm" resultType="Integer">
+	     SELECT  count(*)	  			 
+			    FROM SCPGMTB A WITH(NOLOCK) 
+					, SCCOSTTB S WITH(NOLOCK) 
+					, SCCODTB B WITH(NOLOCK)
+					, SCCODTB C WITH(NOLOCK) 
+					, SCCODTB G WITH(NOLOCK) 
+					, SCCODTB H WITH(NOLOCK)
+					, SCRGLTB E WITH(NOLOCK)
+				WHERE A.MM_QTY = '1'
+				<if test='upId != null and upId != "" and upId != "00"'>
+				  and A.UP_ID = #{upId}
+				</if>
+				<if test='searchVal != null and searchVal != ""'>
+					and a.PGM_NM like '%'+#{searchVal}+'%'
+				</if>
+			      AND A.MM_QTY = '1'
+			      AND A.ONLINE_YN = 'Y'
+			      AND A.ST_TAG = '0'
+			      AND S.UP_ID = A.UP_ID 
+			      AND S.PGM_CD = A.PGM_CD 
+			      AND S.ST_TAG = '0' 
+				  AND B.INI_CD = '03' 
+				  AND B.COM_CD = A.BAS_CD 
+				  AND B.ST_TAG = '0' 
+				  AND C.INI_CD = '04' 
+				  AND C.COM_CD = S.TARGET_CD 
+				  AND C.ST_TAG = '0' 
+				  AND G.INI_CD = '34' 
+				  AND G.COM_CD = A.SALE_COM_CD 
+				  AND G.ST_TAG = '0'									
+				  AND H.INI_CD = '01'
+				  AND H.COM_CD = A.UP_ID 
+				  AND H.ST_TAG = '0'
+				  AND E.UP_ID = A.UP_ID 
+				  AND E.PGM_CD = A.PGM_CD 
+				  AND substring(convert(varchar, getdate(), 112), 1, 6) BETWEEN E.START_MON AND E.END_MON
+				  AND E.ST_TAG='0'
+    </select>
+	
+	
+	
+</mapper>
